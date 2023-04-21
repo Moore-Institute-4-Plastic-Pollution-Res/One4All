@@ -1,0 +1,12 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^\.zenodo\.json$
+^\.github$
+^\.httr-oauth$
+^doc$
+^Meta$
+google-analytics.js
+droptoken.rds
+^cran-comments\.md$
+^CRAN-RELEASE$

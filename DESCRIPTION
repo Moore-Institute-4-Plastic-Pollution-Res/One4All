@@ -1,0 +1,47 @@
+Package: One4All
+Type: Package
+Title: Validate, Share, and Visualize Data
+Version: 0.1
+Date: 2023-04-23
+Authors@R: c(person("Win", "Cowger", role = c("cre", "aut"),
+      email = "wincowger@gmail.com",
+      comment = c(ORCID = "0000-0001-9226-3104")),
+    person("Hannah", "Hapich", role = c("ctb"),
+      comment = c(ORCID = "0000-0003-0000-6632"))
+Description: This pacakge is funded by the National Renewable Energy Laboratory and the Possibility Lab, and maintained by the Moore Institute for Plastic Pollution Research.
+URL: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All
+BugReports: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/issues
+License: CC BY 4.0
+Encoding: UTF-8
+LazyLoad: true
+LazyData: true
+VignetteBuilder: knitr
+Depends:
+    R (>= 4.0.0)
+Imports:
+    shiny,
+    dplyr,
+    validate,
+    digest,
+    data.table,
+    ckanr,
+    purrr,
+    stringr,
+    openxlsx,
+    mongolite
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    config,
+    DT,
+    shinythemes,
+    shinyWidgets,
+    bs4Dash,
+    shinyjs,
+    listviewer,
+    RCurl,
+    readxl,
+    aws.s3
+RoxygenNote: 7.2.1
+Config/testthat/edition: 3
