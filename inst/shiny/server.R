@@ -1,3 +1,23 @@
+
+config <- config::get()
+
+#Data checks ----
+if(isTruthy(config$mongo_key)) {
+    database <- mongo(url = config$mongo_key)
+} 
+
+
+if(isTruthy(config$s3_secret_key)){
+    Sys.setenv(
+        "AWS_ACCESS_KEY_ID" = config$s3_key_id,
+        "AWS_SECRET_ACCESS_KEY" = config$s3_secret_key,
+        "AWS_DEFAULT_REGION" = config$s3_region
+    )
+}
+
+# Options ----
+options(shiny.maxRequestSize = 30*1024^2)
+
 function(input, output, session) {
 
     rules <- reactive({

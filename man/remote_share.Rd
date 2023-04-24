@@ -16,7 +16,10 @@ remote_share(
   url_to_send,
   rules,
   results,
-  bucket,
+  s3_key_id,
+  s3_secret_key,
+  s3_region,
+  s3_bucket,
   mongo_key,
   old_cert = NULL
 )
@@ -44,7 +47,13 @@ remote_share(
 
 \item{results}{A list containing results of the validation.}
 
-\item{bucket}{The name of the Amazon S3 bucket.}
+\item{s3_key_id}{AWS ACCESS KEY ID}
+
+\item{s3_secret_key}{AWS SECRET ACCESS KEY}
+
+\item{s3_region}{AWS DEFAULT REGION}
+
+\item{s3_bucket}{The name of the Amazon S3 bucket.}
 
 \item{mongo_key}{The API key for the MongoDB instance.}
 
@@ -60,5 +69,5 @@ such as CKAN, MongoDB, and/or Amazon S3.
 \examples{
 remote_share(validation, data_formatted, verified, valid_rules, valid_key,
              ckan_url, ckan_key, ckan_package, url_to_send, rules, results,
-             bucket, mongo_key, old_cert = NULL)
+             s3_bucket, mongo_key, old_cert = NULL)#' 
 }

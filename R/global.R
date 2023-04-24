@@ -1,67 +1,17 @@
-
-# Libraries ----
-library(shiny)
-library(dplyr)
-library(DT)
-library(shinythemes)
-library(shinyWidgets)
-library(validate)
-library(digest)
-library(data.table)
-library(bs4Dash)
-library(ckanr)
-library(purrr)
-library(shinyjs)
-library(sentimentr)
-library(listviewer)
-library(RCurl)
-library(readxl)
-library(stringr)
-library(openxlsx)
-library(mongolite)
-library(config)
-library(aws.s3)
-
-#Note for logic using outside functions in the calls. 
-#https://github.com/data-cleaning/validate/issues/45
-
-config <- config::get()
-
-#Data checks ----
-
-
-if(isTruthy(config$mongo_key)) {
-    database <- mongo(url = config$mongo_key)
-} 
-
-
-if(isTruthy(config$s3_secret_key)){
-    Sys.setenv(
-        "AWS_ACCESS_KEY_ID" = config$s3_key_id,
-        "AWS_SECRET_ACCESS_KEY" = config$s3_secret_key,
-        "AWS_DEFAULT_REGION" = config$s3_region
-    )
-}
-
-# Options ----
-options(shiny.maxRequestSize = 30*1024^2)
-
 # Functions ----
-#' Generate a data frame with certificate information
+#' @title Generate a data frame with certificate information
 #'
-#' This function creates a data frame with certificate information including the current time,
+#' @description This function creates a data frame with certificate information including the current time,
 #' data and rule hashes, package version, and web hash.
 #'
 #' @param x A list containing `data_formatted` and `rules` elements.
-#' @param database_true A logical value (default: `isTruthy(config$mongo_key)`). If TRUE, the generated
-#'   data frame will be inserted into the database.
+#' @param mongo_key key for the mongo db database. If it exists, a copy of the certificate will be stored there. 
 #' @return A data frame with certificate information.
+#' @import mongolite
 #' @importFrom digest digest
-#' @importFrom data.table data.frame
-#' @importFrom base Sys.time Sys.info
-#' @importFrom utils packageVersion
+#' @importFrom shiny isTruthy
 #' @export
-certificate_df <- function(x, database_true = isTruthy(config$mongo_key)){
+certificate_df <- function(x, mongo_key){
     df <-  data.frame(time = Sys.time(), 
                       data = digest(x$data_formatted), 
                       rules = digest(x$rules), 
@@ -69,7 +19,9 @@ certificate_df <- function(x, database_true = isTruthy(config$mongo_key)){
                       web_hash = digest(paste(sessionInfo(), 
                                               Sys.time(), 
                                               Sys.info())))
-    if(database_true){
+    
+    if(isTruthy(mongo_key)){
+        database <- mongo(url = mongo_key)
         database$insert(df)
     }
     df
@@ -97,6 +49,11 @@ certificate_df <- function(x, database_true = isTruthy(config$mongo_key)){
 #'                         data_names = c("Dataset1", "Dataset2"),
 #'                         file_rules = "rules.csv")
 #'
+#' @importFrom data.table data.table rbindlist
+#' @importFrom readxl read_excel excel_sheets
+#' @importFrom dplyr left_join mutate filter bind_rows across everything
+#' @importFrom validate confront variables validator
+#' @importFrom shiny isTruthy
 #' @export
 validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     
@@ -212,7 +169,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
                     gsub("(.*/)|(\\..*)", "", data_names)
     } 
     else if(all(grepl("(\\.xlsx$)", ignore.case = T, as.character(files_data))) & length(as.character(files_data)) == 1){
-        readxl::excel_sheets(files_data)
+        excel_sheets(files_data)
     }
     else{
         gsub("(.*/)|(\\..*)", "", files_data)
@@ -251,32 +208,32 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     
     #Add dataset if one doesn't exist so that everything else works. 
     if (!"dataset" %in% names(rules)){
-        rules <- rules %>%
+        rules <- rules |>
             mutate(dataset = data_names)
     }
     
     #Circle back to add logic for multiple dfs
     #Check for special character "___" which is for assessing every column. 
     
-    do_to_all <- rules %>%
+    do_to_all <- rules |>
         filter(grepl("___", rule))
     
     if(nrow(do_to_all) > 0){
        rules <- lapply(data_names, function(x){
-            rules_sub <- do_to_all %>% filter(dataset == x)
+            rules_sub <- do_to_all |> filter(dataset == x)
             lapply(colnames(data_formatted), function(new_name){
-                rules_sub %>%
-                    mutate(rule = gsub("___", new_name, rule)) %>%
+                rules_sub |>
+                    mutate(rule = gsub("___", new_name, rule)) |>
                     mutate(name = paste0(new_name, "_", name))
-            }) %>%
-                rbindlist(.)
-        }) %>%
-           rbindlist(.) %>%
-           bind_rows(rules %>% filter(!grepl("___", rule)))
+            }) |>
+                rbindlist()
+        }) |>
+           rbindlist() |>
+           bind_rows(rules |> filter(!grepl("___", rule)))
     }
    
     # Check special character of is_foreign_key and if so then testing that foreign keys are exact. 
-    foreign_keys <- rules %>%
+    foreign_keys <- rules |>
         filter(grepl("is_foreign_key(.*)", rule))
     
     if(nrow(foreign_keys) > 0){
@@ -291,21 +248,21 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
            ))
        }
        rules <- lapply(1:nrow(foreign_keys), function(x){
-           foreign_keys[x,] %>%
+           foreign_keys[x,] |>
            mutate(rule = paste0(columns[x], 
                                 ' %in% c("',
                                 paste(
                                 lapply(data_formatted, function(y){
                                        y[[columns[x]]]
-                                            }) %>% 
-                                       unlist(.) %>%
-                                       unique(.), 
+                                            }) |> 
+                                       unlist() |>
+                                       unique(), 
                                 collapse = '", "', 
                                 sep = ""), 
                                 '")'))
-       }) %>%
-           rbindlist(.) %>%
-           bind_rows(rules %>% filter(!grepl("is_foreign_key(.*)", rule)))
+       }) |>
+           rbindlist() |>
+           bind_rows(rules |> filter(!grepl("is_foreign_key(.*)", rule)))
     }
     
     #Testing that the rules file has no errors. 
@@ -334,12 +291,12 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     
     #Loops through and makes a validation object for every dataset. 
     report <- lapply(data_names, function(x){
-       confront(data_formatted[[x]], validator(.data=rules %>% filter(dataset == x))) 
+       confront(data_formatted[[x]], validator(.data=rules |> filter(dataset == x))) 
     })
     
     #Loops through and makes a results report for the validation
-    results <- lapply(report, function(x) {summary(x) %>%
-        mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) %>%
+    results <- lapply(report, function(x) {summary(x) |>
+        mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |>
         left_join(rules)})
     
     any_issues <- vapply(results, function(x){
@@ -347,15 +304,15 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
                             }, FUN.VALUE = TRUE)
     
     #Loops through and makes a rules object for each data set. 
-    rules_list_formatted <- tryCatch(lapply(data_names, function(x){validator(.data=rules %>% filter(dataset == x))}), 
+    rules_list_formatted <- tryCatch(lapply(data_names, function(x){validator(.data=rules |> filter(dataset == x))}), 
                                 warning = function(w) {w}, 
                                 error = function(e) {e})
 
     
     #Returns all the results for everything in a formatted list. 
     return(list(data_formatted = lapply(data_formatted, function(x){
-                    x %>%
-                    mutate(across(everything(), check_images)) %>%
+                    x |>
+                    mutate(across(everything(), check_images)) |>
                     mutate(across(everything(), check_other_hyperlinks))}),
                 data_names = data_names,
                 report = report, 
@@ -382,22 +339,31 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
 #' @param url_to_send The URL to send the data.
 #' @param rules A set of rules used for validation.
 #' @param results A list containing results of the validation.
-#' @param bucket The name of the Amazon S3 bucket.
+#' @param s3_key_id AWS ACCESS KEY ID
+#' @param s3_secret_key AWS SECRET ACCESS KEY
+#' @param s3_region AWS DEFAULT REGION
+#' @param s3_bucket The name of the Amazon S3 bucket.
 #' @param mongo_key The API key for the MongoDB instance.
 #' @param old_cert (Optional) An old certificate to be uploaded alongside the new one.
 #'
 #' @return A list containing the status and message of the operation.
-#' @export
-#'
+#' 
+#' @import mongolite
+#' @importFrom data.table data.table
+#' @importFrom digest digest
+#' @importFrom ckanr ckanr_setup resource_create
+#' @importFrom aws.s3 put_object
+#' 
 #' @examples
 #' remote_share(validation, data_formatted, verified, valid_rules, valid_key,
 #'              ckan_url, ckan_key, ckan_package, url_to_send, rules, results,
-#'              bucket, mongo_key, old_cert = NULL)
-remote_share <- function(validation, data_formatted, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, bucket, mongo_key, old_cert = NULL){
+#'              s3_bucket, mongo_key, old_cert = NULL)#' 
+#' @export
+remote_share <- function(validation, data_formatted, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, old_cert = NULL){
     
     use_ckan <- isTruthy(ckan_url) & isTruthy(ckan_key) & isTruthy(ckan_package)
     use_mongo <- isTruthy(mongo_key)
-    use_s3 <- isTruthy(bucket)  
+    use_s3 <- isTruthy(s3_bucket)  
     
     if(!(use_ckan | use_mongo | use_s3)){
         return(list(
@@ -437,6 +403,18 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
         ckanr_setup(url = ckan_url, key = ckan_key)
     }    
     
+    if(use_mongo) {
+        database <- mongo(url = mongo_key)
+    } 
+    
+    if(use_s3){
+        Sys.setenv(
+            "AWS_ACCESS_KEY_ID" = s3_key_id,
+            "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
+            "AWS_DEFAULT_REGION" = s3_region
+        )
+    }
+    
         for(dataset in 1:length(data_formatted)){
             data_name <- names(data_formatted[dataset])
             #hashed_rules <- digest(rules)
@@ -447,7 +425,7 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
                 put_object(
                     file = file,
                     object = paste0(hashed_data, "_", data_name, ".csv"),
-                    bucket = bucket
+                    bucket = s3_bucket
                 )    
             }
             if(use_ckan){
@@ -461,14 +439,14 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
             }
         }        
 
-    certificate <- certificate_df(validation, database_true = use_mongo)
+    certificate <- certificate_df(validation, mongo_key = mongo_key)
     file <- tempfile(pattern = "data", fileext = ".csv")
     write.csv(certificate, file, row.names = F)
     if(use_s3){
        put_object(
         file = file,
         object = paste0(hashed_data, "_", "certificate.csv"),
-        bucket = bucket
+        bucket = s3_bucket
     ) 
     }
     if(use_ckan){
@@ -485,7 +463,7 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
             put_object(
                 file = old_cert,
                 object = paste0(hashed_data, "_", "old_certificate.csv"),
-                bucket = bucket
+                bucket = s3_bucket
             )    
         }
         if(use_ckan){
@@ -509,6 +487,7 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
 #' @param show_decision A logical value to indicate if successful decisions should be included in the output.
 #'
 #' @return A data frame with the filtered results.
+#' @importFrom dplyr filter select everything
 #' @export
 #'
 #' @examples
@@ -523,9 +502,10 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
 #'
 #' # Show only broken rules
 #' broken_rules <- rules_broken(sample_results, show_decision = FALSE)
+#' @export
 rules_broken <- function(results, show_decision){
-    results %>%
-        dplyr::filter(if(show_decision){status == "error"} else{status %in% c("error", "success")}) %>%
+    results |>
+        dplyr::filter(if(show_decision){status == "error"} else{status %in% c("error", "success")}) |>
         select(description, status, name, expression, everything())
 }
 
@@ -539,6 +519,7 @@ rules_broken <- function(results, show_decision){
 #' @param rows A vector of row indices specifying which rules to check for violations.
 #'
 #' @return A data frame with rows in the data that violate the specified rules.
+#' @importFrom validate violating
 #' @export
 #'
 #' @examples
@@ -562,6 +543,7 @@ rules_broken <- function(results, show_decision){
 #'
 #' # Get rows for the specified rules
 #' violating_rows <- rows_for_rules(sample_data, report, broken_rules, c(1, 2))
+#' @export
 rows_for_rules <- function(data_formatted, report, broken_rules, rows){
     violating(data_formatted, report[broken_rules[rows, "name"]])
 }
@@ -575,6 +557,7 @@ rows_for_rules <- function(data_formatted, report, broken_rules, rows){
 #' @examples
 #' checkLuhn("4532015112830366") # TRUE
 #' checkLuhn("4532015112830367") # FALSE
+#' @export
 checkLuhn <- function(number) {
     # must have at least 2 digits
     if(nchar(number) <= 2) {
@@ -611,12 +594,19 @@ checkLuhn <- function(number) {
 #'
 #' This function checks if a file located at a given URL can be downloaded and uploaded to an S3 bucket.
 #' @param url A character string representing the URL of the file to download.
-#' @param bucket A character string representing the S3 bucket name where the file will be uploaded. Defaults to 'config$s3_bucket'.
+#' @param s3_key_id AWS ACCESS KEY ID
+#' @param s3_secret_key AWS SECRET ACCESS KEY
+#' @param s3_region AWS DEFAULT REGION
+#' @param s3_bucket A character string representing the S3 bucket name where the file will be uploaded. Defaults to 'config$s3_bucket'.
 #' @return A logical value indicating whether the file can be uploaded (TRUE) or not (FALSE).
+#' @importFrom digest digest
+#' @importFrom shiny isTruthy
+#' @importFrom aws.s3 put_object
 #' @examples
 #' # Note: The example assumes you have valid AWS credentials and an S3 bucket available
-#' check_uploadable("https://example.com/file.csv", bucket = "your-s3-bucket-name")
-check_uploadable <- function(url, bucket = config$s3_bucket){
+#' check_uploadable("https://example.com/file.csv", s3_bucket = "your-s3-bucket-name")
+#' @export
+check_uploadable <- function(url, s3_key_id, s3_secret_key, s3_region, s3_bucket){
     hash_url <- digest(url)
     file_type <- gsub(".*\\.", "", url)
     file_name <- paste0(hash_url, ".", file_type)
@@ -629,11 +619,16 @@ check_uploadable <- function(url, bucket = config$s3_bucket){
     if(length(class(test)) != 1 || class(test) != "integer"){
         return(FALSE)
     }
-    if(isTruthy(config$s3_bucket)){
+    if(isTruthy(s3_bucket)){
+            Sys.setenv(
+                "AWS_ACCESS_KEY_ID" = s3_key_id,
+                "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
+                "AWS_DEFAULT_REGION" = s3_region
+            )
         put_object(
             file = filedest,
             object = file_name,
-            bucket = bucket
+            bucket = s3_bucket
         )   
     }
 }
@@ -648,12 +643,12 @@ check_uploadable <- function(url, bucket = config$s3_bucket){
 #' check_images("https://example.com/image.png")
 #' check_images("https://example.com/image.jpg")
 #' check_images("https://example.com/text")
+#' @export
 check_images <- function(x){
     ifelse(grepl("https://.*\\.png|https://.*\\.jpg", x), 
            paste0('<img src ="', x, '" height = "50"></img>'), 
            x)
 }
-
 
 #' Check and format non-image hyperlinks
 #'
@@ -664,6 +659,7 @@ check_images <- function(x){
 #' check_other_hyperlinks("https://example.com/page")
 #' check_other_hyperlinks("https://example.com/image.png")
 #' check_other_hyperlinks("https://example.com/image.jpg")
+#' @export
 check_other_hyperlinks <- function(x){
     ifelse(grepl("https://", x) & !grepl("https://.*\\.png|https://.*\\.jpg", x), 
            paste0('<a href ="', x, '">', x, '</a>'), 
@@ -675,13 +671,15 @@ check_other_hyperlinks <- function(x){
 #' This function checks if the input string contains any profane words.
 #' @param x A character string to check for profanity.
 #' @return A logical value indicating whether the input string contains no profane words.
+#' @import lexicon
 #' @examples
 #' test_profanity("This is a clean sentence.")
 #' test_profanity("This sentence contains a badword.")
+#' @export
 test_profanity <- function(x){
     bad_words <- unique(tolower(c(#lexicon::profanity_alvarez, 
                                   #lexicon::profanity_arr_bad, 
-                                  lexicon::profanity_banned#, 
+                                  profanity_banned#, 
                                   #lexicon::profanity_zac_anger#, 
                                   #lexicon::profanity_racist
                                   )))
@@ -702,14 +700,27 @@ test_profanity <- function(x){
 #' @param row_num Number of rows to create in the output file (default is 1000).
 #' @param file_name Name of the output Excel file (default is "conditionalFormattingExample.xlsx").
 #' @return A workbook object containing the formatted Excel file.
+#' @importFrom readr read_csv
+#' @importFrom readxl read_excel
+#' @importFrom dplyr filter mutate bind_rows
+#' @importFrom magrittr %>%
+#' @importFrom data.table rbindlist
+#' @importFrom validate validator variables violating
+#' @importFrom openxlsx createWorkbook addWorksheet writeData freezePane dataValidation conditionalFormatting saveWorkbook createStyle
+#' @importFrom tibble as_tibble
 #' @examples
-#' create_valid_excel(file_rules = "validation_rules.csv")
+#' create_valid_excel(file_rules = data("test_rules", package = "One4All"))
+#' @export
 create_valid_excel <- function(file_rules, 
                                negStyle  = createStyle(fontColour = "#9C0006", bgFill = "#FFC7CE"),
                                posStyle  = createStyle(fontColour = "#006100", bgFill = "#C6EFCE"),
                                row_num   = 1000,
                                file_name = "conditionalFormattingExample.xlsx"){
     #Reads the rules file.
+    if(is.data.frame(file_rules)){
+        rules <- file_rules
+    }
+    
     if(grepl("(\\.csv$)", ignore.case = T, as.character(file_rules))){
         rules <- read.csv(file_rules)
     }
@@ -731,25 +742,25 @@ create_valid_excel <- function(file_rules,
     #Circle back to add logic for multiple dfs
     #Check for special character "___" which is for assessing every column. 
     
-    do_to_all <- rules %>%
+    do_to_all <- rules |>
         filter(grepl("___", rule))
     
     if(nrow(do_to_all) > 0){
         rules <- lapply(data_names, function(x){
-            rules_sub <- do_to_all %>% filter(dataset == x)
+            rules_sub <- do_to_all |> filter(dataset == x)
             rules_sub_variables <- variables(validator(.data=rules_sub))
             lapply(rules_sub_variables, function(new_name){
-                rules_sub %>%
-                    mutate(rule = gsub("___", new_name, rule)) %>%
+                rules_sub |>
+                    mutate(rule = gsub("___", new_name, rule)) |>
                     mutate(name = paste0(new_name, "_", name))
-            }) %>%
-                rbindlist(.)
-        }) %>%
-            rbindlist(.) %>%
-            bind_rows(rules %>% filter(!grepl("___", rule)))
+            }) |>
+                rbindlist()
+        }) |>
+            rbindlist() |>
+            bind_rows(rules |> filter(!grepl("___", rule)))
     }
     
-    rules <- rules %>%
+    rules <- rules |>
         filter(!grepl("is_foreign_key(.*)", rule))
     
     lookup_column_index <- 1
@@ -757,7 +768,7 @@ create_valid_excel <- function(file_rules,
     addWorksheet(wb, "Rules")
     writeData(wb, sheet = "Rules", x = rules, startCol = 1)
     for(sheet_num in 1:length(data_names)){ #Sheet level for loop
-        rules_all_raw <- rules %>% filter(dataset == data_names[sheet_num])
+        rules_all_raw <- rules |> filter(dataset == data_names[sheet_num])
         rules_all <- validator(.data = rules_all_raw)
         rule_variables <- variables(rules_all)
         sheet_name <- data_names[sheet_num]

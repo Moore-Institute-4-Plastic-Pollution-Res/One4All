@@ -31,5 +31,5 @@ This function creates an Excel file with conditional formatting and data validat
 based on the given validation rules in a CSV or Excel file.
 }
 \examples{
-create_valid_excel(file_rules = "validation_rules.csv")
+create_valid_excel(file_rules = data("test_rules", package = "One4All"))
 }

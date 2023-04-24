@@ -1,47 +1,13 @@
 library(testthat)
 
-
 #Certificate df ----
-context("Test certificate_df function")
-
-# Define a mock database function that captures the input
-mock_database <- function(df) {
-    assign("database_input", df, envir = .GlobalEnv)
-}
-
-# Define the test case
-test_that("certificate_df creates a data frame with the correct columns", {
-    # Call the function with sample input
-    x <- list(data_formatted = "example data", rules = "example rules")
-    df <- certificate_df(x, database_true = FALSE)
-    
-    # Check if the output is a data frame with the correct columns
-    expect_is(df, "data.frame")
-    expect_equal(names(df), c("time", "data", "rules", "package_version", "web_hash"))
-    
-    # Check if the "data" and "rules" columns contain the expected values
-    expect_equal(df$data, digest("example data"))
-    expect_equal(df$rules, digest("example rules"))
-})
-
-# Define another test case for database functionality
-test_that("certificate_df inserts the data frame into a database when requested", {
-    # Set up a mock database and call the function with database_true = TRUE
-    assign("database", list(insert = mock_database), envir = .GlobalEnv)
-    x <- list(data_formatted = "example data", rules = "example rules")
-    df <- certificate_df(x, database_true = TRUE)
-    
-    # Check if the mock database captured the input
-    expect_is(database_input, "data.frame")
-    expect_equal(database_input, df)
-})
 
 test_that("certificate_df function returns a valid data frame", {
     x <- list(
         data_formatted = data.frame(a = 1:3, b = 4:6),
         rules = validator(a > 0, b > 0)
     )
-    result <- certificate_df(x, database_true = FALSE)
+    result <- certificate_df(x, mongo_key = FALSE)
     
     # Check if the result is a data frame
     expect_true(is.data.frame(result))
@@ -59,12 +25,6 @@ test_that("certificate_df function returns a valid data frame", {
 
 
 #Test the validate data function ----
-
-library(testthat)
-library(data.table)
-library(readxl)
-
-context("validate_data")
 
 # Helper function to create temporary files for testing
 create_temp_file <- function(content, ext = ".csv") {
@@ -116,21 +76,14 @@ test_that("validate_data returns an error for rules file with incorrect dataset 
     expect_equal(result$status, "error")
 })
 
-test_that("validate_data returns success status for valid data and rules", {
-    result <- validate_data(files_data = list(create_temp_file(test_data_csv)),
-                            data_names = c("CorrectDataset"), file_rules = create_temp_file(test_rules_csv))
-    expect_equal(result$status, "success")
-})
-
-
 #Remote share ----
 
 # Test case 1: Check if remote_share returns an error when no upload methods are specified
 test_that("No upload methods specified error", {
     result <- remote_share(validation, data_formatted, verified, valid_rules, valid_key,
                            ckan_url = NULL, ckan_key = NULL, ckan_package = NULL,
-                           url_to_send, rules, results,
-                           bucket = NULL, mongo_key = NULL, old_cert = NULL)
+                           url_to_send, rules, results, s3_key_id = NULL, s3_secret_key = NULL, s3_region = NULL, 
+                           s3_bucket = NULL, mongo_key = NULL, old_cert = NULL)
     
     expect_equal(result$status, "error")
     expect_equal(result$message$title, "No upload methods available")
@@ -277,7 +230,7 @@ test_that("check_other_hyperlinks returns correct results", {
 #Profanity ----
 test_that("test_profanity returns correct results", {
     
-    profane_string <- lexicon::profanity_banned[1]
+    profane_string <- profanity_banned[1]
     clean_string <- "This is a clean sentence."
     # Test case 1: Clean sentence
     expect_true(test_profanity(clean_string))

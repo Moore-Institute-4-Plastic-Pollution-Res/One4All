@@ -4,12 +4,18 @@
 \alias{check_uploadable}
 \title{Check if a file can be uploaded to an S3 bucket}
 \usage{
-check_uploadable(url, bucket = config$s3_bucket)
+check_uploadable(url, s3_key_id, s3_secret_key, s3_region, s3_bucket)
 }
 \arguments{
 \item{url}{A character string representing the URL of the file to download.}
 
-\item{bucket}{A character string representing the S3 bucket name where the file will be uploaded. Defaults to 'config$s3_bucket'.}
+\item{s3_key_id}{AWS ACCESS KEY ID}
+
+\item{s3_secret_key}{AWS SECRET ACCESS KEY}
+
+\item{s3_region}{AWS DEFAULT REGION}
+
+\item{s3_bucket}{A character string representing the S3 bucket name where the file will be uploaded. Defaults to 'config$s3_bucket'.}
 }
 \value{
 A logical value indicating whether the file can be uploaded (TRUE) or not (FALSE).
@@ -19,5 +25,5 @@ This function checks if a file located at a given URL can be downloaded and uplo
 }
 \examples{
 # Note: The example assumes you have valid AWS credentials and an S3 bucket available
-check_uploadable("https://example.com/file.csv", bucket = "your-s3-bucket-name")
+check_uploadable("https://example.com/file.csv", s3_bucket = "your-s3-bucket-name")
 }

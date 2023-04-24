@@ -4,13 +4,12 @@
 \alias{certificate_df}
 \title{Generate a data frame with certificate information}
 \usage{
-certificate_df(x, database_true = isTruthy(config$mongo_key))
+certificate_df(x, mongo_key)
 }
 \arguments{
 \item{x}{A list containing `data_formatted` and `rules` elements.}
 
-\item{database_true}{A logical value (default: `isTruthy(config$mongo_key)`). If TRUE, the generated
-data frame will be inserted into the database.}
+\item{mongo_key}{key for the mongo db database. If it exists, a copy of the certificate will be stored there.}
 }
 \value{
 A data frame with certificate information.
