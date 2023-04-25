@@ -67,7 +67,6 @@ This function uploads validated data to specified remote repositories,
 such as CKAN, MongoDB, and/or Amazon S3.
 }
 \examples{
-remote_share(validation, data_formatted, verified, valid_rules, valid_key,
-             ckan_url, ckan_key, ckan_package, url_to_send, rules, results,
-             s3_bucket, mongo_key, old_cert = NULL)#' 
+#Need to add. 
+
 }

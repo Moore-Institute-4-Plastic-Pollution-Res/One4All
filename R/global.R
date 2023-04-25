@@ -59,23 +59,21 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     
     #Accepts three fields, files data is the data set we are validating. data_names is optional and can be used to specify the names of the datasets. file_rules is the rules file. 
     
-    #Tests that rules file is a csv
-    if (!grepl("(\\.csv$)|(\\.xlsx$)", ignore.case = T, as.character(file_rules))) {
-        return(list(
-            message = data.table(
-                title = "Data type not supported!",
-                text = paste0("Uploaded data type is not currently supported; please upload a .csv or .xlsx file."),
-                type = "warning"), status = "error"))
-    }
     
     #Reads the rules file.
-    if(grepl("(\\.csv$)", ignore.case = T, as.character(file_rules))){
-        rules <- read.csv(file_rules)
+    if(is.data.frame(file_rules)){
+        rules <- file_rules
+    }
+    else{
+        if(grepl("(\\.csv$)", ignore.case = T, as.character(file_rules))){
+            rules <- read.csv(file_rules)
+        }
+        
+        if(grepl("(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
+            rules <- read_excel(file_rules)
+        }    
     }
     
-    if(grepl("(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
-        rules <- read_excel(file_rules)
-    }
     
     #Test that rules file has the correct required column names. 
     if (!all(c("name", "description", "severity", "rule") %in% names(rules))) {
@@ -114,43 +112,38 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
             type = "warning"), status = "error"))
     }
     
-    # Check that the rules file exists, if not then provide message. 
-    if(is.null(rules)) {
-        return(list(
-            message = data.table(
-            title = "Need Rules File",
-            text = paste0("You must upload a rules file before uploading a data file to validate."),
-            type = "warning"), status = "error"))
-    }
-    
     #Read in all csv files from files_data as a list. 
-    if(all(grepl("(\\.csv$)", ignore.case = T, as.character(files_data)))){
-        data_formatted <- tryCatch(lapply(files_data, function(x){read.csv(x)}),
-                                   warning = function(w) {w}, error = function(e) {e})
-    }
-    
-    else if(all(grepl("(\\.xlsx$)", ignore.case = T, as.character(files_data)))){
-        if(length(as.character(files_data)) > 1){
-            data_formatted <- tryCatch(lapply(files_data, function(x){read_excel(x)}),
-                                       warning = function(w) {w}, error = function(e) {e})    
-        }
-        if(length(as.character(files_data)) == 1){
-            sheets <- readxl::excel_sheets(files_data)
-            data_formatted <- tryCatch(lapply(sheets, function(x){read_excel(files_data, sheet =  x)}),
-                                       warning = function(w) {w}, error = function(e) {e})    
-        }
+    if(is.list(files_data)){
+        data_formatted <- files_data
     }
     
     else{
-        return(list(
-            message = data.table(
-                title = "Mixed Data Types",
-                text = paste0("You cannot mix data types, choose either csv or xlsx for all datasets."),
-                type = "warning"), status = "error")) 
+    
+        if(all(grepl("(\\.csv$)", ignore.case = T, as.character(files_data)))){
+            data_formatted <- tryCatch(lapply(files_data, function(x){read.csv(x)}),
+                                       warning = function(w) {w}, error = function(e) {e})
+        }
+        
+        else if(all(grepl("(\\.xlsx$)", ignore.case = T, as.character(files_data)))){
+            if(length(as.character(files_data)) > 1){
+                data_formatted <- tryCatch(lapply(files_data, function(x){read_excel(x)}),
+                                           warning = function(w) {w}, error = function(e) {e})    
+            }
+            if(length(as.character(files_data)) == 1){
+                sheets <- readxl::excel_sheets(files_data)
+                data_formatted <- tryCatch(lapply(sheets, function(x){read_excel(files_data, sheet =  x)}),
+                                           warning = function(w) {w}, error = function(e) {e})    
+            }
+        }
+        
+        else{
+            return(list(
+                message = data.table(
+                    title = "Mixed Data Types",
+                    text = paste0("You cannot mix data types, choose either csv or xlsx for all datasets."),
+                    type = "warning"), status = "error")) 
+        }    
     }
-    
-    
-    
     
     #Check if there is a warning when reading in the data. 
     if (inherits(data_formatted, "simpleWarning") | inherits(data_formatted, "simpleError")){
@@ -355,9 +348,8 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
 #' @importFrom aws.s3 put_object
 #' 
 #' @examples
-#' remote_share(validation, data_formatted, verified, valid_rules, valid_key,
-#'              ckan_url, ckan_key, ckan_package, url_to_send, rules, results,
-#'              s3_bucket, mongo_key, old_cert = NULL)#' 
+#' #Need to add. 
+#' 
 #' @export
 remote_share <- function(validation, data_formatted, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, old_cert = NULL){
     
@@ -519,7 +511,7 @@ rules_broken <- function(results, show_decision){
 #' @param rows A vector of row indices specifying which rules to check for violations.
 #'
 #' @return A data frame with rows in the data that violate the specified rules.
-#' @importFrom validate violating
+#' @importFrom validate violating validator confront
 #' @export
 #'
 #' @examples
@@ -536,7 +528,7 @@ rules_broken <- function(results, show_decision){
 #' )
 #'
 #' # Generate a validation report
-#' report <- confront(sample_data, rules)
+#' report <- validate_data(sample_data, rules)
 #'
 #' # Find the broken rules
 #' broken_rules <- rules_broken(report, show_decision = FALSE)
@@ -703,13 +695,13 @@ test_profanity <- function(x){
 #' @importFrom readr read_csv
 #' @importFrom readxl read_excel
 #' @importFrom dplyr filter mutate bind_rows
-#' @importFrom magrittr %>%
 #' @importFrom data.table rbindlist
 #' @importFrom validate validator variables violating
-#' @importFrom openxlsx createWorkbook addWorksheet writeData freezePane dataValidation conditionalFormatting saveWorkbook createStyle
-#' @importFrom tibble as_tibble
+#' @importFrom openxlsx createWorkbook addWorksheet writeData freezePane dataValidation conditionalFormatting saveWorkbook createStyle protectWorksheet
+#' @importFrom tibble as_tibble tibble
 #' @examples
-#' create_valid_excel(file_rules = data("test_rules", package = "One4All"))
+#' data("test_rules")
+#' create_valid_excel(file_rules = test_rules)
 #' @export
 create_valid_excel <- function(file_rules, 
                                negStyle  = createStyle(fontColour = "#9C0006", bgFill = "#FFC7CE"),
@@ -720,15 +712,15 @@ create_valid_excel <- function(file_rules,
     if(is.data.frame(file_rules)){
         rules <- file_rules
     }
-    
-    if(grepl("(\\.csv$)", ignore.case = T, as.character(file_rules))){
+    else{
+        if(grepl("(\\.csv$)", ignore.case = T, as.character(file_rules))){
         rules <- read.csv(file_rules)
-    }
+        }
     
-    if(grepl("(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
-        rules <- read_excel(file_rules)
+        if(grepl("(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
+            rules <- read_excel(file_rules)
+        }
     }
-    
     #Grab the names of the datasets.
     data_names <- if("dataset" %in% names(rules)){
         unique(rules$dataset)
@@ -854,7 +846,7 @@ create_valid_excel <- function(file_rules,
             
         }
     }
-    saveWorkbook(wb, file_name, TRUE)
+    #saveWorkbook(wb, file_name, TRUE)
     wb
 }
 
