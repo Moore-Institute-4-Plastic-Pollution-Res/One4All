@@ -29,8 +29,16 @@ Validate_data: Validate data based on specified rules.
 }
 \examples{
 # Validate data with specified rules
-result <- validate_data(files_data = list("data1.csv", "data2.csv"),
-                        data_names = c("Dataset1", "Dataset2"),
-                        file_rules = "rules.csv")
+data("valid_example")
+data("invalid_example")
+data("test_rules")
+
+result_valid <- validate_data(files_data = valid_example,
+                        data_names = c("methodology", "particles", "samples"),
+                        file_rules = test_rules)
+                        
+result_invalid <- validate_data(files_data = invalid_example,
+                        data_names = c("methodology", "particles", "samples"),
+                        file_rules = test_rules)
 
 }

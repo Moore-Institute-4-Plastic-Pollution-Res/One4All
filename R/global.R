@@ -45,9 +45,17 @@ certificate_df <- function(x, mongo_key){
 #'
 #' @examples
 #' # Validate data with specified rules
-#' result <- validate_data(files_data = list("data1.csv", "data2.csv"),
-#'                         data_names = c("Dataset1", "Dataset2"),
-#'                         file_rules = "rules.csv")
+#' data("valid_example")
+#' data("invalid_example")
+#' data("test_rules")
+#' 
+#' result_valid <- validate_data(files_data = valid_example,
+#'                         data_names = c("methodology", "particles", "samples"),
+#'                         file_rules = test_rules)
+#'                         
+#' result_invalid <- validate_data(files_data = invalid_example,
+#'                         data_names = c("methodology", "particles", "samples"),
+#'                         file_rules = test_rules)
 #'
 #' @importFrom data.table data.table rbindlist
 #' @importFrom readxl read_excel excel_sheets
@@ -58,7 +66,6 @@ certificate_df <- function(x, mongo_key){
 validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     
     #Accepts three fields, files data is the data set we are validating. data_names is optional and can be used to specify the names of the datasets. file_rules is the rules file. 
-    
     
     #Reads the rules file.
     if(is.data.frame(file_rules)){
@@ -100,16 +107,6 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
                 title = "Data type not supported!",
                 text = paste0('Uploaded rules format is not currently supported, please provide a rules file with columns that are all character type.'),
                 type = "warning"), status = "error"))
-    }
-    
-    # check files data to make sure it is a csv. 
-    if (!all(grepl("(\\.csv$)|(\\.xlsx$)", ignore.case = T, as.character(files_data)))) {
-        return(list(
-            message = data.table(
-            title = "Data type not supported!",
-            text = paste0("Uploaded data type is not currently supported; please
-                      upload a .csv or .xlsx file."),
-            type = "warning"), status = "error"))
     }
     
     #Read in all csv files from files_data as a list. 
@@ -515,20 +512,12 @@ rules_broken <- function(results, show_decision){
 #' @export
 #'
 #' @examples
-#' # Sample data
-#' sample_data <- data.frame(
-#'   col1 = c(1, -2, 3, -4, 5),
-#'   col2 = c(6, 7, 8, 9, 10)
-#' )
-#'
-#' # Validation rules
-#' rules <- validator(
-#'   col1 > 0,
-#'   col2 <= 5
-#' )
-#'
+#' data("invalid_example")
+#' data("test_rules")
 #' # Generate a validation report
-#' report <- validate_data(sample_data, rules)
+#' result_invalid <- validate_data(files_data = invalid_example,
+#'                         data_names = c("methodology", "particles", "samples"),
+#'                         file_rules = test_rules)
 #'
 #' # Find the broken rules
 #' broken_rules <- rules_broken(report, show_decision = FALSE)

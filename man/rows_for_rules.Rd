@@ -35,7 +35,7 @@ rules <- validator(
 )
 
 # Generate a validation report
-report <- confront(sample_data, rules)
+report <- validate_data(sample_data, rules)
 
 # Find the broken rules
 broken_rules <- rules_broken(report, show_decision = FALSE)
