@@ -22,24 +22,16 @@ A data frame with rows in the data that violate the specified rules.
 Get the rows in the data that violate the specified rules.
 }
 \examples{
-# Sample data
-sample_data <- data.frame(
-  col1 = c(1, -2, 3, -4, 5),
-  col2 = c(6, 7, 8, 9, 10)
-)
-
-# Validation rules
-rules <- validator(
-  col1 > 0,
-  col2 <= 5
-)
-
+data("invalid_example")
+data("test_rules")
 # Generate a validation report
-report <- validate_data(sample_data, rules)
+result_invalid <- validate_data(files_data = invalid_example,
+                        data_names = c("methodology", "particles", "samples"),
+                        file_rules = test_rules)
 
 # Find the broken rules
-broken_rules <- rules_broken(report, show_decision = FALSE)
+broken_rules <- rules_broken(results = result_invalid$results[[2]], show_decision = TRUE)
 
 # Get rows for the specified rules
-violating_rows <- rows_for_rules(sample_data, report, broken_rules, c(1, 2))
+violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[2]], report = result_invalid$report[[2]],broken_rules = broken_rules,rows = 4)
 }

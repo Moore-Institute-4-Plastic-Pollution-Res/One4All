@@ -60,7 +60,7 @@ certificate_df <- function(x, mongo_key){
 #' @importFrom data.table data.table rbindlist
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom dplyr left_join mutate filter bind_rows across everything
-#' @importFrom validate confront variables validator
+#' @importFrom validate confront variables validator summary
 #' @importFrom shiny isTruthy
 #' @export
 validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
@@ -115,7 +115,6 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     }
     
     else{
-    
         if(all(grepl("(\\.csv$)", ignore.case = T, as.character(files_data)))){
             data_formatted <- tryCatch(lapply(files_data, function(x){read.csv(x)}),
                                        warning = function(w) {w}, error = function(e) {e})
@@ -285,7 +284,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     })
     
     #Loops through and makes a results report for the validation
-    results <- lapply(report, function(x) {summary(x) |>
+    results <- lapply(report, function(x) {validate::summary(x) |>
         mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |>
         left_join(rules)})
     
@@ -520,10 +519,10 @@ rules_broken <- function(results, show_decision){
 #'                         file_rules = test_rules)
 #'
 #' # Find the broken rules
-#' broken_rules <- rules_broken(report, show_decision = FALSE)
+#' broken_rules <- rules_broken(results = result_invalid$results[[2]], show_decision = TRUE)
 #'
 #' # Get rows for the specified rules
-#' violating_rows <- rows_for_rules(sample_data, report, broken_rules, c(1, 2))
+#' violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[2]], report = result_invalid$report[[2]],broken_rules = broken_rules,rows = 4)
 #' @export
 rows_for_rules <- function(data_formatted, report, broken_rules, rows){
     violating(data_formatted, report[broken_rules[rows, "name"]])
@@ -660,7 +659,7 @@ check_other_hyperlinks <- function(x){
 test_profanity <- function(x){
     bad_words <- unique(tolower(c(#lexicon::profanity_alvarez, 
                                   #lexicon::profanity_arr_bad, 
-                                  profanity_banned#, 
+                                  lexicon::profanity_banned#, 
                                   #lexicon::profanity_zac_anger#, 
                                   #lexicon::profanity_racist
                                   )))
