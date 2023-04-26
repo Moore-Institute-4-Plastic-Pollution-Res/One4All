@@ -10,6 +10,7 @@
 #' @import mongolite
 #' @importFrom digest digest
 #' @importFrom shiny isTruthy
+#' @importFrom utils packageVersion sessionInfo
 #' @export
 certificate_df <- function(x, mongo_key){
     df <-  data.frame(time = Sys.time(), 
@@ -62,6 +63,7 @@ certificate_df <- function(x, mongo_key){
 #' @importFrom dplyr left_join mutate filter bind_rows across everything
 #' @importFrom validate confront variables validator summary
 #' @importFrom shiny isTruthy
+#' @importFrom utils read.csv
 #' @export
 validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     
@@ -342,6 +344,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
 #' @importFrom digest digest
 #' @importFrom ckanr ckanr_setup resource_create
 #' @importFrom aws.s3 put_object
+#' @importFrom utils write.csv read.csv
 #' 
 #' @examples
 #' #Need to add. 
@@ -588,6 +591,7 @@ checkLuhn <- function(number) {
 #' @importFrom digest digest
 #' @importFrom shiny isTruthy
 #' @importFrom aws.s3 put_object
+#' @importFrom utils download.file
 #' @examples
 #' # Note: The example assumes you have valid AWS credentials and an S3 bucket available
 #' check_uploadable("https://example.com/file.csv", s3_bucket = "your-s3-bucket-name")
@@ -693,6 +697,7 @@ test_profanity <- function(x){
 #' @importFrom validate validator variables violating
 #' @importFrom openxlsx createWorkbook addWorksheet writeData freezePane dataValidation conditionalFormatting saveWorkbook createStyle protectWorksheet
 #' @importFrom tibble as_tibble tibble
+#' @importFrom utils read.csv
 #' @examples
 #' data("test_rules")
 #' create_valid_excel(file_rules = test_rules)
@@ -729,7 +734,7 @@ create_valid_excel <- function(file_rules,
     #Check for special character "___" which is for assessing every column. 
     
     do_to_all <- rules |>
-        filter(grepl("___", rule))
+        filter(grepl("___", .data$rule))
     
     if(nrow(do_to_all) > 0){
         rules <- lapply(data_names, function(x){
