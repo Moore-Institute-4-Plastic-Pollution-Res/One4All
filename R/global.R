@@ -713,9 +713,9 @@ create_valid_excel <- function(file_rules,
     }
     else{
         if(grepl("(\\.csv$)", ignore.case = T, as.character(file_rules))){
-        rules <- read.csv(file_rules)
+            rules <- read.csv(file_rules)
         }
-    
+        
         if(grepl("(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
             rules <- read_excel(file_rules)
         }
