@@ -522,9 +522,15 @@ rules_broken <- function(results, show_decision){
 #' broken_rules <- rules_broken(results = result_invalid$results[[2]], show_decision = TRUE)
 #'
 #' # Get rows for the specified rules
-#' violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[2]], report = result_invalid$report[[2]],broken_rules = broken_rules,rows = 4)
+#' violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[2]], 
+#'                                  report = result_invalid$report[[2]],
+#'                                  broken_rules = broken_rules,
+#'                                  rows = 4)
 #' @export
-rows_for_rules <- function(data_formatted, report, broken_rules, rows){
+rows_for_rules <- function(data_formatted, 
+                           report, 
+                           broken_rules, 
+                           rows){
     violating(data_formatted, report[broken_rules[rows, "name"]])
 }
 
