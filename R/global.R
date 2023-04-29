@@ -470,7 +470,114 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
                                      type = "success")))
 }
 
-#' rules_broken
+#' Download Data from Remote Sources
+#'
+#' This function downloads data from remote sources like CKAN, AWS S3, and MongoDB.
+#' It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
+#'
+#' @param hashed_data A character string representing the hashed identifier of the data to be downloaded.
+#' @param ckan_url A character string representing the CKAN base URL.
+#' @param ckan_key A character string representing the CKAN API key.
+#' @param ckan_package A character string representing the CKAN package identifier.
+#' @param s3_key_id A character string representing the AWS S3 access key ID.
+#' @param s3_secret_key A character string representing the AWS S3 secret access key.
+#' @param s3_region A character string representing the AWS S3 region.
+#' @param s3_bucket A character string representing the AWS S3 bucket name.
+#' @param mongo_key A character string representing the MongoDB connection string.
+#'
+#' @importFrom httr GET content
+#' @importFrom shiny isTruthy
+#' @importFrom jsonlite fromJSON
+#' @importFrom aws.s3 get_bucket get_object
+#' @importFrom mongolite mongo
+#' @importFrom ckanr ckanr_setup resource_search resource_download
+#' @importFrom stringr str_extract
+#' 
+#' @return A named list containing the downloaded datasets.
+#' 
+#' @examples
+#' \dontrun{
+#'   downloaded_data <- remote_download(hashed_data = "example_hash",
+#'                                      ckan_url = "https://example.com",
+#'                                      ckan_key = "your_ckan_key",
+#'                                      ckan_package = "your_ckan_package",
+#'                                      s3_key_id = "your_s3_key_id",
+#'                                      s3_secret_key = "your_s3_secret_key",
+#'                                      s3_region = "your_s3_region",
+#'                                      s3_bucket = "your_s3_bucket",
+#'                                      mongo_key = "your_mongo_key")
+#' }
+#' 
+#' @export
+remote_download <- function(hashed_data, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key) {
+    
+    use_ckan <- isTruthy(ckan_url) & isTruthy(ckan_key) & isTruthy(ckan_package)
+    use_mongo <- isTruthy(mongo_key)
+    use_s3 <- isTruthy(s3_bucket)  
+    
+    if(use_ckan){
+        ckanr_setup(url = ckan_url, key = ckan_key)
+    }
+    
+    if(use_mongo) {
+        database <- mongo(url = mongo_key)
+    }
+    
+    if(use_s3){
+        Sys.setenv(
+            "AWS_ACCESS_KEY_ID" = s3_key_id,
+            "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
+            "AWS_DEFAULT_REGION" = s3_region
+        )
+    }
+    
+    data_downloaded <- list()
+    
+    if(use_s3){
+        # Retrieve a list of objects from S3 bucket
+        s3_objects <- get_bucket(bucket = s3_bucket, prefix = paste0(hashed_data, "_")) 
+        
+        for (obj in s3_objects$Contents) {
+            # Download each object
+            file <- tempfile(fileext = ".csv")
+            save_object(object = obj$Key, file = file, bucket = s3_bucket)
+            
+            # Read the data and store it in a named list
+            dataset_name <- gsub(paste0(hashed_data, "_"), "", obj$Key)
+            dataset_name <- gsub("\\.csv$", "", dataset_name)
+            data_downloaded[[dataset_name]] <- read.csv(file)
+        }
+    }
+    
+    if(use_ckan){
+        resources <- package_show(ckan_package)$resources
+        resources_names <- vapply(resources, function(x){x$name}, FUN.VALUE = character(1))
+        hashed_data_resources <- resources[grepl(paste0(hashed_data, "_"), resources_names)]
+        
+        for (res in hashed_data_resources) {
+            file <- tempfile(fileext = ".csv")
+            data <- ckan_fetch(x = res$url)
+            dataset_name <- gsub(paste0(hashed_data, "_"), "", res$name)
+            dataset_name <- gsub("\\.csv$", "", dataset_name)
+            data_downloaded[[dataset_name]] <- data
+        }
+    }
+    
+    if(use_mongo){
+        # Assuming that the data is stored as separate collections named with the hashed_data prefix
+        collections <- database$list_collections()
+        hashed_data_collections <- collections[grepl(paste0(hashed_data, "_"), collections)]
+        
+        for (coll_name in hashed_data_collections) {
+            coll <- database$collection(coll_name)
+            dataset_name <- gsub(paste0(hashed_data, "_"), "", coll_name)
+            data_downloaded[[dataset_name]] <- as.data.frame(coll$find())
+        }
+    }
+    
+    return(data_downloaded)
+}
+#' rules_broken ----
 #'
 #' Filter the results of validation to show only broken rules, optionally including successful decisions.
 #'

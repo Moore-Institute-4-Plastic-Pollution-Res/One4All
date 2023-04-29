@@ -297,3 +297,44 @@ test_that("create_valid_excel creates a valid Excel file", {
     file.remove(output_file)
 })
 
+#remote_download ----
+context("remote_download tests")
+
+# Add your setup code here if needed
+# This code will run before all the tests in this file
+
+# Test for successful data download
+test_that("remote_download successfully downloads data", {
+    # Setup the remote sources and hashed_data for testing
+    # Be cautious with real credentials and consider using a separate set of credentials for testing purposes
+    
+    hashed_data <- "example_hash"
+    ckan_url <- "https://example.com"
+    ckan_key <- "your_ckan_key"
+    ckan_package <- "your_ckan_package"
+    s3_key_id <- "your_s3_key_id"
+    s3_secret_key <- "your_s3_secret_key"
+    s3_region <- "your_s3_region"
+    s3_bucket <- "your_s3_bucket"
+    mongo_key <- "your_mongo_key"
+    
+    # Run the remote_download function
+    downloaded_data <- remote_download(hashed_data = hashed_data,
+                                       ckan_url = ckan_url,
+                                       ckan_key = ckan_key,
+                                       ckan_package = ckan_package,
+                                       s3_key_id = s3_key_id,
+                                       s3_secret_key = s3_secret_key,
+                                       s3_region = s3_region,
+                                       s3_bucket = s3_bucket,
+                                       mongo_key = mongo_key)
+    
+    # Test that the downloaded_data is a list
+    expect_is(downloaded_data, "list")
+    
+    # Test that the downloaded_data has the expected length
+    expect_length(downloaded_data, length_of_expected_data) # Replace length_of_expected_data with the expected length
+})
+
+# Add more test cases as needed
+
