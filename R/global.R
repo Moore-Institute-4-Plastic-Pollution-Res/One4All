@@ -537,7 +537,7 @@ remote_download <- function(hashed_data, ckan_url, ckan_key, ckan_package, s3_ke
         # Retrieve a list of objects from S3 bucket
         s3_objects <- get_bucket(bucket = s3_bucket, prefix = paste0(hashed_data, "_")) 
         
-        for (obj in s3_objects$Contents) {
+        for (obj in s3_objects) {
             # Download each object
             file <- tempfile(fileext = ".csv")
             save_object(object = obj$Key, file = file, bucket = s3_bucket)
@@ -545,7 +545,7 @@ remote_download <- function(hashed_data, ckan_url, ckan_key, ckan_package, s3_ke
             # Read the data and store it in a named list
             dataset_name <- gsub(paste0(hashed_data, "_"), "", obj$Key)
             dataset_name <- gsub("\\.csv$", "", dataset_name)
-            data_downloaded[[dataset_name]] <- read.csv(file)
+            data_downloaded[["s3"]][[dataset_name]] <- read.csv(file)
         }
     }
     
@@ -555,26 +555,17 @@ remote_download <- function(hashed_data, ckan_url, ckan_key, ckan_package, s3_ke
         hashed_data_resources <- resources[grepl(paste0(hashed_data, "_"), resources_names)]
         
         for (res in hashed_data_resources) {
-            file <- tempfile(fileext = ".csv")
             data <- ckan_fetch(x = res$url)
             dataset_name <- gsub(paste0(hashed_data, "_"), "", res$name)
-            dataset_name <- gsub("\\.csv$", "", dataset_name)
-            data_downloaded[[dataset_name]] <- data
+            data_downloaded[["ckan"]][[dataset_name]] <- data
         }
     }
-    
     if(use_mongo){
-        # Assuming that the data is stored as separate collections named with the hashed_data prefix
-        collections <- database$list_collections()
-        hashed_data_collections <- collections[grepl(paste0(hashed_data, "_"), collections)]
-        
-        for (coll_name in hashed_data_collections) {
-            coll <- database$collection(coll_name)
-            dataset_name <- gsub(paste0(hashed_data, "_"), "", coll_name)
-            data_downloaded[[dataset_name]] <- as.data.frame(coll$find())
-        }
+        # Assuming that the data is stored in a single collection with a field named 'hashed_data_prefix'
+        db_certs <- database$find(paste0('{"data": "', hashed_data, '"}'))  # Replace collection_name with the actual name of the collection
+        hashed_data_docs <- coll$find('{"hashed_data_prefix": "' + hashed_data + '"}')
+        data_downloaded[["mongo"]][["certificates"]] <- as.data.frame(doc$data)  # Replace data with the actual field name for the data in your MongoDB documents
     }
-    
     return(data_downloaded)
 }
 #' rules_broken ----
