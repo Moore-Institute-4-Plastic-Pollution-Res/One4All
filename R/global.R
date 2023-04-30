@@ -426,7 +426,7 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
                                 upload = file)
             }
             if(use_mongo){
-                database$insert(data_formatted[dataset])
+                database$insert(as.data.frame(data_formatted[dataset]) |> mutate(name = paste0(hashed_data, "_", data_name), data = hashed_data))
             }
         }        
 
@@ -560,11 +560,20 @@ remote_download <- function(hashed_data, ckan_url, ckan_key, ckan_package, s3_ke
             data_downloaded[["ckan"]][[dataset_name]] <- data
         }
     }
+    
     if(use_mongo){
         # Assuming that the data is stored in a single collection with a field named 'hashed_data_prefix'
         db_certs <- database$find(paste0('{"data": "', hashed_data, '"}'))  # Replace collection_name with the actual name of the collection
-        hashed_data_docs <- coll$find('{"hashed_data_prefix": "' + hashed_data + '"}')
-        data_downloaded[["mongo"]][["certificates"]] <- as.data.frame(doc$data)  # Replace data with the actual field name for the data in your MongoDB documents
+        #Split up the datasets here
+        dataset_name <- unique(db_certs$name[!is.na(db_certs$name)]) 
+        for(dataset in dataset_name){
+            filter_name = gsub(paste0(hashed_data, "_"), "", dataset)
+            filtered <- db_certs |>
+                filter(name == dataset) |>
+                select(starts_with(filter_name))
+            data_downloaded[["mongo"]][[filter_name]] <- filtered  # Replace data with the actual field name for the data in your MongoDB documents
+        }
+        data_downloaded[["mongo"]][["certificates"]] <- db_certs |> filter(is.na(name)) |> select(time, data, rules, package_version, web_hash)  # Replace data with the actual field name for the data in your MongoDB documents
     }
     return(data_downloaded)
 }
