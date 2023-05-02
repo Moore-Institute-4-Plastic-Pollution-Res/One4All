@@ -66,7 +66,6 @@ certificate_df <- function(x, mongo_key){
 #' @importFrom utils read.csv
 #' @export
 validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
-    
     #Accepts three fields, files data is the data set we are validating. data_names is optional and can be used to specify the names of the datasets. file_rules is the rules file. 
     
     #Reads the rules file.
@@ -509,8 +508,9 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
 #' }
 #' 
 #' @export
-remote_download <- function(hashed_data, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key) {
+remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key) {
     
+    download_all <- !isTruthy(hashed_data)
     use_ckan <- isTruthy(ckan_url) & isTruthy(ckan_key) & isTruthy(ckan_package)
     use_mongo <- isTruthy(mongo_key)
     use_s3 <- isTruthy(s3_bucket)  
@@ -533,9 +533,25 @@ remote_download <- function(hashed_data, ckan_url, ckan_key, ckan_package, s3_ke
     
     data_downloaded <- list()
     
-    if(use_s3){
+    if(use_s3 & !download_all){
         # Retrieve a list of objects from S3 bucket
         s3_objects <- get_bucket(bucket = s3_bucket, prefix = paste0(hashed_data, "_")) 
+        
+        for (obj in s3_objects) {
+            # Download each object
+            file <- tempfile(fileext = ".csv")
+            save_object(object = obj$Key, file = file, bucket = s3_bucket)
+            
+            # Read the data and store it in a named list
+            dataset_name <- gsub(paste0(hashed_data, "_"), "", obj$Key)
+            dataset_name <- gsub("\\.csv$", "", dataset_name)
+            data_downloaded[["s3"]][[dataset_name]] <- read.csv(file)
+        }
+    }
+    
+    if(use_s3 & download_all){
+        # Retrieve a list of objects from S3 bucket
+        s3_objects <- get_bucket(bucket = s3_bucket) 
         
         for (obj in s3_objects) {
             # Download each object
@@ -703,7 +719,11 @@ checkLuhn <- function(number) {
 #' # Note: The example assumes you have valid AWS credentials and an S3 bucket available
 #' check_uploadable("https://example.com/file.csv", s3_bucket = "your-s3-bucket-name")
 #' @export
-check_uploadable <- function(url, s3_key_id, s3_secret_key, s3_region, s3_bucket){
+check_uploadable <- function(url, 
+                             s3_key_id = config$s3_key_id,
+                             s3_secret_key = config$s3_secret_key,
+                             s3_region = config$s3_region,
+                             s3_bucket = config$s3_bucket){
     hash_url <- digest(url)
     file_type <- gsub(".*\\.", "", url)
     file_name <- paste0(hash_url, ".", file_type)
@@ -724,7 +744,7 @@ check_uploadable <- function(url, s3_key_id, s3_secret_key, s3_region, s3_bucket
             )
         put_object(
             file = filedest,
-            object = file_name,
+            object = paste0("uploaded/", file_name),
             bucket = s3_bucket
         )   
     }
