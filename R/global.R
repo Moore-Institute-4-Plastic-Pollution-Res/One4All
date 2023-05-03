@@ -438,7 +438,9 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
             }
         }        
 
-    return(list(status = "success", 
+    return(list(hashed_data = hashed_data,
+                submission_time = submission_time,
+                status = "success", 
                 message = data.table(title = "Data Upload Successful", 
                                      text = paste0("Data was successfully sent to the data portal at ", url_to_send), 
                                      type = "success")))
@@ -600,6 +602,21 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
     return(data_downloaded)
 }
 
+#' Check if an object is of class POSIXct
+#'
+#' This function checks if the given object is of class POSIXct.
+#' It returns TRUE if the object inherits the POSIXct class, otherwise FALSE.
+#'
+#' @param x An object to be tested for POSIXct class inheritance.
+#' @return A logical value indicating if the input object is of class POSIXct.
+#' @examples
+#' x <- as.POSIXct("2021-01-01")
+#' is.POSIXct(x) # TRUE
+#'
+#' y <- Sys.Date()
+#' is.POSIXct(y) # FALSE
+#'
+#' @export
 is.POSIXct <- function(x) inherits(x, "POSIXct")
 
 #' rules_broken ----

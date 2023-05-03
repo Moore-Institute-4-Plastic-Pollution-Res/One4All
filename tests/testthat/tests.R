@@ -336,5 +336,81 @@ test_that("remote_download successfully downloads data", {
     expect_length(downloaded_data, length_of_expected_data) # Replace length_of_expected_data with the expected length
 })
 
+#Posixct test ----
+test_that("is.POSIXct works correctly", {
+    # Test with POSIXct object
+    posixct_obj <- as.POSIXct("2021-01-01")
+    expect_true(is.POSIXct(posixct_obj))
+    
+    # Test with Date object
+    date_obj <- Sys.Date()
+    expect_false(is.POSIXct(date_obj))
+    
+    # Test with character object
+    char_obj <- "2021-01-01"
+    expect_false(is.POSIXct(char_obj))
+    
+    # Test with numeric object
+    num_obj <- 42
+    expect_false(is.POSIXct(num_obj))
+})
+
+#Test locally only ----
+test_that("remote_download retrieves identical data from all sources", {
+    # Load the required configuration
+    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/One4All/inst/shiny/config.yml")
+    
+    # Load the necessary datasets
+    data("valid_example")
+    data("invalid_example")
+    data("test_rules")
+    
+    # Perform the validation
+    result_valid <- validate_data(files_data = valid_example,
+                                  data_names = c("methodology", "particles", "samples"),
+                                  file_rules = test_rules)
+    
+    # Perform the remote share
+    test_remote <- remote_share(validation = result_valid, 
+                                data_formatted = result_valid$data_formatted, 
+                                verified = config$valid_key, 
+                                valid_key = config$valid_key, 
+                                valid_rules = config$valid_rules, 
+                                ckan_url = config$ckan_url, 
+                                ckan_key = config$ckan_key, 
+                                ckan_package = config$ckan_package, 
+                                url_to_send = config$ckan_url_to_send, 
+                                rules = test_rules, 
+                                results = valid_example$results, 
+                                s3_key_id = config$s3_key_id, 
+                                s3_secret_key = config$s3_secret_key, 
+                                s3_region = config$s3_region, 
+                                s3_bucket = config$s3_bucket, 
+                                mongo_key = config$mongo_key, 
+                                old_cert = NULL)
+    
+    # Download the data using remote_download
+    dataset <- remote_download(hashed_data = test_remote$hashed_data, 
+                               ckan_url = config$ckan_url, 
+                               ckan_key = config$ckan_key, 
+                               ckan_package = config$ckan_package,
+                               s3_key_id = config$s3_key_id,
+                               s3_secret_key = config$s3_secret_key,
+                               s3_region = config$s3_region,
+                               s3_bucket = config$s3_bucket,
+                               mongo_key = config$mongo_key)
+    
+    # Compare datasets from different sources
+    expect_identical(dataset$s3$certificate, dataset$ckan$certificate)
+    expect_identical(dataset$s3$methodology, dataset$ckan$methodology)
+    expect_identical(dataset$s3$samples, dataset$ckan$samples)
+    expect_identical(dataset$s3$particles, dataset$ckan$particles)
+    expect_identical(dataset$s3$particles, dataset$mongo$particles)
+    expect_identical(dataset$s3$certificate, dataset$mongo$certificate)
+    expect_identical(dataset$s3$methodology, dataset$mongo$methodology) 
+    expect_identical(dataset$s3$samples, dataset$mongo$samples)
+})
+
+
 # Add more test cases as needed
 
