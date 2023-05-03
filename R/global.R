@@ -12,8 +12,8 @@
 #' @importFrom shiny isTruthy
 #' @importFrom utils packageVersion sessionInfo
 #' @export
-certificate_df <- function(x, mongo_key){
-    df <-  data.frame(time = Sys.time(), 
+certificate_df <- function(x, mongo_key, time = Sys.time()){
+    df <-  data.frame(time = time, 
                       data = digest(x$data_formatted), 
                       rules = digest(x$rules), 
                       package_version = paste(unlist(packageVersion("validate")), collapse = ".", sep = ""), 
@@ -388,6 +388,7 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
     }
 
     hashed_data <- digest(data_formatted)
+    submission_time <- Sys.time()
     
     if(use_ckan){
         ckanr_setup(url = ckan_url, key = ckan_key)
@@ -405,12 +406,20 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
         )
     }
     
+    #Add certificate
+    data_formatted$certificate <- certificate_df(validation, mongo_key = mongo_key, time = submission_time)
+    
+    #Add old certificate
+    if(isTruthy(old_cert)){
+    data_formatted$old_certificate <- read.csv(old_cert)
+    }
+    
         for(dataset in 1:length(data_formatted)){
             data_name <- names(data_formatted[dataset])
-            #hashed_rules <- digest(rules)
-            #package_version <- packageVersion("validate")
+            time_added <- as.data.frame(data_formatted[dataset]) |> 
+                mutate(submission_time = submission_time)
             file <- tempfile(pattern = "data", fileext = ".csv")
-            write.csv(data_formatted[dataset], file, row.names = F)
+            write.csv(time_added, file, row.names = F)
             if(use_s3){
                 put_object(
                     file = file,
@@ -425,44 +434,10 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
                                 upload = file)
             }
             if(use_mongo){
-                database$insert(as.data.frame(data_formatted[dataset]) |> mutate(name = paste0(hashed_data, "_", data_name), data = hashed_data))
+                database$insert(time_added |> mutate(name = paste0(hashed_data, "_", data_name)), na = "NA")
             }
         }        
 
-    certificate <- certificate_df(validation, mongo_key = mongo_key)
-    file <- tempfile(pattern = "data", fileext = ".csv")
-    write.csv(certificate, file, row.names = F)
-    if(use_s3){
-       put_object(
-        file = file,
-        object = paste0(hashed_data, "_", "certificate.csv"),
-        bucket = s3_bucket
-    ) 
-    }
-    if(use_ckan){
-        resource_create(package_id = ckan_package,
-                        description = "validated raw data upload to microplastic data portal",
-                        name = paste0(hashed_data, "_certificate"),
-                        upload = file)    
-    }
-    if(isTruthy(old_cert)){
-        if(use_mongo){
-            database$insert(read.csv(old_cert))
-        }
-        if(use_s3){
-            put_object(
-                file = old_cert,
-                object = paste0(hashed_data, "_", "old_certificate.csv"),
-                bucket = s3_bucket
-            )    
-        }
-        if(use_ckan){
-            resource_create(package_id = ckan_package,
-                        description = "validated raw data upload to microplastic data portal",
-                        name = paste0(hashed_data, "old_certificate"),
-                        upload = old_cert)
-        }
-    }
     return(list(status = "success", 
                 message = data.table(title = "Data Upload Successful", 
                                      text = paste0("Data was successfully sent to the data portal at ", url_to_send), 
@@ -552,20 +527,19 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
     if(use_s3 & download_all){
         # Retrieve a list of objects from S3 bucket
         s3_objects <- get_bucket(bucket = s3_bucket) 
-        
         for (obj in s3_objects) {
+            if(grepl("^uploaded/", obj$Key)) next
             # Download each object
             file <- tempfile(fileext = ".csv")
             save_object(object = obj$Key, file = file, bucket = s3_bucket)
             
             # Read the data and store it in a named list
-            dataset_name <- gsub(paste0(hashed_data, "_"), "", obj$Key)
-            dataset_name <- gsub("\\.csv$", "", dataset_name)
+            dataset_name <- gsub("\\.csv$", "", obj$Key)
             data_downloaded[["s3"]][[dataset_name]] <- read.csv(file)
         }
     }
     
-    if(use_ckan){
+    if(use_ckan & !download_all){
         resources <- package_show(ckan_package)$resources
         resources_names <- vapply(resources, function(x){x$name}, FUN.VALUE = character(1))
         hashed_data_resources <- resources[grepl(paste0(hashed_data, "_"), resources_names)]
@@ -577,22 +551,57 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
         }
     }
     
-    if(use_mongo){
+    if(use_ckan & download_all){
+        resources <- package_show(ckan_package)$resources
+
+        for (res in resources) {
+            data <- ckan_fetch(x = res$url)
+            dataset_name <- res$name
+            data_downloaded[["ckan"]][[dataset_name]] <- data
+        }
+    }
+    
+    if(use_mongo  & !download_all){
         # Assuming that the data is stored in a single collection with a field named 'hashed_data_prefix'
-        db_certs <- database$find(paste0('{"data": "', hashed_data, '"}'))  # Replace collection_name with the actual name of the collection
+        db_certs <- database$find('{}') |>
+            filter(grepl(hashed_data, name)) |>
+            filter(submission_time == max(submission_time, na.rm = T))# Replace collection_name with the actual name of the collection
+
         #Split up the datasets here
         dataset_name <- unique(db_certs$name[!is.na(db_certs$name)]) 
         for(dataset in dataset_name){
             filter_name = gsub(paste0(hashed_data, "_"), "", dataset)
             filtered <- db_certs |>
                 filter(name == dataset) |>
-                select(starts_with(filter_name))
+                mutate(submission_time = as.character(submission_time)) |>
+                mutate_if(is.POSIXct, as.character) |>
+                select(starts_with(paste0(filter_name, "_")), -matches(paste0("^", filter_name, "$")), c(submission_time))
+            names(filtered) <- gsub(paste0(filter_name, "_"), paste0(filter_name, "\\."), names(filtered))
             data_downloaded[["mongo"]][[filter_name]] <- filtered  # Replace data with the actual field name for the data in your MongoDB documents
         }
-        data_downloaded[["mongo"]][["certificates"]] <- db_certs |> filter(is.na(name)) |> select(time, data, rules, package_version, web_hash)  # Replace data with the actual field name for the data in your MongoDB documents
+        #data_downloaded[["mongo"]][["certificates"]] <- db_certs |> filter(is.na(name)) |> select(time, data, rules, package_version, web_hash)  # Replace data with the actual field name for the data in your MongoDB documents
+    }
+    
+    if(use_mongo  & download_all){
+        # Assuming that the data is stored in a single collection with a field named 'hashed_data_prefix'
+        db_certs <- database$find('{}')  # Replace collection_name with the actual name of the collection
+        #Split up the datasets here
+        dataset_name <- unique(db_certs$name[!is.na(db_certs$name)]) 
+        for(dataset in dataset_name){
+            filter_name = gsub(".*_", "", dataset)
+            filtered <- db_certs |>
+                filter(name == dataset) |>
+                select(starts_with(filter_name))
+            names(filtered) <- gsub(paste0(filter_name, "_"), paste0(filter_name, "\\."), names(filtered))
+            data_downloaded[["mongo"]][[filter_name]] <- filtered  # Replace data with the actual field name for the data in your MongoDB documents
+        }
+        #data_downloaded[["mongo"]][["certificates"]] <- db_certs |> filter(is.na(name)) |> select(time, data, rules, package_version, web_hash)  # Replace data with the actual field name for the data in your MongoDB documents
     }
     return(data_downloaded)
 }
+
+is.POSIXct <- function(x) inherits(x, "POSIXct")
+
 #' rules_broken ----
 #'
 #' Filter the results of validation to show only broken rules, optionally including successful decisions.
