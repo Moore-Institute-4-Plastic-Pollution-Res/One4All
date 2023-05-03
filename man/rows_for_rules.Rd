@@ -30,11 +30,11 @@ result_invalid <- validate_data(files_data = invalid_example,
                         file_rules = test_rules)
 
 # Find the broken rules
-broken_rules <- rules_broken(results = result_invalid$results[[2]], show_decision = TRUE)
+broken_rules <- rules_broken(results = result_invalid$results[[1]], show_decision = TRUE)
 
 # Get rows for the specified rules
-violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[2]], 
-                                 report = result_invalid$report[[2]],
+violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[1]], 
+                                 report = result_invalid$report[[1]],
                                  broken_rules = broken_rules,
-                                 rows = 4)
+                                 rows = 2)
 }

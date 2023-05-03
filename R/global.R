@@ -61,7 +61,7 @@ certificate_df <- function(x, mongo_key, time = Sys.time()){
 #' @importFrom data.table data.table rbindlist
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom dplyr left_join mutate filter bind_rows across everything
-#' @importFrom validate confront variables validator summary
+#' @import validate
 #' @importFrom shiny isTruthy
 #' @importFrom utils read.csv
 #' @export
@@ -668,13 +668,13 @@ rules_broken <- function(results, show_decision){
 #'                         file_rules = test_rules)
 #'
 #' # Find the broken rules
-#' broken_rules <- rules_broken(results = result_invalid$results[[2]], show_decision = TRUE)
+#' broken_rules <- rules_broken(results = result_invalid$results[[1]], show_decision = TRUE)
 #'
 #' # Get rows for the specified rules
-#' violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[2]], 
-#'                                  report = result_invalid$report[[2]],
+#' violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[1]], 
+#'                                  report = result_invalid$report[[1]],
 #'                                  broken_rules = broken_rules,
-#'                                  rows = 4)
+#'                                  rows = 2)
 #' @export
 rows_for_rules <- function(data_formatted, 
                            report, 
