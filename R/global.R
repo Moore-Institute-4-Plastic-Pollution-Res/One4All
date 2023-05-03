@@ -6,6 +6,7 @@
 #'
 #' @param x A list containing `data_formatted` and `rules` elements.
 #' @param mongo_key key for the mongo db database. If it exists, a copy of the certificate will be stored there. 
+#' @param time the time the certificate is generated, can be passed a value or uses current system time.
 #' @return A data frame with certificate information.
 #' @import mongolite
 #' @importFrom digest digest
