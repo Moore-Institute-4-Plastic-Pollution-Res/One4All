@@ -22,8 +22,6 @@ test_that("certificate_df function returns a valid data frame", {
     expect_true(all(!sapply(result, is.null)))
 })
 
-
-
 #Test the validate data function ----
 
 # Helper function to create temporary files for testing

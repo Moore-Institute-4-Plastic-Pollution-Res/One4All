@@ -461,13 +461,10 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
 #' @param s3_bucket A character string representing the AWS S3 bucket name.
 #' @param mongo_key A character string representing the MongoDB connection string.
 #'
-#' @importFrom httr GET content
 #' @importFrom shiny isTruthy
-#' @importFrom jsonlite fromJSON
 #' @importFrom aws.s3 get_bucket get_object
 #' @importFrom mongolite mongo
-#' @importFrom ckanr ckanr_setup resource_search resource_download
-#' @importFrom stringr str_extract
+#' @importFrom ckanr ckanr_setup
 #' 
 #' @return A named list containing the downloaded datasets.
 #' 

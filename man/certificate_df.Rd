@@ -4,7 +4,7 @@
 \alias{certificate_df}
 \title{Generate a data frame with certificate information}
 \usage{
-certificate_df(x, mongo_key)
+certificate_df(x, mongo_key, time = Sys.time())
 }
 \arguments{
 \item{x}{A list containing `data_formatted` and `rules` elements.}

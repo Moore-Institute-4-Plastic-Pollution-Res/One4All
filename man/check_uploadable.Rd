@@ -4,7 +4,13 @@
 \alias{check_uploadable}
 \title{Check if a file can be uploaded to an S3 bucket}
 \usage{
-check_uploadable(url, s3_key_id, s3_secret_key, s3_region, s3_bucket)
+check_uploadable(
+  url,
+  s3_key_id = config$s3_key_id,
+  s3_secret_key = config$s3_secret_key,
+  s3_region = config$s3_region,
+  s3_bucket = config$s3_bucket
+)
 }
 \arguments{
 \item{url}{A character string representing the URL of the file to download.}
