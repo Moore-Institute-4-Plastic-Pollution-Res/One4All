@@ -372,7 +372,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
 #' #Need to add. 
 #' 
 #' @export
-remote_share <- function(validation, data_formatted, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, old_cert = NULL){
+remote_share <- function(validation, data_formatted, zip_files, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, old_cert = NULL){
     
     use_ckan <- isTruthy(ckan_url) & isTruthy(ckan_key) & isTruthy(ckan_package)
     use_mongo <- isTruthy(mongo_key)
@@ -448,13 +448,27 @@ remote_share <- function(validation, data_formatted, verified, valid_rules, vali
                     file = file,
                     object = paste0(hashed_data, "_", data_name, ".csv"),
                     bucket = s3_bucket
-                )    
+                ) 
+                if(isTruthy(zip_files)){
+                    put_object(
+                        file = zip_files,
+                        object = paste0(hashed_data, ".zip"),
+                        bucket = s3_bucket
+                    )
+                }
             }
             if(use_ckan){
                 resource_create(package_id = ckan_package,
                                 description = "validated raw data upload to microplastic data portal",
                                 name = paste0(hashed_data, "_", data_name),
                                 upload = file)
+                
+                if(isTruthy(zip_files)){
+                    resource_create(package_id = ckan_package,
+                                    description = "validated zipped files",
+                                    name = hashed_data,
+                                    upload = zip_files)
+                }
             }
             if(use_mongo){
                 database$insert(time_added |> mutate(name = paste0(hashed_data, "_", data_name)), na = "NA")
