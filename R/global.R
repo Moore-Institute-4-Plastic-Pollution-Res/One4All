@@ -75,6 +75,13 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
         rules <- file_rules
     }
     else{
+        if(!grepl("(\\.csv$)|(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
+            return(list(
+                message = data.table(
+                    title = "Data type not supported!",
+                    text = paste0('Uploaded rules format is not currently supported, please provide a rules file in csv or xlsx format.'),
+                    type = "warning"), status = "error"))
+        }
         if(grepl("(\\.csv$)", ignore.case = T, as.character(file_rules))){
             rules <- read.csv(file_rules)
         }
@@ -214,6 +221,12 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
             mutate(dataset = data_names)
     }
     
+    #Check for special function checking additional files 
+    rules <- rules |>
+        mutate(rule = ifelse(grepl("check_exists_in_zip(.*)", rule), 
+                             paste0('check_exists_in_zip(zip_path = "', zip_data, '", file_name = ', gsub("(check_exists_in_zip\\()|(\\))", "", rule), ') == TRUE'), 
+                             rule))
+    
     #Circle back to add logic for multiple dfs
     #Check for special character "___" which is for assessing every column. 
     
@@ -314,7 +327,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     #Returns all the results for everything in a formatted list. 
     return(list(data_formatted = data_formatted,
                 data_names = data_names,
-                zip_data = if(exists(zip_data)){zip_data} else{NULL},
+                zip_data = if(exists("zip_data")){zip_data} else{NULL},
                 report = report, 
                 results = results, 
                 rules = rules_list_formatted, 

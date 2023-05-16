@@ -97,7 +97,13 @@ function(input, output, session) {
             
             output[[paste0("report_selected", x)]] <- DT::renderDataTable({
                 if(isTruthy(input[[paste0("show_report", x, "_rows_selected")]])){
-                    datatable({rows_for_rules(data_formatted = validation()$data_formatted[[x]], report = validation()$report[[x]], broken_rules = rules_broken(results = validation()$results[[x]], show_decision = input[[paste0("show_decision", x)]]), rows = input[[paste0("show_report", x, "_rows_selected")]]) },
+                    datatable({rows_for_rules(data_formatted = validation()$data_formatted[[x]], 
+                                              report = validation()$report[[x]], 
+                                              broken_rules = rules_broken(results = validation()$results[[x]], 
+                                                                          show_decision = input[[paste0("show_decision", x)]]), 
+                                              rows = input[[paste0("show_report", x, "_rows_selected")]]) |>
+                                              mutate(across(everything(), check_images)) |>
+                                              mutate(across(everything(), check_other_hyperlinks))},
                               rownames = FALSE,
                               escape = FALSE,
                               filter = "top", 
