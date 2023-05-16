@@ -353,6 +353,25 @@ test_that("is.POSIXct works correctly", {
     expect_false(is.POSIXct(num_obj))
 })
 
+
+test_that("check_exists_in_zip correctly identifies existing files in a zip", {
+    old_wd <- getwd() # Save the current working directory
+    temp_dir <- tempdir()
+    test_file <- file.path(temp_dir, "test_file.txt")
+    test_zip <- file.path(temp_dir, "test.zip")
+    
+    writeLines("This is a test file.", test_file)
+    
+    setwd(temp_dir) # Set the working directory to the temp directory
+    zip(zipfile = "test.zip", files = "test_file.txt") # Zip the test file
+    setwd(old_wd) # Restore the original working directory
+    
+    expect_true(check_exists_in_zip(zip_path = test_zip, file_name = "test_file.txt"))
+    expect_false(check_exists_in_zip(zip_path = test_zip, file_name = "non_existing_file.txt"))
+    unlink(test_file)
+    unlink(test_zip)
+})
+
 #Test locally only ----
 test_that("remote_download retrieves identical data from all sources", {
     # Load the required configuration
@@ -408,7 +427,6 @@ test_that("remote_download retrieves identical data from all sources", {
     expect_identical(dataset$s3$methodology, dataset$mongo$methodology) 
     expect_identical(dataset$s3$samples, dataset$mongo$samples)
 })
-
 
 # Add more test cases as needed
 

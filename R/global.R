@@ -1,3 +1,4 @@
+
 # Functions ----
 #' @title Generate a data frame with certificate information
 #'
@@ -115,8 +116,18 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     if(is.list(files_data)){
         data_formatted <- files_data
     }
-    
     else{
+        if(sum(grepl("(\\.zip$)", ignore.case = T, as.character(files_data))) > 1) {
+            return(list(
+                message = data.table(
+                    title = "Data type not supported!",
+                    text = paste0('Only one zip folder may be uploaded per package.'),
+                    type = "warning"), status = "error"))
+        }
+        if(sum(grepl("(\\.zip$)", ignore.case = T, as.character(files_data))) == 1){
+            zip_data = files_data[grepl("(\\.zip$)", ignore.case = T, as.character(files_data))]
+            files_data = files_data[!grepl("(\\.zip$)", ignore.case = T, as.character(files_data))]
+        }
         if(all(grepl("(\\.csv$)", ignore.case = T, as.character(files_data)))){
             data_formatted <- tryCatch(lapply(files_data, function(x){read.csv(x)}),
                                        warning = function(w) {w}, error = function(e) {e})
@@ -301,11 +312,9 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
 
     
     #Returns all the results for everything in a formatted list. 
-    return(list(data_formatted = lapply(data_formatted, function(x){
-                    x |>
-                    mutate(across(everything(), check_images)) |>
-                    mutate(across(everything(), check_other_hyperlinks))}),
+    return(list(data_formatted = data_formatted,
                 data_names = data_names,
+                zip_data = if(exists(zip_data)){zip_data} else{NULL},
                 report = report, 
                 results = results, 
                 rules = rules_list_formatted, 
@@ -724,6 +733,25 @@ checkLuhn <- function(number) {
     
     # does the sum divide by 10?
     ((sum(digits) %% 10) == 0)
+}
+
+#' Check if a file exists in a zip file
+#'
+#' This function checks if a file with a given name exists in a specified zip file.
+#' @param zip_path A character string representing the path of the zip file.
+#' @param file_name A character string representing the name of the file to check.
+#' @return A logical value indicating whether the file exists in the zip file (TRUE) or not (FALSE).
+#' @importFrom utils unzip
+#' @examples
+#' # Example usage:
+#' check_exists_in_zip(zip_path = "/path/to/your.zip", file_name = "file/in/zip.csv")
+#' @export
+check_exists_in_zip <- function(zip_path, file_name) {
+    # List files in the zip
+    zip_files <- unzip(zip_path, list = TRUE)$Name
+    # Check if file_name is in the list of files
+    file_exists <- file_name %in% zip_files
+    return(file_exists)
 }
 
 #' Check if a file can be uploaded to an S3 bucket

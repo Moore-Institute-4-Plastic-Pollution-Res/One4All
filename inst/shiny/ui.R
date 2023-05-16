@@ -1,3 +1,26 @@
+library(shiny)
+library(dplyr)
+library(DT)
+library(shinythemes)
+library(shinyWidgets)
+library(validate)
+library(digest)
+library(data.table)
+library(bs4Dash)
+library(ckanr)
+library(purrr)
+library(shinyjs)
+library(sentimentr)
+library(listviewer)
+library(RCurl)
+library(readxl)
+library(stringr)
+library(openxlsx)
+library(mongolite)
+library(config)
+library(aws.s3)
+
+config <- config::get()
 
 dashboardPage(
     fullscreen = T,
