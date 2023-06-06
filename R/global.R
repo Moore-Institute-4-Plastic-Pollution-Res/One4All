@@ -156,6 +156,8 @@ read_data <- function(files_data, data_names = NULL){
 #' name_data(files_data = c("path/to/data1.csv", "path/to/data2.csv"))
 #' name_data(files_data = c("path/to/data.xlsx"), data_names = c("sheet1", "sheet2"))
 #' 
+#' @importFrom readxl excel_sheets
+#' 
 #' @export
 name_data <- function(files_data, data_names = NULL){
     #Grab the names of the datasets.

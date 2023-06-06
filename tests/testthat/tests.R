@@ -117,9 +117,6 @@ test_that("'is_foreign_key' rules are handled", {
     expect_equal(length(unique(result$rule)), 2)
 })
 
-
-
-
 # Test for csv file reading
 test_that("read_data reads csv files correctly", {
     # Create a temporary csv file
