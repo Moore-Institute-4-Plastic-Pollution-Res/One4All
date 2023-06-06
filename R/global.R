@@ -181,11 +181,13 @@ name_data <- function(files_data, data_names = NULL){
 #'
 #' @param rules A data.frame containing rules to be reformatted.
 #' @param data_formatted A named list of data.frames with data.
+#' @importFrom dplyr filter mutate bind_rows
+#' @importFrom data.table rbindlist
 #' @return A data.frame with reformatted rules.
 #' @examples
 #' reformat_rules(rules, data_formatted)
 #' @export
-reformat_rules <- function(rules, data_formatted){
+reformat_rules <- function(rules, data_formatted, zip_data = NULL){
     #Add dataset if one doesn't exist so that everything else works. 
     if (!"dataset" %in% names(rules)){
         rules <- rules |>
@@ -194,7 +196,7 @@ reformat_rules <- function(rules, data_formatted){
     
     #Check for special function checking additional files 
     rules <- rules |>
-        mutate(rule = ifelse(grepl("check_exists_in_zip(.*)", rule), 
+        dplyr::mutate(rule = ifelse(grepl("check_exists_in_zip(.*)", rule), 
                              paste0('check_exists_in_zip(zip_path = "', zip_data, '", file_name = ', gsub("(check_exists_in_zip\\()|(\\))", "", rule), ') == TRUE'), 
                              rule))
     
@@ -202,25 +204,23 @@ reformat_rules <- function(rules, data_formatted){
     #Check for special character "___" which is for assessing every column. 
     
     do_to_all <- rules |>
-        filter(grepl("___", rule))
+        dplyr::filter(grepl("___", rule))
     
     if(nrow(do_to_all) > 0){
         rules <- lapply(names(data_formatted), function(x){
-            rules_sub <- do_to_all |> filter(dataset == x)
-            lapply(colnames(data_formatted), function(new_name){
+            rules_sub <- do_to_all |> dplyr::filter(dataset == x)
+            lapply(colnames(data_formatted[[x]]), function(new_name){
                 rules_sub |>
-                    mutate(rule = gsub("___", new_name, rule)) |>
-                    mutate(name = paste0(new_name, "_", name))
-            }) |>
-                rbindlist()
-        }) |>
-            rbindlist() |>
-            bind_rows(rules |> filter(!grepl("___", rule)))
+                    dplyr::mutate(rule = gsub("___", new_name, rule)) |>
+                    dplyr::mutate(name = paste0(new_name, "_", name))}) |>
+                data.table::rbindlist()}) |>
+            data.table::rbindlist() |>
+            dplyr::bind_rows(rules |> dplyr::filter(!grepl("___", rule)))
     }
     
     # Check special character of is_foreign_key and if so then testing that foreign keys are exact. 
     foreign_keys <- rules |>
-        filter(grepl("is_foreign_key(.*)", rule))
+        dplyr::filter(grepl("is_foreign_key(.*)", rule))
     
     if(nrow(foreign_keys) > 0){
         columns <- gsub("(is_foreign_key\\()|(\\))", "", foreign_keys[["rule"]])
@@ -242,6 +242,7 @@ reformat_rules <- function(rules, data_formatted){
             rbindlist() |>
             bind_rows(rules |> filter(!grepl("is_foreign_key(.*)", rule)))
     }
+    rules
 }
 
 

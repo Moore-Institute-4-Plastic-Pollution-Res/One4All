@@ -91,34 +91,60 @@ test_that("rules without 'dataset' column are handled", {
     expect_s3_class(result, "data.frame")
     expect_true("dataset" %in% names(result))
     expect_equal(length(unique(result$dataset)), 1)
+    expect_equal(unique(result$dataset), names(only_particles_data))
 })
 
 # Test when rules have '___' in the rule
 test_that("rules with '___' are handled", {
-    rules <- data.frame(name = c("name1", "name2"), 
-                        rule = c("A___", "B___"),
-                        dataset = c("data1", "data1"),
+    rules <- data.frame(name = c("name1"), 
+                        severity = c("error"),
+                        rule = c("___ > 2"),
+                        dataset = c("data1"),
                         stringsAsFactors = FALSE)
     data_formatted <- list(data1 = data.frame(A = 1:3, B = 4:6))
     
     result <- reformat_rules(rules, data_formatted)
-    expect_is(result, "data.frame")
-    expect_equal(length(unique(result$rule)), 2)
+    expect_s3_class(result, "data.frame")
+    expect_equal(nrow(result), 2)
+    expect_equal(result$rule, c("A > 2", "B > 2"))
 })
 
 # Test when rules have 'is_foreign_key' in the rule
 test_that("'is_foreign_key' rules are handled", {
     rules <- data.frame(name = c("name1", "name2"), 
-                        rule = c("is_foreign_key(A)", "is_foreign_key(B)"),
-                        dataset = c("data1", "data1"),
+                        severity = c("error", "error"),
+                        rule = c("is_foreign_key(A)", "is_foreign_key(A)"),
+                        dataset = c("data1", "data2"),
                         stringsAsFactors = FALSE)
-    data_formatted <- list(data1 = data.frame(A = 1:3, B = 4:6))
+    data_formatted <- list(data1 = data.frame(A = 1:3, B = 4:6),
+                           data2 = data.frame(A = 1:3, C = 10:12))
     
     result <- reformat_rules(rules, data_formatted)
-    expect_is(result, "data.frame")
-    expect_equal(length(unique(result$rule)), 2)
+    expect_s3_class(result, "data.frame")
+    expect_equal(nrow(result), 2)
+    expect_equal(result$rule, c("A %in% c(\"1\", \"2\", \"3\")", "A %in% c(\"1\", \"2\", \"3\")"))
 })
 
+# Test when rules have 'is_foreign_key' in the rule
+test_that("'check_exists_in_zip' rules are handled", {
+    rules <- data.frame(name = c("name1"), 
+                        severity = c("error"),
+                        rule = c("check_exists_in_zip(file)"),
+                        dataset = c("data1"),
+                        stringsAsFactors = FALSE)
+    
+    zip_data <- "fakedir\\test.zip"
+    
+    data_formatted <- list(data1 = data.frame(file = "rules.csv"))
+    
+    result <- reformat_rules(rules, data_formatted, zip_data)
+    
+    expect_s3_class(result, "data.frame")
+    expect_equal(nrow(result), 1)
+    expect_equal(result$rule, "check_exists_in_zip(zip_path = \"fakedir\\test.zip\", file_name = file) == TRUE")
+})
+
+# read data ----
 # Test for csv file reading
 test_that("read_data reads csv files correctly", {
     # Create a temporary csv file
