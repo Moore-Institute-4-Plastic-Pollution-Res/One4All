@@ -20,7 +20,7 @@ library(mongolite)
 library(config)
 library(aws.s3)
 
-config <- config::get()
+config <- config::get(file = "example_config.yml")
 
 #Data checks ----
 if(isTruthy(config$mongo_key)) {
@@ -57,7 +57,9 @@ function(input, output, session) {
     validation <- reactive({
         req(input$file)
         req(rules())
-        validate_data(files_data = input$file$datapath, data_names = input$file$name, file_rules = rules())
+        validate_data(files_data = input$file$datapath, 
+                      data_names = input$file$name[!grepl(".zip$", input$file$name)], 
+                      file_rules = rules())
     })
 
     output$error_query <- renderUI({

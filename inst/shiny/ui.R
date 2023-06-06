@@ -20,7 +20,7 @@ library(mongolite)
 library(config)
 library(aws.s3)
 
-config <- config::get()
+config <- config::get(file = "example_config.yml")
 
 dashboardPage(
     fullscreen = T,
@@ -85,7 +85,8 @@ dashboardPage(
                                          width = "100%",
                                          multiple = T,
                                          accept=c("text/csv",
-                                                  "text/comma-separated-values,text/plain")), #%>%
+                                                  "text/comma-separated-values,text/plain",
+                                                  ".zip")), #%>%
                                title = "Upload CSV to validate",
                                content = "This can only be uploaded after the rules file. This is where you upload the csv file that you want to validate using the rules file.")
                     ),

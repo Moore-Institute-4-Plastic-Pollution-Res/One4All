@@ -30,67 +30,28 @@ certificate_df <- function(x, mongo_key, time = Sys.time()){
     df
 }
 
-#' Validate_data: Validate data based on specified rules.
-#'
-#' @param files_data A list of file paths for the datasets to be validated.
-#' @param data_names (Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths.
-#' @param file_rules A file path for the rules file, either in .csv or .xlsx format.
-#'
-#' @return A list containing the following elements:
-#'   - data_formatted: A list of data frames with the validated data.
-#'   - data_names: A character vector of dataset names.
-#'   - report: A list of validation report objects for each dataset.
-#'   - results: A list of validation result data frames for each dataset.
-#'   - rules: A list of validator objects for each dataset.
-#'   - status: A character string indicating the overall validation status ("success" or "error").
-#'   - issues: A logical vector indicating if there are any issues in the validation results.
-#'   - message: A data.table containing information about any issues encountered.
-#'
-#' @examples
-#' # Validate data with specified rules
-#' data("valid_example")
-#' data("invalid_example")
-#' data("test_rules")
-#' 
-#' result_valid <- validate_data(files_data = valid_example,
-#'                         data_names = c("methodology", "particles", "samples"),
-#'                         file_rules = test_rules)
-#'                         
-#' result_invalid <- validate_data(files_data = invalid_example,
-#'                         data_names = c("methodology", "particles", "samples"),
-#'                         file_rules = test_rules)
-#'
-#' @importFrom data.table data.table rbindlist
-#' @importFrom readxl read_excel excel_sheets
-#' @importFrom dplyr left_join mutate filter bind_rows across everything
-#' @import validate
-#' @importFrom shiny isTruthy
-#' @importFrom utils read.csv
-#' @export
-validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
-    #Accepts three fields, files data is the data set we are validating. data_names is optional and can be used to specify the names of the datasets. file_rules is the rules file. 
-    
+read_rules <- function(file_rules){
     #Reads the rules file.
     if(is.data.frame(file_rules)){
         rules <- file_rules
     }
     else{
-        if(!grepl("(\\.csv$)|(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
-            return(list(
-                message = data.table(
-                    title = "Data type not supported!",
-                    text = paste0('Uploaded rules format is not currently supported, please provide a rules file in csv or xlsx format.'),
-                    type = "warning"), status = "error"))
-        }
         if(grepl("(\\.csv$)", ignore.case = T, as.character(file_rules))){
             rules <- read.csv(file_rules)
         }
         
-        if(grepl("(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
+        else if(grepl("(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
             rules <- read_excel(file_rules)
-        }    
+        }
+        else{
+          return(list(
+            message = data.table(
+                title = "Data type not supported!",
+                text = paste0('Uploaded rules format is not currently supported, please provide a rules file in csv or xlsx format.'),
+                type = "warning"), status = "error"))  
+        }
+        
     }
-    
     
     #Test that rules file has the correct required column names. 
     if (!all(c("name", "description", "severity", "rule") %in% names(rules))) {
@@ -118,7 +79,10 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
                 text = paste0('Uploaded rules format is not currently supported, please provide a rules file with columns that are all character type.'),
                 type = "warning"), status = "error"))
     }
-    
+    rules
+}
+
+read_data <- function(files_data, data_names = NULL){
     #Read in all csv files from files_data as a list. 
     if(is.list(files_data)){
         data_formatted <- files_data
@@ -165,60 +129,67 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
     if (inherits(data_formatted, "simpleWarning") | inherits(data_formatted, "simpleError")){
         return(list(
             message = data.table(
-            title = "Something went wrong with reading the data.",
-            text = paste0("There was an error that said ", data_formatted$message),
-            type = "error"),
+                title = "Something went wrong with reading the data.",
+                text = paste0("There was an error that said ", data_formatted$message),
+                type = "error"),
             status = "error"
-                )
-            )
+        )
+        )
     }
-    
-    #Grab the names of the datasets.
-    data_names <- if(isTruthy(data_names)){
-                    gsub("(.*/)|(\\..*)", "", data_names)
-    } 
-    else if(all(grepl("(\\.xlsx$)", ignore.case = T, as.character(files_data))) & length(as.character(files_data)) == 1){
-        excel_sheets(files_data)
-    }
-    else{
-        gsub("(.*/)|(\\..*)", "", files_data)
-        } 
-                    
     
     #Names the data with the file names. 
-    names(data_formatted) <- data_names
+    names(data_formatted) <- name_data(files_data, data_names)
     
+    data_formatted 
+}
+
+name_data <- function(files_data, data_names = NULL){
+    #Grab the names of the datasets.
+    if(isTruthy(data_names)){
+        data_names <- gsub("(\\..*$)", "", gsub("(.*/)", "", data_names))
+    } 
+    else if(all(grepl("(\\.xlsx$)", ignore.case = T, as.character(files_data))) & length(as.character(files_data)) == 1){
+        data_names <- excel_sheets(files_data)
+    }
+    else{
+        data_names <- gsub("(\\..*$)", "", gsub("(.*/)", "", files_data))
+    } 
+    data_names
+}
+
+check_rules_correspond <- function(rules, data_formatted){
     #Checks if there is a dataset column in the rules file and tests that all of the datasets exist. 
-    if (!"dataset" %in% names(rules) & length(data_names) > 1){
-            return(list(
-                message = data.table(
-                    title = "Missing dataset column",
-                    text = paste0("If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset."),
-                    type = "error"),
-                status = "error"
-            )
-            )
+    if (!"dataset" %in% names(rules) & length(names(data_formatted)) > 1){
+        return(list(
+            message = data.table(
+                title = "Missing dataset column",
+                text = paste0("If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset."),
+                type = "error"),
+            status = "error"
+        )
+        )
     }
     
     #Checks if there is a dataset column in the rules file and tests that all of the datasets exist. 
     if ("dataset" %in% names(rules)){
-        if(!all(unique(rules$dataset) %in% data_names)){
+        if(!all(unique(rules$dataset) %in% names(data_formatted))){
             return(list(
-            message = data.table(
-                title = "Dataset names incompatible",
-                text = paste0("If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists these datasets ", paste(unique(rules$dataset), collapse = ", "), " while the datasets shared are ", paste(data_names, collapse = ",")),
-                type = "error"),
-            status = "error"
+                message = data.table(
+                    title = "Dataset names incompatible",
+                    text = paste0("If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists these datasets ", paste(unique(rules$dataset), collapse = ", "), " while the datasets shared are ", paste(data_names, collapse = ",")),
+                    type = "error"),
+                status = "error"
             )
-        )
+            )
         }
     }
-    
-    
+}
+
+reformat_rules <- function(rules, data_formatted){
     #Add dataset if one doesn't exist so that everything else works. 
     if (!"dataset" %in% names(rules)){
         rules <- rules |>
-            mutate(dataset = data_names)
+            mutate(dataset = names(data_formatted))
     }
     
     #Check for special function checking additional files 
@@ -234,7 +205,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
         filter(grepl("___", rule))
     
     if(nrow(do_to_all) > 0){
-       rules <- lapply(data_names, function(x){
+        rules <- lapply(data_names, function(x){
             rules_sub <- do_to_all |> filter(dataset == x)
             lapply(colnames(data_formatted), function(new_name){
                 rules_sub |>
@@ -243,42 +214,98 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
             }) |>
                 rbindlist()
         }) |>
-           rbindlist() |>
-           bind_rows(rules |> filter(!grepl("___", rule)))
+            rbindlist() |>
+            bind_rows(rules |> filter(!grepl("___", rule)))
     }
-   
+    
     # Check special character of is_foreign_key and if so then testing that foreign keys are exact. 
     foreign_keys <- rules |>
         filter(grepl("is_foreign_key(.*)", rule))
     
     if(nrow(foreign_keys) > 0){
-       columns <- gsub("(is_foreign_key\\()|(\\))", "", foreign_keys[["rule"]])
-       if (!"dataset" %in% names(rules)){
-           return(list(
-               message = data.table(
-                   title = "Foreign key error.",
-                   text = "Foreign key searches only work if there is a dataset column in the rules file that specifies which dataset the foreign key is in.",
-                   type = "error"
-               ), status = "error"
-           ))
-       }
-       rules <- lapply(1:nrow(foreign_keys), function(x){
-           foreign_keys[x,] |>
-           mutate(rule = paste0(columns[x], 
-                                ' %in% c("',
-                                paste(
-                                lapply(data_formatted, function(y){
-                                       y[[columns[x]]]
-                                            }) |> 
-                                       unlist() |>
-                                       unique(), 
-                                collapse = '", "', 
-                                sep = ""), 
-                                '")'))
-       }) |>
-           rbindlist() |>
-           bind_rows(rules |> filter(!grepl("is_foreign_key(.*)", rule)))
+        columns <- gsub("(is_foreign_key\\()|(\\))", "", foreign_keys[["rule"]])
+        if (!"dataset" %in% names(rules)){
+            return(list(
+                message = data.table(
+                    title = "Foreign key error.",
+                    text = "Foreign key searches only work if there is a dataset column in the rules file that specifies which dataset the foreign key is in.",
+                    type = "error"
+                ), status = "error"
+            ))
+        }
+        rules <- lapply(1:nrow(foreign_keys), function(x){
+            foreign_keys[x,] |>
+                mutate(rule = paste0(columns[x], 
+                                     ' %in% c("',
+                                     paste(
+                                         lapply(data_formatted, function(y){
+                                             y[[columns[x]]]
+                                         }) |> 
+                                             unlist() |>
+                                             unique(), 
+                                         collapse = '", "', 
+                                         sep = ""), 
+                                     '")'))
+        }) |>
+            rbindlist() |>
+            bind_rows(rules |> filter(!grepl("is_foreign_key(.*)", rule)))
     }
+}
+
+
+#' Validate_data: Validate data based on specified rules.
+#'
+#' @param files_data A list of file paths for the datasets to be validated.
+#' @param data_names (Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths.
+#' @param file_rules A file path for the rules file, either in .csv or .xlsx format.
+#'
+#' @return A list containing the following elements:
+#'   - data_formatted: A list of data frames with the validated data.
+#'   - data_names: A character vector of dataset names.
+#'   - report: A list of validation report objects for each dataset.
+#'   - results: A list of validation result data frames for each dataset.
+#'   - rules: A list of validator objects for each dataset.
+#'   - status: A character string indicating the overall validation status ("success" or "error").
+#'   - issues: A logical vector indicating if there are any issues in the validation results.
+#'   - message: A data.table containing information about any issues encountered.
+#'
+#' @examples
+#' # Validate data with specified rules
+#' data("valid_example")
+#' data("invalid_example")
+#' data("test_rules")
+#' 
+#' result_valid <- validate_data(files_data = valid_example,
+#'                         data_names = c("methodology", "particles", "samples"),
+#'                         file_rules = test_rules)
+#'                         
+#' result_invalid <- validate_data(files_data = invalid_example,
+#'                         data_names = c("methodology", "particles", "samples"),
+#'                         file_rules = test_rules)
+#'
+#' @importFrom data.table data.table rbindlist
+#' @importFrom readxl read_excel excel_sheets
+#' @importFrom dplyr left_join mutate filter bind_rows across everything
+#' @import validate
+#' @importFrom shiny isTruthy
+#' @importFrom utils read.csv
+#' @export
+validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
+    #Accepts three fields, files data is the data set we are validating. data_names is optional and can be used to specify the names of the datasets. file_rules is the rules file. 
+    
+    rules <- read_rules(file_rules)
+    
+    if(isTruthy(rules$message)){
+        return(rules)
+    }
+    
+    data_formatted <- read_data(files_data = files_data, data_names = data_names)
+    
+    if(isTruthy(data_formatted$message)){
+        return(data_formatted)
+    }
+    
+    check_rules_correspond(rules = rules, data_formatted = data_formatted)
     
     #Testing that the rules file has no errors. 
     rules_formatted <- tryCatch(validator(.data=rules), 
