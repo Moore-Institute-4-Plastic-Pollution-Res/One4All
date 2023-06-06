@@ -72,8 +72,8 @@ read_rules <- function(file_rules){
     }
     
     # Tests that the rules severity is only warning or error
-    if (all(grepl("(error)|(warning)", rules$severity))) {
-        stop('The rules file can only be "error" or "severity"')
+    if (!all(grepl("(error)|(warning)", rules$severity))) {
+        stop('severity in the rules file can only be "error" or "warning"')
     }
     
     # Checks that all the rules fields are character type. 

@@ -19,7 +19,7 @@ test_that("read_rules correctly reads a CSV file", {
 })
 
 test_that("read_rules returns error on unsupported file type", {
-    expect_error(read_rules(file_rules = "test_rules.txt"))
+    expect_error(read_rules(file_rules = "test_rules.txt"), 'Uploaded rules format is not currently supported, please provide a rules file in csv or xlsx format.')
 })
 
 test_that("read_rules returns error when required columns are missing", {
@@ -30,7 +30,7 @@ test_that("read_rules returns error when required columns are missing", {
     )
     
     write.csv(test_df, "test_rules.csv", row.names = FALSE)
-    expect_error(read_rules("test_rules.csv"))
+    expect_error(read_rules("test_rules.csv"), 'Uploaded rules format is not currently supported, please provide a rules file with column names, "name", "description", "severity", "rule".')
 })
 
 test_that("read_rules returns error when sensitive words are in rules", {
@@ -43,7 +43,7 @@ test_that("read_rules returns error when sensitive words are in rules", {
     )
     
     write.csv(test_df, "test_rules.csv", row.names = FALSE)
-    expect_error(read_rules("test_rules.csv"))
+    expect_error(read_rules("test_rules.csv"), 'At this time we are unable to support any rules with the words "config" or "secret" in them as they could be malicious.')
 })
 
 test_that("read_rules returns error when words besides error or warning are in severity", {
@@ -55,7 +55,7 @@ test_that("read_rules returns error when words besides error or warning are in s
     )
     
     write.csv(test_df, "test_rules.csv", row.names = FALSE)
-    expect_error(read_rules("test_rules.csv"))
+    expect_error(read_rules("test_rules.csv"), 'severity in the rules file can only be "error" or "warning"')
 })
 
 test_that("read_rules returns error when columns are not all character type", {
@@ -67,7 +67,7 @@ test_that("read_rules returns error when columns are not all character type", {
     )
     
     write.csv(test_df, "test_rules.csv", row.names = FALSE)
-    expect_error(read_rules("test_rules.csv"))
+    expect_error(read_rules("test_rules.csv"), 'Uploaded rules format is not currently supported, please provide a rules file with columns that are all character type.')
 })
 
 # Clean up
