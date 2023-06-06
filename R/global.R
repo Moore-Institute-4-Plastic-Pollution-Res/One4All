@@ -205,7 +205,7 @@ reformat_rules <- function(rules, data_formatted){
         filter(grepl("___", rule))
     
     if(nrow(do_to_all) > 0){
-        rules <- lapply(data_names, function(x){
+        rules <- lapply(names(data_formatted), function(x){
             rules_sub <- do_to_all |> filter(dataset == x)
             lapply(colnames(data_formatted), function(new_name){
                 rules_sub |>
@@ -224,15 +224,7 @@ reformat_rules <- function(rules, data_formatted){
     
     if(nrow(foreign_keys) > 0){
         columns <- gsub("(is_foreign_key\\()|(\\))", "", foreign_keys[["rule"]])
-        if (!"dataset" %in% names(rules)){
-            return(list(
-                message = data.table(
-                    title = "Foreign key error.",
-                    text = "Foreign key searches only work if there is a dataset column in the rules file that specifies which dataset the foreign key is in.",
-                    type = "error"
-                ), status = "error"
-            ))
-        }
+
         rules <- lapply(1:nrow(foreign_keys), function(x){
             foreign_keys[x,] |>
                 mutate(rule = paste0(columns[x], 

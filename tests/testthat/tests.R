@@ -79,16 +79,18 @@ context("Testing reformat_rules")
 
 # Test when rules don't have a 'dataset' column
 test_that("rules without 'dataset' column are handled", {
-    rules <- data.frame(name = c("name1", "name2"), 
-                        rule = c("rule1", "rule2"), 
-                        stringsAsFactors = FALSE)
-    data_formatted <- list(data1 = data.frame(A = 1:3, B = 4:6),
-                           data2 = data.frame(X = 7:9, Y = 10:12))
+    data("test_rules")
+    data("valid_example")
     
-    result <- reformat_rules(rules, data_formatted)
-    expect_is(result, "data.frame")
+    only_rules_particles <- test_rules |>  
+        dplyr::filter(dataset == "particles")|>
+        dplyr::select(-dataset)
+    only_particles_data <- valid_example["particles"] 
+    
+    result <- reformat_rules(rules = only_rules_particles, data_formatted = only_particles_data)
+    expect_s3_class(result, "data.frame")
     expect_true("dataset" %in% names(result))
-    expect_equal(length(unique(result$dataset)), 2)
+    expect_equal(length(unique(result$dataset)), 1)
 })
 
 # Test when rules have '___' in the rule
