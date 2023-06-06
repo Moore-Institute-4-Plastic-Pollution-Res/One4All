@@ -166,6 +166,29 @@ test_that("read_data returns an error for mixed file types", {
     file.remove(c(temp_file1, temp_file2))
 })
 
+#Name data ----
+context("name_data tests")
+
+test_that("name_data correctly handles csv file paths", {
+    # Here you should replace with paths to your actual test csv files
+    test_files <- c("/path/to/your/test/file1.csv", "/path/to/your/test/file2.csv")
+    expected_names <- c("file1", "file2")
+    expect_equal(name_data(files_data = test_files), expected_names)
+})
+
+test_that("name_data correctly handles xlsx file paths", {
+    # Here you should replace with paths to your actual test xlsx file
+    test_files <- "/path/to/your/test/file.xlsx"
+    # And replace with your actual sheet names
+    expected_names <- c("sheet1", "sheet2")
+    expect_equal(name_data(files_data = test_files, data_names = expected_names), expected_names)
+})
+
+test_that("name_data uses data_names argument when provided", {
+    test_files <- c("irrelevant", "does_not_matter")
+    expected_names <- c("name1", "name2")
+    expect_equal(name_data(files_data = test_files, data_names = expected_names), expected_names)
+})
 
 
 #Certificate df ----

@@ -142,7 +142,21 @@ read_data <- function(files_data, data_names = NULL){
     data_formatted 
 }
 
-
+#' Name datasets
+#'
+#' This function extracts the names of the datasets provided in the input files.
+#' If specific data names are provided, they are used, otherwise the function tries
+#' to extract the names from the files themselves.
+#'
+#' @param files_data A vector of file paths or list of data frames.
+#' @param data_names A vector of names to be assigned to datasets.
+#'
+#' @return A vector of dataset names.
+#' @examples
+#' name_data(files_data = c("path/to/data1.csv", "path/to/data2.csv"))
+#' name_data(files_data = c("path/to/data.xlsx"), data_names = c("sheet1", "sheet2"))
+#' 
+#' @export
 name_data <- function(files_data, data_names = NULL){
     #Grab the names of the datasets.
     if(isTruthy(data_names)){
