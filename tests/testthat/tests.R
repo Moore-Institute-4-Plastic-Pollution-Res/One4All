@@ -1,6 +1,5 @@
 library(testthat)
 
-
 # Read rules ----
 
 context("Test read_rules function")
@@ -9,7 +8,7 @@ test_that("read_rules correctly reads a CSV file", {
     test_df <- data.frame(
         name = c("test1", "test2"),
         description = c("description1", "description2"),
-        severity = c("severe1", "severe2"),
+        severity = c("error", "error"),
         rule = c("rule1", "rule2"),
         stringsAsFactors = FALSE
     )
@@ -20,7 +19,7 @@ test_that("read_rules correctly reads a CSV file", {
 })
 
 test_that("read_rules returns error on unsupported file type", {
-    expect_error(read_rules("test_rules.txt"))
+    expect_error(read_rules(file_rules = "test_rules.txt"))
 })
 
 test_that("read_rules returns error when required columns are missing", {
@@ -38,9 +37,21 @@ test_that("read_rules returns error when sensitive words are in rules", {
     test_df <- data.frame(
         name = c("test1", "test2"),
         description = c("description1", "description2"),
-        severity = c("severe1", "severe2"),
+        severity = c("error", "error"),
         rule = c("config", "rule2"),
         stringsAsFactors = FALSE
+    )
+    
+    write.csv(test_df, "test_rules.csv", row.names = FALSE)
+    expect_error(read_rules("test_rules.csv"))
+})
+
+test_that("read_rules returns error when words besides error or warning are in severity", {
+    test_df <- data.frame(
+        name = c("test1", "test2"),
+        description = c("description1", "description2"),
+        severity = c("severe1", "severe2"),
+        rule = c("rule1", "rule2")
     )
     
     write.csv(test_df, "test_rules.csv", row.names = FALSE)
@@ -51,7 +62,7 @@ test_that("read_rules returns error when columns are not all character type", {
     test_df <- data.frame(
         name = c("test1", "test2"),
         description = c("description1", "description2"),
-        severity = c("severe1", "severe2"),
+        severity = c("error", "error"),
         rule = c(1, 2)
     )
     

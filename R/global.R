@@ -39,12 +39,11 @@ certificate_df <- function(x, mongo_key, time = Sys.time()){
 #' all the rules fields are character type.
 #'
 #' @param file_rules The file containing the rules. Can be a CSV or XLSX file, or a data frame.
-#' 
-#' @return A data frame containing the rules.
-#' @export
 #'
 #' @examples
-#' read_rules("rules.csv")
+#' read_rules("rules.csv") 
+#' @return A data frame containing the rules.
+#' @export
 read_rules <- function(file_rules){
     # Reads the rules file.
     if(is.data.frame(file_rules)){
@@ -72,6 +71,11 @@ read_rules <- function(file_rules){
         stop('At this time we are unable to support any rules with the words "config" or "secret" in them as they could be malicious.')
     }
     
+    # Tests that the rules severity is only warning or error
+    if (all(grepl("(error)|(warning)", rules$severity))) {
+        stop('The rules file can only be "error" or "severity"')
+    }
+    
     # Checks that all the rules fields are character type. 
     if (!all(sapply(rules, is.character))) {
         stop('Uploaded rules format is not currently supported, please provide a rules file with columns that are all character type.')
@@ -84,11 +88,11 @@ read_rules <- function(file_rules){
 #' 
 #' @param files_data List of files to be read
 #' @param data_names Optional vector of names for the data frames 
+#' @examples
+#' ## You can add examples of function usage here.
 #' 
 #' @return A list of data frames
 #' @export
-#' @examples
-#' ## You can add examples of function usage here.
 read_data <- function(files_data, data_names = NULL){
     # Read in all csv files from files_data as a list. 
     if(is.list(files_data)){
