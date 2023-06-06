@@ -30,70 +30,73 @@ certificate_df <- function(x, mongo_key, time = Sys.time()){
     df
 }
 
+#' Read rules from a file
+#'
+#' This function reads rules from a file or a data frame. 
+#' The file can be in csv or xlsx format. 
+#' The data should have the column names "name", "description", "severity", "rule".
+#' The function also checks that the rules do not contain sensitive words and that 
+#' all the rules fields are character type.
+#'
+#' @param file_rules The file containing the rules. Can be a CSV or XLSX file, or a data frame.
+#' 
+#' @return A data frame containing the rules.
+#' @export
+#'
+#' @examples
+#' read_rules("rules.csv")
 read_rules <- function(file_rules){
-    #Reads the rules file.
+    # Reads the rules file.
     if(is.data.frame(file_rules)){
         rules <- file_rules
     }
     else{
-        if(grepl("(\\.csv$)", ignore.case = T, as.character(file_rules))){
+        if(grepl("(\\.csv$)", ignore.case = TRUE, as.character(file_rules))){
             rules <- read.csv(file_rules)
         }
-        
-        else if(grepl("(\\.xlsx$)", ignore.case = T, as.character(file_rules))){
+        else if(grepl("(\\.xlsx$)", ignore.case = TRUE, as.character(file_rules))){
             rules <- read_excel(file_rules)
         }
         else{
-          return(list(
-            message = data.table(
-                title = "Data type not supported!",
-                text = paste0('Uploaded rules format is not currently supported, please provide a rules file in csv or xlsx format.'),
-                type = "warning"), status = "error"))  
+            stop('Uploaded rules format is not currently supported, please provide a rules file in csv or xlsx format.')  
         }
-        
     }
     
-    #Test that rules file has the correct required column names. 
+    # Test that rules file has the correct required column names. 
     if (!all(c("name", "description", "severity", "rule") %in% names(rules))) {
-        return(list(
-            message = data.table(
-                title = "Data type not supported!",
-                text = paste0('Uploaded rules format is not currently supported, please provide a rules file with column names, "name", "description", "severity", "rule"'),
-                type = "warning"), status = "error"))
+        stop('Uploaded rules format is not currently supported, please provide a rules file with column names, "name", "description", "severity", "rule".')
     }
     
-    #Tests that the rules do not contain sensitive words that may be malicious. 
+    # Tests that the rules do not contain sensitive words that may be malicious. 
     if (any(grepl("config|secret", rules$rule))) {
-        return(list(
-            message = data.table(
-                title = "Rule not supported!",
-                text = paste0('At this time we are unable to support any rules with the words config or secret in them as they could be malicious.'),
-                type = "warning"), status = "error"))
+        stop('At this time we are unable to support any rules with the words "config" or "secret" in them as they could be malicious.')
     }
     
-    #Checks that all the rules fields are character type. 
-    if (!all(unlist(lapply(rules, class)) %in% c("character"))) {
-        return(list(
-            message = data.table(
-                title = "Data type not supported!",
-                text = paste0('Uploaded rules format is not currently supported, please provide a rules file with columns that are all character type.'),
-                type = "warning"), status = "error"))
+    # Checks that all the rules fields are character type. 
+    if (!all(sapply(rules, is.character))) {
+        stop('Uploaded rules format is not currently supported, please provide a rules file with columns that are all character type.')
     }
-    rules
+    
+    return(rules)
 }
 
+#' Read and format data from csv or xlsx files
+#' 
+#' @param files_data List of files to be read
+#' @param data_names Optional vector of names for the data frames 
+#' 
+#' @return A list of data frames
+#' @export
+#' @examples
+#' ## You can add examples of function usage here.
 read_data <- function(files_data, data_names = NULL){
-    #Read in all csv files from files_data as a list. 
+    # Read in all csv files from files_data as a list. 
     if(is.list(files_data)){
         data_formatted <- files_data
     }
     else{
         if(sum(grepl("(\\.zip$)", ignore.case = T, as.character(files_data))) > 1) {
-            return(list(
-                message = data.table(
-                    title = "Data type not supported!",
-                    text = paste0('Only one zip folder may be uploaded per package.'),
-                    type = "warning"), status = "error"))
+            stop("Only one zip folder may be uploaded per package.")
         }
         if(sum(grepl("(\\.zip$)", ignore.case = T, as.character(files_data))) == 1){
             zip_data = files_data[grepl("(\\.zip$)", ignore.case = T, as.character(files_data))]
@@ -101,40 +104,32 @@ read_data <- function(files_data, data_names = NULL){
         }
         if(all(grepl("(\\.csv$)", ignore.case = T, as.character(files_data)))){
             data_formatted <- tryCatch(lapply(files_data, function(x){read.csv(x)}),
-                                       warning = function(w) {w}, error = function(e) {e})
+                                       warning = function(w) {warning(w$message)}, 
+                                       error = function(e) {stop(e$message)})
         }
         
         else if(all(grepl("(\\.xlsx$)", ignore.case = T, as.character(files_data)))){
             if(length(as.character(files_data)) > 1){
                 data_formatted <- tryCatch(lapply(files_data, function(x){read_excel(x)}),
-                                           warning = function(w) {w}, error = function(e) {e})    
+                                           warning = function(w) {warning(w$message)}, 
+                                           error = function(e) {stop(e$message)})    
             }
             if(length(as.character(files_data)) == 1){
                 sheets <- readxl::excel_sheets(files_data)
                 data_formatted <- tryCatch(lapply(sheets, function(x){read_excel(files_data, sheet =  x)}),
-                                           warning = function(w) {w}, error = function(e) {e})    
+                                           warning = function(w) {warning(w$message)}, 
+                                           error = function(e) {stop(e$message)})    
             }
         }
         
         else{
-            return(list(
-                message = data.table(
-                    title = "Mixed Data Types",
-                    text = paste0("You cannot mix data types, choose either csv or xlsx for all datasets."),
-                    type = "warning"), status = "error")) 
+            stop("You cannot mix data types, choose either csv or xlsx for all datasets.")
         }    
     }
     
     #Check if there is a warning when reading in the data. 
     if (inherits(data_formatted, "simpleWarning") | inherits(data_formatted, "simpleError")){
-        return(list(
-            message = data.table(
-                title = "Something went wrong with reading the data.",
-                text = paste0("There was an error that said ", data_formatted$message),
-                type = "error"),
-            status = "error"
-        )
-        )
+        stop(paste0("There was an error that said ", data_formatted$message))
     }
     
     #Names the data with the file names. 
@@ -142,6 +137,7 @@ read_data <- function(files_data, data_names = NULL){
     
     data_formatted 
 }
+
 
 name_data <- function(files_data, data_names = NULL){
     #Grab the names of the datasets.
@@ -157,34 +153,18 @@ name_data <- function(files_data, data_names = NULL){
     data_names
 }
 
-check_rules_correspond <- function(rules, data_formatted){
-    #Checks if there is a dataset column in the rules file and tests that all of the datasets exist. 
-    if (!"dataset" %in% names(rules) & length(names(data_formatted)) > 1){
-        return(list(
-            message = data.table(
-                title = "Missing dataset column",
-                text = paste0("If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset."),
-                type = "error"),
-            status = "error"
-        )
-        )
-    }
-    
-    #Checks if there is a dataset column in the rules file and tests that all of the datasets exist. 
-    if ("dataset" %in% names(rules)){
-        if(!all(unique(rules$dataset) %in% names(data_formatted))){
-            return(list(
-                message = data.table(
-                    title = "Dataset names incompatible",
-                    text = paste0("If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists these datasets ", paste(unique(rules$dataset), collapse = ", "), " while the datasets shared are ", paste(data_names, collapse = ",")),
-                    type = "error"),
-                status = "error"
-            )
-            )
-        }
-    }
-}
 
+#' Reformats the rules
+#'
+#' This function is responsible for handling the rule reformating, dataset handling
+#' and foreign key checks.
+#'
+#' @param rules A data.frame containing rules to be reformatted.
+#' @param data_formatted A named list of data.frames with data.
+#' @return A data.frame with reformatted rules.
+#' @examples
+#' reformat_rules(rules, data_formatted)
+#' @export
 reformat_rules <- function(rules, data_formatted){
     #Add dataset if one doesn't exist so that everything else works. 
     if (!"dataset" %in% names(rules)){
@@ -290,77 +270,71 @@ reformat_rules <- function(rules, data_formatted){
 #' @importFrom shiny isTruthy
 #' @importFrom utils read.csv
 #' @export
-validate_data <- function(files_data, data_names = NULL, file_rules = NULL){
-    #Accepts three fields, files data is the data set we are validating. data_names is optional and can be used to specify the names of the datasets. file_rules is the rules file. 
-    
-    rules <- read_rules(file_rules)
-    
-    if(isTruthy(rules$message)){
-        return(rules)
-    }
-    
-    data_formatted <- read_data(files_data = files_data, data_names = data_names)
-    
-    if(isTruthy(data_formatted$message)){
-        return(data_formatted)
-    }
-    
-    check_rules_correspond(rules = rules, data_formatted = data_formatted)
-    
-    #Testing that the rules file has no errors. 
-    rules_formatted <- tryCatch(validator(.data=rules), 
-                                warning = function(w) {w}, 
-                                error = function(e) {e})
-    
-    #Tests that rules_formatted has only one class and that class is validator. 
-    if (length(class(rules_formatted)) != 1 || class(rules_formatted) != "validator"){
-        return(list(
-            message = data.table(
-                title = "Something went wrong with reading the rules file.",
-                text = paste0("There was an error that said ", rules_formatted$message),
-                type = "error"
-            ), status = "error"
-        ))
-    }
-    
-    #Tests that columns in rules files are in the same as in the data. 
-    if(!all(variables(rules_formatted) %in% unlist(lapply(data_formatted, names))) | !all(unlist(lapply(data_formatted, names)) %in% variables(rules_formatted))){
-        warning_2 <- data.table(
-                        title = "Rules and data mismatch",
-                        text = paste0("All variables in the rules csv (", paste(variables(rules_formatted)[!variables(rules_formatted) %in% unlist(lapply(data_formatted, names))], collapse = ", "), ") need to be in the data csv (",  paste(unlist(lapply(data_formatted, names))[!unlist(lapply(data_formatted, names)) %in% variables(rules_formatted)], collapse = ", "), ") and vice versa for the validation to work."),
-                        type = "warning")
-    }
-    
-    #Loops through and makes a validation object for every dataset. 
-    report <- lapply(data_names, function(x){
-       confront(data_formatted[[x]], validator(.data=rules |> filter(dataset == x))) 
-    })
-    
-    #Loops through and makes a results report for the validation
-    results <- lapply(report, function(x) {validate::summary(x) |>
-        mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |>
-        left_join(rules)})
-    
-    any_issues <- vapply(results, function(x){
-                            any(x$status == "error")
-                            }, FUN.VALUE = TRUE)
-    
-    #Loops through and makes a rules object for each data set. 
-    rules_list_formatted <- tryCatch(lapply(data_names, function(x){validator(.data=rules |> filter(dataset == x))}), 
-                                warning = function(w) {w}, 
-                                error = function(e) {e})
+validate_data <- function(files_data, data_names = NULL, file_rules = NULL) {
+rules <- read_rules(file_rules)
 
-    
-    #Returns all the results for everything in a formatted list. 
-    return(list(data_formatted = data_formatted,
-                data_names = data_names,
-                zip_data = if(exists("zip_data")){zip_data} else{NULL},
-                report = report, 
-                results = results, 
-                rules = rules_list_formatted, 
-                status = "success", 
-                issues = any_issues,
-                message = if(exists("warning_2")){warning_2} else{NULL}))
+data_formatted <- read_data(files_data = files_data, data_names = data_names)
+
+if (!"dataset" %in% names(rules) & length(names(data_formatted)) > 1) {
+    stop("If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset.")
+}
+
+if ("dataset" %in% names(rules)) {
+    if (!all(unique(rules$dataset) %in% names(data_formatted))) {
+        stop("If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists datasets that do not match the datasets shared.")
+    }
+}
+
+rules_formatted <- tryCatch(validator(.data=rules), 
+                            warning = function(w) {
+                                warning(w)
+                                NULL
+                            }, 
+                            error = function(e) {
+                                stop(e)
+                            })
+
+if (is.null(rules_formatted) || (length(class(rules_formatted)) != 1 || class(rules_formatted) != "validator")) {
+    stop("There was an error with reading the rules file.")
+}
+
+if (!all(variables(rules_formatted) %in% unlist(lapply(data_formatted, names))) | !all(unlist(lapply(data_formatted, names)) %in% variables(rules_formatted))) {
+    warning("All variables in the rules csv need to be in the data csv and vice versa for the validation to work.")
+}
+
+report <- lapply(data_names, function(x){
+    confront(data_formatted[[x]], validator(.data=rules |> filter(dataset == x))) 
+})
+
+results <- lapply(report, function(x) {
+    validate::summary(x) |> 
+        mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |> 
+        left_join(rules)
+})
+
+any_issues <- vapply(results, function(x) {
+    any(x$status == "error")
+}, FUN.VALUE = TRUE)
+
+rules_list_formatted <- tryCatch(lapply(data_names, function(x) {
+    validator(.data=rules |> filter(dataset == x))
+}), 
+warning = function(w) {
+    warning(w)
+    NULL
+}, 
+error = function(e) {
+    stop(e)
+})
+
+list(data_formatted = data_formatted,
+     data_names = data_names,
+     zip_data = if(exists("zip_data")){zip_data} else{NULL},
+     report = report, 
+     results = results, 
+     rules = rules_list_formatted, 
+     status = "success", 
+     issues = any_issues)
 }
 
 #' Remote Share Function

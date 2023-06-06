@@ -7,6 +7,7 @@
 remote_share(
   validation,
   data_formatted,
+  zip_files,
   verified,
   valid_rules,
   valid_key,

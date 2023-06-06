@@ -1,5 +1,162 @@
 library(testthat)
 
+
+# Read rules ----
+
+context("Test read_rules function")
+
+test_that("read_rules correctly reads a CSV file", {
+    test_df <- data.frame(
+        name = c("test1", "test2"),
+        description = c("description1", "description2"),
+        severity = c("severe1", "severe2"),
+        rule = c("rule1", "rule2"),
+        stringsAsFactors = FALSE
+    )
+    
+    write.csv(test_df, "test_rules.csv", row.names = FALSE)
+    rules <- read_rules("test_rules.csv")
+    expect_equal(rules, test_df)
+})
+
+test_that("read_rules returns error on unsupported file type", {
+    expect_error(read_rules("test_rules.txt"))
+})
+
+test_that("read_rules returns error when required columns are missing", {
+    test_df <- data.frame(
+        name = c("test1", "test2"),
+        description = c("description1", "description2"),
+        stringsAsFactors = FALSE
+    )
+    
+    write.csv(test_df, "test_rules.csv", row.names = FALSE)
+    expect_error(read_rules("test_rules.csv"))
+})
+
+test_that("read_rules returns error when sensitive words are in rules", {
+    test_df <- data.frame(
+        name = c("test1", "test2"),
+        description = c("description1", "description2"),
+        severity = c("severe1", "severe2"),
+        rule = c("config", "rule2"),
+        stringsAsFactors = FALSE
+    )
+    
+    write.csv(test_df, "test_rules.csv", row.names = FALSE)
+    expect_error(read_rules("test_rules.csv"))
+})
+
+test_that("read_rules returns error when columns are not all character type", {
+    test_df <- data.frame(
+        name = c("test1", "test2"),
+        description = c("description1", "description2"),
+        severity = c("severe1", "severe2"),
+        rule = c(1, 2)
+    )
+    
+    write.csv(test_df, "test_rules.csv", row.names = FALSE)
+    expect_error(read_rules("test_rules.csv"))
+})
+
+# Clean up
+unlink("test_rules.csv")
+
+#read data ----
+# Assuming reformat_rules() is in your current environment.
+context("Testing reformat_rules")
+
+# Test when rules don't have a 'dataset' column
+test_that("rules without 'dataset' column are handled", {
+    rules <- data.frame(name = c("name1", "name2"), 
+                        rule = c("rule1", "rule2"), 
+                        stringsAsFactors = FALSE)
+    data_formatted <- list(data1 = data.frame(A = 1:3, B = 4:6),
+                           data2 = data.frame(X = 7:9, Y = 10:12))
+    
+    result <- reformat_rules(rules, data_formatted)
+    expect_is(result, "data.frame")
+    expect_true("dataset" %in% names(result))
+    expect_equal(length(unique(result$dataset)), 2)
+})
+
+# Test when rules have '___' in the rule
+test_that("rules with '___' are handled", {
+    rules <- data.frame(name = c("name1", "name2"), 
+                        rule = c("A___", "B___"),
+                        dataset = c("data1", "data1"),
+                        stringsAsFactors = FALSE)
+    data_formatted <- list(data1 = data.frame(A = 1:3, B = 4:6))
+    
+    result <- reformat_rules(rules, data_formatted)
+    expect_is(result, "data.frame")
+    expect_equal(length(unique(result$rule)), 2)
+})
+
+# Test when rules have 'is_foreign_key' in the rule
+test_that("'is_foreign_key' rules are handled", {
+    rules <- data.frame(name = c("name1", "name2"), 
+                        rule = c("is_foreign_key(A)", "is_foreign_key(B)"),
+                        dataset = c("data1", "data1"),
+                        stringsAsFactors = FALSE)
+    data_formatted <- list(data1 = data.frame(A = 1:3, B = 4:6))
+    
+    result <- reformat_rules(rules, data_formatted)
+    expect_is(result, "data.frame")
+    expect_equal(length(unique(result$rule)), 2)
+})
+
+
+
+
+# Test for csv file reading
+test_that("read_data reads csv files correctly", {
+    # Create a temporary csv file
+    temp_file <- tempfile(fileext = ".csv")
+    write.csv(mtcars, temp_file, row.names = FALSE)
+    
+    result <- read_data(temp_file)
+    
+    # Check that the returned object is a list
+    expect_is(result, "list")
+    
+    # Check that the content of the list is a data frame
+    expect_is(result[[1]], "data.frame")
+    
+    # Clean up
+    file.remove(temp_file)
+})
+
+# Test for error when multiple zip files are provided
+test_that("read_data returns an error for multiple zip files", {
+    # Create two temporary zip files
+    temp_file1 <- tempfile(fileext = ".zip")
+    temp_file2 <- tempfile(fileext = ".zip")
+    
+    # Expect an error when trying to read multiple zip files
+    expect_error(read_data(c(temp_file1, temp_file2)), 
+                 "Only one zip folder may be uploaded per package.")
+    
+    # Clean up
+    file.remove(c(temp_file1, temp_file2))
+})
+
+# Test for error when mixed file types are provided
+test_that("read_data returns an error for mixed file types", {
+    # Create a temporary csv and xlsx files
+    temp_file1 <- tempfile(fileext = ".csv")
+    temp_file2 <- tempfile(fileext = ".xlsx")
+    
+    # Expect an error when trying to read mixed file types
+    expect_error(read_data(c(temp_file1, temp_file2)), 
+                 "You cannot mix data types, choose either csv or xlsx for all datasets.")
+    
+    # Clean up
+    file.remove(c(temp_file1, temp_file2))
+})
+
+
+
 #Certificate df ----
 
 test_that("certificate_df function returns a valid data frame", {
