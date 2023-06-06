@@ -99,13 +99,6 @@ read_data <- function(files_data, data_names = NULL){
         data_formatted <- files_data
     }
     else{
-        if(sum(grepl("(\\.zip$)", ignore.case = T, as.character(files_data))) > 1) {
-            stop("Only one zip folder may be uploaded per package.")
-        }
-        if(sum(grepl("(\\.zip$)", ignore.case = T, as.character(files_data))) == 1){
-            zip_data = files_data[grepl("(\\.zip$)", ignore.case = T, as.character(files_data))]
-            files_data = files_data[!grepl("(\\.zip$)", ignore.case = T, as.character(files_data))]
-        }
         if(all(grepl("(\\.csv$)", ignore.case = T, as.character(files_data)))){
             data_formatted <- tryCatch(lapply(files_data, function(x){read.csv(x)}),
                                        warning = function(w) {warning(w$message)}, 
@@ -288,6 +281,8 @@ rules <- read_rules(file_rules)
 
 data_formatted <- read_data(files_data = files_data, data_names = data_names)
 
+names(data_formatted) <- name_data(files_data = files_data, data_names = data_names)
+
 if (!"dataset" %in% names(rules) & length(names(data_formatted)) > 1) {
     stop("If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset.")
 }
@@ -298,7 +293,9 @@ if ("dataset" %in% names(rules)) {
     }
 }
 
-rules_formatted <- tryCatch(validator(.data=rules), 
+rules <- reformat_rules(rules = rules, data_formatted = data_formatted)
+
+rules_formatted <- tryCatch(validate::validator(.data=rules), 
                             warning = function(w) {
                                 warning(w)
                                 NULL
@@ -316,7 +313,7 @@ if (!all(variables(rules_formatted) %in% unlist(lapply(data_formatted, names))) 
 }
 
 report <- lapply(data_names, function(x){
-    confront(data_formatted[[x]], validator(.data=rules |> filter(dataset == x))) 
+    validate::confront(data_formatted[[x]], validate::validator(.data=rules |> filter(dataset == x))) 
 })
 
 results <- lapply(report, function(x) {

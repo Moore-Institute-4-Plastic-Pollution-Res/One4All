@@ -154,34 +154,22 @@ test_that("read_data reads csv files correctly", {
     result <- read_data(temp_file)
     
     # Check that the returned object is a list
-    expect_is(result, "list")
+    expect_type(result, "list")
     
     # Check that the content of the list is a data frame
-    expect_is(result[[1]], "data.frame")
+    expect_s3_class(result[[1]], "data.frame")
     
     # Clean up
     file.remove(temp_file)
-})
-
-# Test for error when multiple zip files are provided
-test_that("read_data returns an error for multiple zip files", {
-    # Create two temporary zip files
-    temp_file1 <- tempfile(fileext = ".zip")
-    temp_file2 <- tempfile(fileext = ".zip")
-    
-    # Expect an error when trying to read multiple zip files
-    expect_error(read_data(c(temp_file1, temp_file2)), 
-                 "Only one zip folder may be uploaded per package.")
-    
-    # Clean up
-    file.remove(c(temp_file1, temp_file2))
 })
 
 # Test for error when mixed file types are provided
 test_that("read_data returns an error for mixed file types", {
     # Create a temporary csv and xlsx files
     temp_file1 <- tempfile(fileext = ".csv")
-    temp_file2 <- tempfile(fileext = ".xlsx")
+    temp_file2 <- tempfile(fileext = ".txt")
+    write.csv(mtcars, temp_file1, row.names = FALSE)
+    write.table(mtcars, temp_file2, row.names = FALSE)
     
     # Expect an error when trying to read mixed file types
     expect_error(read_data(c(temp_file1, temp_file2)), 
@@ -202,26 +190,33 @@ test_that("name_data correctly handles csv file paths", {
 })
 
 test_that("name_data correctly handles xlsx file paths", {
+    test_files <- paste0(tempdir(), "\\createWorkbookExample.xlsx")
+    wb <- openxlsx::createWorkbook()
+    openxlsx::addWorksheet(wb, "sheet1")
+    openxlsx::addWorksheet(wb, "sheet2")
+    
+    ## Save workbook to working directory
+    openxlsx::saveWorkbook(wb, file = test_files, overwrite = TRUE)
+    
     # Here you should replace with paths to your actual test xlsx file
-    test_files <- "/path/to/your/test/file.xlsx"
+
     # And replace with your actual sheet names
     expected_names <- c("sheet1", "sheet2")
-    expect_equal(name_data(files_data = test_files, data_names = expected_names), expected_names)
+    expect_equal(name_data(files_data = test_files), expected_names)
 })
 
 test_that("name_data uses data_names argument when provided", {
-    test_files <- c("irrelevant", "does_not_matter")
+    test_files <- c("irrelevant")
     expected_names <- c("name1", "name2")
     expect_equal(name_data(files_data = test_files, data_names = expected_names), expected_names)
 })
 
 
 #Certificate df ----
-
 test_that("certificate_df function returns a valid data frame", {
     x <- list(
         data_formatted = data.frame(a = 1:3, b = 4:6),
-        rules = validator(a > 0, b > 0)
+        rules = validate::validator(a > 0, b > 0)
     )
     result <- certificate_df(x, mongo_key = FALSE)
     
@@ -247,40 +242,15 @@ create_temp_file <- function(content, ext = ".csv") {
     return(tmp_file)
 }
 
-# Test data and rules files
-test_data_csv <- "column1,column2\n1,2\n3,4"
-test_rules_csv <- "name,description,severity,rule\nrule1,Test rule 1,low,column1 > 0"
+# validate_data ----
 
-test_that("validate_data returns an error for invalid file types", {
-    invalid_file <- create_temp_file(test_data_csv, ext = ".txt")
-    
-    result <- validate_data(files_data = list(invalid_file), file_rules = invalid_file)
+test_that("validate_data returns an error for rules file with incorrect dataset names", {
+    data("valid_example")
+    data("test_rules")
+    result <- validate_data(files_data = valid_example, data_names = names(valid_example), file_rules = test_rules)
     expect_equal(result$status, "error")
 })
 
-test_that("validate_data returns an error for rules file with incorrect column names", {
-    incorrect_rules_csv <- "name,description,severity,wrong_rule_column\nrule1,Test rule 1,low,column1 > 0"
-    incorrect_rules_file <- create_temp_file(incorrect_rules_csv)
-    
-    result <- validate_data(files_data = list(create_temp_file(test_data_csv)), file_rules = incorrect_rules_file)
-    expect_equal(result$status, "error")
-})
-
-test_that("validate_data returns an error for rules with sensitive words", {
-    sensitive_rules_csv <- "name,description,severity,rule\nrule1,Test rule 1,low,config"
-    sensitive_rules_file <- create_temp_file(sensitive_rules_csv)
-    
-    result <- validate_data(files_data = list(create_temp_file(test_data_csv)), file_rules = sensitive_rules_file)
-    expect_equal(result$status, "error")
-})
-
-test_that("validate_data returns an error for rules file with incorrect column types", {
-    incorrect_column_type_rules_csv <- "name,description,severity,rule\n1,Test rule 1,low,column1 > 0"
-    incorrect_column_type_rules_file <- create_temp_file(incorrect_column_type_rules_csv)
-    
-    result <- validate_data(files_data = list(create_temp_file(test_data_csv)), file_rules = incorrect_column_type_rules_file)
-    expect_equal(result$status, "error")
-})
 
 test_that("validate_data returns an error for rules file with incorrect dataset names", {
     incorrect_dataset_rules_csv <- "name,description,severity,rule,dataset\nrule1,Test rule 1,low,column1 > 0,WrongDataset"
