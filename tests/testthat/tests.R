@@ -244,11 +244,18 @@ create_temp_file <- function(content, ext = ".csv") {
 
 # validate_data ----
 
-test_that("validate_data returns an error for rules file with incorrect dataset names", {
+test_that("validate_data returns an success for rules files that are valid for the datasets", {
     data("valid_example")
     data("test_rules")
     result <- validate_data(files_data = valid_example, data_names = names(valid_example), file_rules = test_rules)
-    expect_equal(result$status, "error")
+    expect_false(result$issues)
+})
+
+test_that("validate_data returns an error for rules file with incorrect validation", {
+    data("invalid_example")
+    data("test_rules")
+    result <- validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules)
+    expect_true(result$issues)
 })
 
 

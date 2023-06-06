@@ -4,7 +4,7 @@
 \alias{reformat_rules}
 \title{Reformats the rules}
 \usage{
-reformat_rules(rules, data_formatted)
+reformat_rules(rules, data_formatted, zip_data = NULL)
 }
 \arguments{
 \item{rules}{A data.frame containing rules to be reformatted.}

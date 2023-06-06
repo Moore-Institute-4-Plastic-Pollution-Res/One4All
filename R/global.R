@@ -308,18 +308,18 @@ if (is.null(rules_formatted) || (length(class(rules_formatted)) != 1 || class(ru
     stop("There was an error with reading the rules file.")
 }
 
-if (!all(variables(rules_formatted) %in% unlist(lapply(data_formatted, names))) | !all(unlist(lapply(data_formatted, names)) %in% variables(rules_formatted))) {
+if (!all(validate::variables(rules_formatted) %in% unlist(lapply(data_formatted, names))) | !all(unlist(lapply(data_formatted, names)) %in% validate::variables(rules_formatted))) {
     warning("All variables in the rules csv need to be in the data csv and vice versa for the validation to work.")
 }
 
 report <- lapply(data_names, function(x){
-    validate::confront(data_formatted[[x]], validate::validator(.data=rules |> filter(dataset == x))) 
+    validate::confront(data_formatted[[x]], validate::validator(.data=rules |> dplyr::filter(dataset == x))) 
 })
 
 results <- lapply(report, function(x) {
     validate::summary(x) |> 
-        mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |> 
-        left_join(rules)
+        dplyr::mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |> 
+        dplyr::left_join(rules)
 })
 
 any_issues <- vapply(results, function(x) {
@@ -343,7 +343,6 @@ list(data_formatted = data_formatted,
      report = report, 
      results = results, 
      rules = rules_list_formatted, 
-     status = "success", 
      issues = any_issues)
 }
 
@@ -791,55 +790,6 @@ check_exists_in_zip <- function(zip_path, file_name) {
     file_exists <- file_name %in% zip_files
     return(file_exists)
 }
-
-#' Check if a file can be uploaded to an S3 bucket
-#'
-#' This function checks if a file located at a given URL can be downloaded and uploaded to an S3 bucket.
-#' @param url A character string representing the URL of the file to download.
-#' @param s3_key_id AWS ACCESS KEY ID
-#' @param s3_secret_key AWS SECRET ACCESS KEY
-#' @param s3_region AWS DEFAULT REGION
-#' @param s3_bucket A character string representing the S3 bucket name where the file will be uploaded. Defaults to 'config$s3_bucket'.
-#' @return A logical value indicating whether the file can be uploaded (TRUE) or not (FALSE).
-#' @importFrom digest digest
-#' @importFrom shiny isTruthy
-#' @importFrom aws.s3 put_object
-#' @importFrom utils download.file
-#' @examples
-#' # Note: The example assumes you have valid AWS credentials and an S3 bucket available
-#' check_uploadable("https://example.com/file.csv", s3_bucket = "your-s3-bucket-name")
-#' @export
-check_uploadable <- function(url, 
-                             s3_key_id = config$s3_key_id,
-                             s3_secret_key = config$s3_secret_key,
-                             s3_region = config$s3_region,
-                             s3_bucket = config$s3_bucket){
-    hash_url <- digest(url)
-    file_type <- gsub(".*\\.", "", url)
-    file_name <- paste0(hash_url, ".", file_type)
-    filedest <- paste0(tempfile(), file_name)
-    test <- tryCatch(download.file(url = url, 
-                                   destfile = filedest, 
-                                   quiet = T,
-                                   mode = "wb"), #The wb is for windows, need to be changed for remote deployment.
-                     warning = function(w) {w}, error = function(e) {e})
-    if(length(class(test)) != 1 || class(test) != "integer"){
-        return(FALSE)
-    }
-    if(isTruthy(s3_bucket)){
-            Sys.setenv(
-                "AWS_ACCESS_KEY_ID" = s3_key_id,
-                "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
-                "AWS_DEFAULT_REGION" = s3_region
-            )
-        put_object(
-            file = filedest,
-            object = paste0("uploaded/", file_name),
-            bucket = s3_bucket
-        )   
-    }
-}
-
 
 #' Check and format image URLs
 #'
