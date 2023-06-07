@@ -308,8 +308,10 @@ if (is.null(rules_formatted) || (length(class(rules_formatted)) != 1 || class(ru
     stop("There was an error with reading the rules file.")
 }
 
-if (!all(validate::variables(rules_formatted) %in% unlist(lapply(data_formatted, names))) | !all(unlist(lapply(data_formatted, names)) %in% validate::variables(rules_formatted))) {
-    warning("All variables in the rules csv need to be in the data csv and vice versa for the validation to work.")
+all_variables <- unique(c(validate::variables(rules_formatted), unlist(lapply(data_formatted, names))))
+
+if (!(all(all_variables %in% validate::variables(rules_formatted)) & all(all_variables %in% unlist(lapply(data_formatted, names))))) {
+    warning(paste0("All variables in the rules csv should be in the data csv and vice versa for the validation to work correctly. Ignoring these unmatched variables ", paste0(all_variables[!(all_variables %in% validate::variables(rules_formatted)) | !(all_variables %in% unlist(lapply(data_formatted, names)))], collapse = ", ")))
 }
 
 report <- lapply(data_names, function(x){
@@ -389,35 +391,19 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
     use_s3 <- isTruthy(s3_bucket)  
     
     if(!(use_ckan | use_mongo | use_s3)){
-        return(list(
-            message = data.table(
-                title = "No upload methods available",
-                text = "This feature will not work because no upload methods are specified.",
-                type = "error"), status = "error"))
+        stop("Upload will not work because no upload methods are specified.")
     }
     
     if(any(results$status == "error")){
-        return(list(
-            message = data.table(
-            title = "Errors Prevent Upload",
-            text = "There are errors in the dataset that persist. Until all errors are remedied, the data cannot be uploaded to the remote repository.",
-            type = "error"), status = "error"))
+        stop("There are errors in the dataset that persist. Until all errors are remedied, the data cannot be uploaded to the remote repository.")
     }
     
     if(!any(digest(as.data.frame(rules)) %in% valid_rules)){
-        return(list(
-            message = data.table(
-            title = "Rules file is not valid",
-            text = "If you are using a key to upload data to a remote repo then there must be a valid pair with the rules you are using in our internal database.",
-            type = "error"), status = "error"))
+        stop("If you are using a key to upload data to a remote repo then there must be a valid pair with the rules you are using in our internal database.")
     }
     
     if(!any(verified %in% valid_key)){
-        return(list(
-            message = data.table(
-                title = "Secret Key is not valid",
-                text = "You must have a valid key provided by the portal maintainer to use this feature.",
-                type = "error"), status = "error"))
+        stop("You must have a valid key provided by the portal maintainer to use this feature.")
     }
 
     hashed_data <- digest(data_formatted)
@@ -484,13 +470,11 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
                 database$insert(time_added |> mutate(name = paste0(hashed_data, "_", data_name)), na = "NA")
             }
         }        
+    
+    message(paste0("Data was successfully sent to the data portal at ", url_to_send))
 
     return(list(hashed_data = hashed_data,
-                submission_time = submission_time,
-                status = "success", 
-                message = data.table(title = "Data Upload Successful", 
-                                     text = paste0("Data was successfully sent to the data portal at ", url_to_send), 
-                                     type = "success")))
+                submission_time = submission_time))
 }
 
 #' Download Data from Remote Sources

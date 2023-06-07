@@ -248,27 +248,35 @@ test_that("validate_data returns an success for rules files that are valid for t
     data("valid_example")
     data("test_rules")
     result <- validate_data(files_data = valid_example, data_names = names(valid_example), file_rules = test_rules)
-    expect_false(result$issues)
+    expect_false(unique(result$issues))
 })
 
 test_that("validate_data returns an error for rules file with incorrect validation", {
     data("invalid_example")
     data("test_rules")
     result <- validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules)
-    expect_true(result$issues)
+    expect_true(any(result$issues))
 })
 
+test_that("validate_data returns a warning when there is a column that is in the rules or data that isn't matched", {
+    data("invalid_example")
+    data("test_rules")
+    expect_warning(validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules |> dplyr::filter(name != "PickingStrategy")))
+})
 
-test_that("validate_data returns an error for rules file with incorrect dataset names", {
-    incorrect_dataset_rules_csv <- "name,description,severity,rule,dataset\nrule1,Test rule 1,low,column1 > 0,WrongDataset"
-    incorrect_dataset_rules_file <- create_temp_file(incorrect_dataset_rules_csv)
-    
-    result <- validate_data(files_data = list(create_temp_file(test_data_csv)), data_names = c("CorrectDataset"), file_rules = incorrect_dataset_rules_file)
-    expect_equal(result$status, "error")
+test_that("validate_data returns an error when the data has more than one dataset but the rules doesn't have a dataset column", {
+    data("invalid_example")
+    data("test_rules")
+    expect_error(validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules |> dplyr::select(-dataset)))
+})
+
+test_that("validate_data returns an error when rules file has a dataset listed that isn't in the datasets", {
+    data("invalid_example")
+    data("test_rules")
+    expect_error(validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules |> dplyr::mutate(dataset = ifelse(dataset == "methodology", "test", "methodology"))))
 })
 
 #Remote share ----
-
 # Test case 1: Check if remote_share returns an error when no upload methods are specified
 test_that("No upload methods specified error", {
     result <- remote_share(validation, data_formatted, verified, valid_rules, valid_key,
