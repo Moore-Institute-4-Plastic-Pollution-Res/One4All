@@ -493,9 +493,10 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
 #' @param mongo_key A character string representing the MongoDB connection string.
 #'
 #' @importFrom shiny isTruthy
+#' @importFrom dplyr mutate_if
 #' @importFrom aws.s3 get_bucket get_object save_object
 #' @importFrom mongolite mongo
-#' @importFrom ckanr ckanr_setup
+#' @importFrom ckanr ckanr_setup package_show ckan_fetch
 #' 
 #' @return A named list containing the downloaded datasets.
 #' 
