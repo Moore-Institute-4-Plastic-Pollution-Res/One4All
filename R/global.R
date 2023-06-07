@@ -856,8 +856,7 @@ test_profanity <- function(x){
 create_valid_excel <- function(file_rules, 
                                negStyle  = createStyle(fontColour = "#9C0006", bgFill = "#FFC7CE"),
                                posStyle  = createStyle(fontColour = "#006100", bgFill = "#C6EFCE"),
-                               row_num   = 1000,
-                               file_name = "conditionalFormattingExample.xlsx"){
+                               row_num   = 1000){
     #Reads the rules file.
     if(is.data.frame(file_rules)){
         rules <- file_rules
@@ -996,7 +995,6 @@ create_valid_excel <- function(file_rules,
             
         }
     }
-    #saveWorkbook(wb, file_name, TRUE)
     wb
 }
 

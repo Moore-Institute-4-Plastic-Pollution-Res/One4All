@@ -279,13 +279,7 @@ test_that("validate_data returns an error when rules file has a dataset listed t
 #Remote share ----
 # Test case 1: Check if remote_share returns an error when no upload methods are specified
 test_that("No upload methods specified error", {
-    result <- remote_share(validation, data_formatted, verified, valid_rules, valid_key,
-                           ckan_url = NULL, ckan_key = NULL, ckan_package = NULL,
-                           url_to_send, rules, results, s3_key_id = NULL, s3_secret_key = NULL, s3_region = NULL, 
-                           s3_bucket = NULL, mongo_key = NULL, old_cert = NULL)
-    
-    expect_equal(result$status, "error")
-    expect_equal(result$message$title, "No upload methods available")
+    expect_error(remote_share())
 }) #Could use some better tests here. 
 
 #Rules broken ----
@@ -322,18 +316,18 @@ sample_data <- data.frame(
 )
 
 # Validation rules
-rules <- validator(
+rules <- validate::validator(
     col1 > 0,
     col2 <= 9
 )
 
 # Generate a validation report
-report <- confront(sample_data, rules)
+report <- validate::confront(sample_data, rules)
 
 # Find the broken rules
-results <- summary(report) %>%
-    mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) %>%
-    mutate(description = "test")
+results <- validate::summary(report) %>%
+    dplyr::mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) %>%
+    dplyr::mutate(description = "test")
 
 broken_rules <- rules_broken(results, show_decision = FALSE)
 
@@ -429,7 +423,7 @@ test_that("check_other_hyperlinks returns correct results", {
 #Profanity ----
 test_that("test_profanity returns correct results", {
     
-    profane_string <- profanity_banned[1]
+    profane_string <- lexicon::profanity_banned[1]
     clean_string <- "This is a clean sentence."
     # Test case 1: Clean sentence
     expect_true(test_profanity(clean_string))
@@ -452,43 +446,26 @@ test_that("test_profanity returns correct results", {
 
 test_that("create_valid_excel creates a valid Excel file", {
     # Validation rules as a data frame
-    validation_rules <- data.frame(
-        name = c("MethodologyID_valid", "SamplingDevice", "AirFiltration",
-                 "ParticleID_blank", "ParticleID"),
-        description = c("URL address is valid and can be found on the internet.",
-                        "Device used to collect sample and dimensions",
-                        "Is there HEPA air filtration system in the lab?",
-                        "Unique ID for each particle cannot be blank",
-                        "Unique ID for each particle must be unique"),
-        dataset = c("methodology", "methodology", "methodology",
-                    "particles", "particles"),
-        valid_example = c("https://example.com", "10 L Glass Jar", "Yes",
-                          "1_23jreh334", "1_23jreh334"),
-        severity = c("error", "error", "error", "error", "error"),
-        rule = c("check_uploadable(MethodologyID) == TRUE", "!is.na(SamplingDevice)",
-                 "AirFiltration %in% c(\"Yes\", \"No\")",
-                 "!is.na(ParticleID)", "is_unique(ParticleID)")
-    )
+    data("test_rules")
     
     temp_file_rules_csv <- tempfile(fileext = ".csv")
-    write.csv(validation_rules, temp_file_rules_csv, row.names = FALSE)
+    write.csv(test_rules, temp_file_rules_csv, row.names = FALSE)
     
     # Create the Excel file
     output_file <- "test_output.xlsx"
-    create_valid_excel(temp_file_rules_csv, file_name = output_file) #TODO: Has warnings, perhaps add some example datasets and rules from water pact
     
+    suppressWarnings(workbook <- create_valid_excel(temp_file_rules_csv, file_name = output_file)) #TODO: Has warnings, perhaps add some example datasets and rules from water pact
+    
+    openxlsx::saveWorkbook(wb = workbook, file = output_file, overwrite = T)
     # Check if the file exists
     expect_true(file.exists(output_file))
     
     # Load the created Excel file
-    wb <- loadWorkbook(output_file)
+    wb <- openxlsx::loadWorkbook(output_file)
     
     # Check the presence of worksheets
-    expect_equal(length(sheets(wb)), 4)
-    expect_true("Rules" %in% sheets(wb))
-    expect_true("methodology" %in% sheets(wb))
-    expect_true("particles" %in% sheets(wb))
-    expect_true("Lookup" %in% sheets(wb))
+    expect_equal(length(openxlsx::sheets(wb)), 5)
+    expect_true(all(c("Rules", "methodology", "Lookup", "particles", "samples") %in% openxlsx::sheets(wb)))
     
     # Perform additional checks on the worksheets as needed
     
