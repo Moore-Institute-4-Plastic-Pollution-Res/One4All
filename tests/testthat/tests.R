@@ -546,7 +546,7 @@ test_that("remote_download retrieves identical data from all sources", {
                                 data_formatted = result_valid$data_formatted, 
                                 verified = config$valid_key, 
                                 valid_key = config$valid_key, 
-                                valid_rules = digest(test_rules), 
+                                valid_rules = digest::digest(test_rules), 
                                 ckan_url = config$ckan_url, 
                                 ckan_key = config$ckan_key, 
                                 ckan_package = config$ckan_package, 
