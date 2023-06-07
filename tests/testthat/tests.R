@@ -480,36 +480,9 @@ context("remote_download tests")
 # This code will run before all the tests in this file
 
 # Test for successful data download
-test_that("remote_download successfully downloads data", {
-    # Setup the remote sources and hashed_data for testing
-    # Be cautious with real credentials and consider using a separate set of credentials for testing purposes
-    
-    hashed_data <- "example_hash"
-    ckan_url <- "https://example.com"
-    ckan_key <- "your_ckan_key"
-    ckan_package <- "your_ckan_package"
-    s3_key_id <- "your_s3_key_id"
-    s3_secret_key <- "your_s3_secret_key"
-    s3_region <- "your_s3_region"
-    s3_bucket <- "your_s3_bucket"
-    mongo_key <- "your_mongo_key"
-    
+test_that("remote_download fails without inputs", {
     # Run the remote_download function
-    downloaded_data <- remote_download(hashed_data = hashed_data,
-                                       ckan_url = ckan_url,
-                                       ckan_key = ckan_key,
-                                       ckan_package = ckan_package,
-                                       s3_key_id = s3_key_id,
-                                       s3_secret_key = s3_secret_key,
-                                       s3_region = s3_region,
-                                       s3_bucket = s3_bucket,
-                                       mongo_key = mongo_key)
-    
-    # Test that the downloaded_data is a list
-    expect_is(downloaded_data, "list")
-    
-    # Test that the downloaded_data has the expected length
-    expect_length(downloaded_data, length_of_expected_data) # Replace length_of_expected_data with the expected length
+    expect_error(remote_download())
 })
 
 #Posixct test ----
@@ -552,8 +525,11 @@ test_that("check_exists_in_zip correctly identifies existing files in a zip", {
 
 #Test locally only ----
 test_that("remote_download retrieves identical data from all sources", {
+    
+    testthat::skip_on_cran()
+    
     # Load the required configuration
-    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/One4All/inst/shiny/config.yml")
+    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/One4All/inst/shiny/config_pl.yml")
     
     # Load the necessary datasets
     data("valid_example")
@@ -570,12 +546,13 @@ test_that("remote_download retrieves identical data from all sources", {
                                 data_formatted = result_valid$data_formatted, 
                                 verified = config$valid_key, 
                                 valid_key = config$valid_key, 
-                                valid_rules = config$valid_rules, 
+                                valid_rules = digest(test_rules), 
                                 ckan_url = config$ckan_url, 
                                 ckan_key = config$ckan_key, 
                                 ckan_package = config$ckan_package, 
                                 url_to_send = config$ckan_url_to_send, 
                                 rules = test_rules, 
+                                zip_files = NULL,
                                 results = valid_example$results, 
                                 s3_key_id = config$s3_key_id, 
                                 s3_secret_key = config$s3_secret_key, 

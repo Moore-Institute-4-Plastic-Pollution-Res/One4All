@@ -8,8 +8,7 @@ create_valid_excel(
   file_rules,
   negStyle = createStyle(fontColour = "#9C0006", bgFill = "#FFC7CE"),
   posStyle = createStyle(fontColour = "#006100", bgFill = "#C6EFCE"),
-  row_num = 1000,
-  file_name = "conditionalFormattingExample.xlsx"
+  row_num = 1000
 )
 }
 \arguments{

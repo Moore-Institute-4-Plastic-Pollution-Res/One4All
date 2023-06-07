@@ -493,7 +493,7 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
 #' @param mongo_key A character string representing the MongoDB connection string.
 #'
 #' @importFrom shiny isTruthy
-#' @importFrom aws.s3 get_bucket get_object
+#' @importFrom aws.s3 get_bucket get_object save_object
 #' @importFrom mongolite mongo
 #' @importFrom ckanr ckanr_setup
 #' 
@@ -515,17 +515,17 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
 #' @export
 remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key) {
     
-    download_all <- !isTruthy(hashed_data)
-    use_ckan <- isTruthy(ckan_url) & isTruthy(ckan_key) & isTruthy(ckan_package)
-    use_mongo <- isTruthy(mongo_key)
-    use_s3 <- isTruthy(s3_bucket)  
+    download_all <- !shiny::isTruthy(hashed_data)
+    use_ckan <- shiny::isTruthy(ckan_url) & shiny::isTruthy(ckan_key) & shiny::isTruthy(ckan_package)
+    use_mongo <- shiny::isTruthy(mongo_key)
+    use_s3 <- shiny::isTruthy(s3_bucket)  
     
     if(use_ckan){
-        ckanr_setup(url = ckan_url, key = ckan_key)
+        ckanr::ckanr_setup(url = ckan_url, key = ckan_key)
     }
     
     if(use_mongo) {
-        database <- mongo(url = mongo_key)
+        database <- mongolite::mongo(url = mongo_key)
     }
     
     if(use_s3){
@@ -545,7 +545,7 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
         for (obj in s3_objects) {
             # Download each object
             file <- tempfile(fileext = ".csv")
-            save_object(object = obj$Key, file = file, bucket = s3_bucket)
+            aws.s3::save_object(object = obj$Key, file = file, bucket = s3_bucket)
             
             # Read the data and store it in a named list
             dataset_name <- gsub(paste0(hashed_data, "_"), "", obj$Key)
@@ -561,7 +561,7 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
             if(grepl("^uploaded/", obj$Key)) next
             # Download each object
             file <- tempfile(fileext = ".csv")
-            save_object(object = obj$Key, file = file, bucket = s3_bucket)
+            aws.s3::save_object(object = obj$Key, file = file, bucket = s3_bucket)
             
             # Read the data and store it in a named list
             dataset_name <- gsub("\\.csv$", "", obj$Key)
