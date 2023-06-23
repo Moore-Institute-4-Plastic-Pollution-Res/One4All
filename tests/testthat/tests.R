@@ -541,7 +541,7 @@ test_that("remote_download retrieves identical data from all sources", {
                                   data_names = c("methodology", "particles", "samples"),
                                   file_rules = test_rules)
     
-    test_file <- tempfile(pattern = "file", fileext = ".rds")
+    test_file <- tempfile(pattern = "file", fileext = ".RData")
     
     save(valid_example, file = test_file)
     
@@ -565,15 +565,14 @@ test_that("remote_download retrieves identical data from all sources", {
                                 old_cert = NULL)
     
     # Download the data using remote_download
-    dataset <- remote_download(hashed_data = test_remote$hashed_data, 
+    dataset <- remote_download(hashed_zip = test_remote$hashed_zip, 
                                ckan_url = config$ckan_url, 
                                ckan_key = config$ckan_key, 
                                ckan_package = config$ckan_package,
                                s3_key_id = config$s3_key_id,
                                s3_secret_key = config$s3_secret_key,
                                s3_region = config$s3_region,
-                               s3_bucket = config$s3_bucket,
-                               mongo_key = config$mongo_key)
+                               s3_bucket = config$s3_bucket)
     
     # Compare datasets from different sources
     expect_identical(dataset$s3$certificate, dataset$ckan$certificate)

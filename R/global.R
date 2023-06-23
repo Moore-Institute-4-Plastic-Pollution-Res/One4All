@@ -397,9 +397,9 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 
     hashed_data <- digest(data_formatted)
     
-    structured_files <- paste(tempdir(), "\\", hashed_data, ".RData", sep = "")
+    structured_files <- paste(tempdir(), "\\", hashed_data, ".rds", sep = "")
     
-    save(data_formatted, file = structured_files)
+    saveRDS(data_formatted, file = structured_files)
     
     submission_time <- as.double(as.POSIXlt(Sys.time(), "GMT"))
     
@@ -450,7 +450,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
     
     message(paste0("Data was successfully sent to the data portal at ", url_to_send))
 
-    return(list(hashed_data = hashed_data,
+    return(list(hashed_zip = hashed_zip,
                 submission_time = submission_time))
 }
 
@@ -488,9 +488,9 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 #' }
 #' 
 #' @export
-remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket) {
+remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket) {
     
-    download_all <- !shiny::isTruthy(hashed_data)
+    download_all <- !shiny::isTruthy(hashed_zip)
     use_ckan <- shiny::isTruthy(ckan_url) & shiny::isTruthy(ckan_key) & shiny::isTruthy(ckan_package)
     use_s3 <- shiny::isTruthy(s3_bucket)  
     
@@ -510,18 +510,13 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
     
     if(use_s3 & !download_all){
         # Retrieve a list of objects from S3 bucket
-        s3_objects <- get_bucket(bucket = s3_bucket, prefix = paste0(hashed_data, "_")) 
-        
-        for (obj in s3_objects) {
-            # Download each object
-            file <- tempfile(fileext = ".csv")
-            aws.s3::save_object(object = obj$Key, file = file, bucket = s3_bucket)
-            
-            # Read the data and store it in a named list
-            dataset_name <- gsub(paste0(hashed_data, "_"), "", obj$Key)
-            dataset_name <- gsub("\\.csv$", "", dataset_name)
-            data_downloaded[["s3"]][[dataset_name]] <- read.csv(file)
-        }
+        s3_objects <- get_bucket(bucket = s3_bucket, prefix = hashed_zip) 
+        file <- tempfile(fileext = ".zip")
+        aws.s3::save_object(object = s3_objects[[1]]$Key, file = file, bucket = s3_bucket)
+        zip_files <- unzip(file, list = TRUE)$Name
+        structured_data <- zip_files[grepl(".rds$", zip_files)]
+        unzip(file)
+        data_downloaded[["s3"]] <- read_rds(structured_data)
     }
     
     if(use_s3 & download_all){
@@ -542,11 +537,13 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
     if(use_ckan & !download_all){
         resources <- package_show(ckan_package)$resources
         resources_names <- vapply(resources, function(x){x$name}, FUN.VALUE = character(1))
-        hashed_data_resources <- resources[grepl(paste0(hashed_data, "_"), resources_names)]
-        
-        for (res in hashed_data_resources) {
-            data <- ckan_fetch(x = res$url)
-            dataset_name <- gsub(paste0(hashed_data, "_"), "", res$name)
+        hashed_zip_resources <- resources[grepl(hashed_zip, resources_names)]
+        file <- tempfile(fileext = ".zip")
+        curl::curl_download(url = hashed_zip_resources[[1]]$url, destfile = file)
+        unzip(file)
+        for (res in hashed_zip_resources) {
+            data <- ckan_fetch(x = hashed_zip_resources[[1]]$url)
+            dataset_name <- gsub(paste0(hashed_zip, "_"), "", res$name)
             data_downloaded[["ckan"]][[dataset_name]] <- data
         }
     }
