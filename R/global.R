@@ -6,28 +6,20 @@
 #' data and rule hashes, package version, and web hash.
 #'
 #' @param x A list containing `data_formatted` and `rules` elements.
-#' @param mongo_key key for the mongo db database. If it exists, a copy of the certificate will be stored there. 
 #' @param time the time the certificate is generated, can be passed a value or uses current system time.
 #' @return A data frame with certificate information.
-#' @import mongolite
 #' @importFrom digest digest
 #' @importFrom shiny isTruthy
 #' @importFrom utils packageVersion sessionInfo
 #' @export
-certificate_df <- function(x, mongo_key, time = Sys.time()){
-    df <-  data.frame(time = time, 
+certificate_df <- function(x, time = Sys.time()){
+    data.frame(time = time, 
                       data = digest(x$data_formatted), 
                       rules = digest(x$rules), 
                       package_version = paste(unlist(packageVersion("validate")), collapse = ".", sep = ""), 
                       web_hash = digest(paste(sessionInfo(), 
                                               Sys.time(), 
                                               Sys.info())))
-    
-    if(isTruthy(mongo_key)){
-        database <- mongo(url = mongo_key)
-        database$insert(df)
-    }
-    df
 }
 
 #' Read rules from a file
@@ -276,68 +268,68 @@ reformat_rules <- function(rules, data_formatted, zip_data = NULL){
 #' @importFrom shiny isTruthy
 #' @importFrom utils read.csv
 #' @export
-validate_data <- function(files_data, data_names = NULL, file_rules = NULL) {
-rules <- read_rules(file_rules)
-
-data_formatted <- read_data(files_data = files_data, data_names = data_names)
-
-names(data_formatted) <- name_data(files_data = files_data, data_names = data_names)
-
-if (!"dataset" %in% names(rules) & length(names(data_formatted)) > 1) {
-    stop("If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset.")
-}
-
-if ("dataset" %in% names(rules)) {
-    if (!all(unique(rules$dataset) %in% names(data_formatted))) {
-        stop("If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists datasets that do not match the datasets shared.")
+validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_data = NULL) {
+    rules <- read_rules(file_rules)
+    
+    data_formatted <- read_data(files_data = files_data, data_names = data_names)
+    
+    names(data_formatted) <- name_data(files_data = files_data, data_names = data_names)
+    
+    if (!"dataset" %in% names(rules) & length(names(data_formatted)) > 1) {
+        stop("If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset.")
     }
-}
-
-rules <- reformat_rules(rules = rules, data_formatted = data_formatted)
-
-rules_formatted <- tryCatch(validate::validator(.data=rules), 
-                            warning = function(w) {
-                                warning(w)
-                                NULL
-                            }, 
-                            error = function(e) {
-                                stop(e)
-                            })
-
-if (is.null(rules_formatted) || (length(class(rules_formatted)) != 1 || class(rules_formatted) != "validator")) {
-    stop("There was an error with reading the rules file.")
-}
-
-all_variables <- unique(c(validate::variables(rules_formatted), unlist(lapply(data_formatted, names))))
-
-if (!(all(all_variables %in% validate::variables(rules_formatted)) & all(all_variables %in% unlist(lapply(data_formatted, names))))) {
-    warning(paste0("All variables in the rules csv should be in the data csv and vice versa for the validation to work correctly. Ignoring these unmatched variables ", paste0(all_variables[!(all_variables %in% validate::variables(rules_formatted)) | !(all_variables %in% unlist(lapply(data_formatted, names)))], collapse = ", ")))
-}
-
-report <- lapply(data_names, function(x){
-    validate::confront(data_formatted[[x]], validate::validator(.data=rules |> dplyr::filter(dataset == x))) 
-})
-
-results <- lapply(report, function(x) {
-    validate::summary(x) |> 
-        dplyr::mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |> 
-        dplyr::left_join(rules)
-})
-
-any_issues <- vapply(results, function(x) {
-    any(x$status == "error")
-}, FUN.VALUE = TRUE)
-
-rules_list_formatted <- tryCatch(lapply(data_names, function(x) {
-    validator(.data=rules |> filter(dataset == x))
-}), 
-warning = function(w) {
-    warning(w)
-    NULL
-}, 
-error = function(e) {
-    stop(e)
-})
+    
+    if ("dataset" %in% names(rules)) {
+        if (!all(unique(rules$dataset) %in% names(data_formatted))) {
+            stop("If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists datasets that do not match the datasets shared.")
+        }
+    }
+    
+    rules <- reformat_rules(rules = rules, data_formatted = data_formatted, zip_data = zip_data)
+    
+    rules_formatted <- tryCatch(validate::validator(.data=rules), 
+                                warning = function(w) {
+                                    warning(w)
+                                    NULL
+                                }, 
+                                error = function(e) {
+                                    stop(e)
+                                })
+    
+    if (is.null(rules_formatted) || (length(class(rules_formatted)) != 1 || class(rules_formatted) != "validator")) {
+        stop("There was an error with reading the rules file.")
+    }
+    
+    all_variables <- unique(c(validate::variables(rules_formatted), unlist(lapply(data_formatted, names))))
+    
+    if (!(all(all_variables %in% validate::variables(rules_formatted)) & all(all_variables %in% unlist(lapply(data_formatted, names))))) {
+        warning(paste0("All variables in the rules csv should be in the data csv and vice versa for the validation to work correctly. Ignoring these unmatched variables ", paste0(all_variables[!(all_variables %in% validate::variables(rules_formatted)) | !(all_variables %in% unlist(lapply(data_formatted, names)))], collapse = ", ")))
+    }
+    
+    report <- lapply(data_names, function(x){
+        validate::confront(data_formatted[[x]], validate::validator(.data=rules |> dplyr::filter(dataset == x))) 
+    })
+    
+    results <- lapply(report, function(x) {
+        validate::summary(x) |> 
+            dplyr::mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |> 
+            dplyr::left_join(rules)
+    })
+    
+    any_issues <- vapply(results, function(x) {
+        any(x$status == "error")
+    }, FUN.VALUE = TRUE)
+    
+    rules_list_formatted <- tryCatch(lapply(data_names, function(x) {
+        validator(.data=rules |> filter(dataset == x))
+    }), 
+    warning = function(w) {
+        warning(w)
+        NULL
+    }, 
+    error = function(e) {
+        stop(e)
+    })
 
 list(data_formatted = data_formatted,
      data_names = data_names,
@@ -351,7 +343,7 @@ list(data_formatted = data_formatted,
 #' Remote Share Function
 #'
 #' This function uploads validated data to specified remote repositories,
-#' such as CKAN, MongoDB, and/or Amazon S3.
+#' such as CKAN and/or Amazon S3.
 #'
 #' @param validation A list containing validation information.
 #' @param data_formatted A list containing formatted data.
@@ -368,13 +360,11 @@ list(data_formatted = data_formatted,
 #' @param s3_secret_key AWS SECRET ACCESS KEY
 #' @param s3_region AWS DEFAULT REGION
 #' @param s3_bucket The name of the Amazon S3 bucket.
-#' @param mongo_key The API key for the MongoDB instance.
-#' @param old_cert (Optional) An old certificate to be uploaded alongside the new one.
+#' @param old_cert (Optional) An old certificate to be uploaded alongside the new one to override the previous submission with.
 #'
 #' @return A list containing the status and message of the operation.
 #' 
-#' @import mongolite
-#' @importFrom data.table data.table
+#' @importFrom data.table data.table fwrite
 #' @importFrom digest digest
 #' @importFrom ckanr ckanr_setup resource_create
 #' @importFrom aws.s3 put_object
@@ -384,13 +374,12 @@ list(data_formatted = data_formatted,
 #' #Need to add. 
 #' 
 #' @export
-remote_share <- function(validation, data_formatted, zip_files, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, old_cert = NULL){
+remote_share <- function(validation, data_formatted, files, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, old_cert = NULL){
     
     use_ckan <- isTruthy(ckan_url) & isTruthy(ckan_key) & isTruthy(ckan_package)
-    use_mongo <- isTruthy(mongo_key)
     use_s3 <- isTruthy(s3_bucket)  
     
-    if(!(use_ckan | use_mongo | use_s3)){
+    if(!(use_ckan| use_s3)){
         stop("Upload will not work because no upload methods are specified.")
     }
     
@@ -407,15 +396,16 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
     }
 
     hashed_data <- digest(data_formatted)
-    submission_time <- Sys.time()
+    
+    structured_files <- paste(tempdir(), "\\", hashed_data, ".RData", sep = "")
+    
+    save(data_formatted, file = structured_files)
+    
+    submission_time <- as.double(as.POSIXlt(Sys.time(), "GMT"))
     
     if(use_ckan){
         ckanr_setup(url = ckan_url, key = ckan_key)
     }    
-    
-    if(use_mongo) {
-        database <- mongo(url = mongo_key)
-    } 
     
     if(use_s3){
         Sys.setenv(
@@ -426,50 +416,37 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
     }
     
     #Add certificate
-    data_formatted$certificate <- certificate_df(validation, mongo_key = mongo_key, time = submission_time)
+    certificate_file <- tempfile(pattern = "certificate", fileext = ".csv")
+    
+    data.table::fwrite(certificate_df(validation, time = submission_time), certificate_file)
+    
+    files = c(files, structured_files, certificate_file)
     
     #Add old certificate
     if(isTruthy(old_cert)){
-    data_formatted$old_certificate <- read.csv(old_cert)
+        files = c(files, old_cert)
     }
     
-        for(dataset in 1:length(data_formatted)){
-            data_name <- names(data_formatted[dataset])
-            time_added <- as.data.frame(data_formatted[dataset]) |> 
-                mutate(submission_time = submission_time)
-            file <- tempfile(pattern = "data", fileext = ".csv")
-            write.csv(time_added, file, row.names = F)
+    temp_zip <- file.path(tempdir(), "temp.zip")
+    
+    zip(zipfile = temp_zip, files = files, extras = '-j') # Zip the test file
+    
+    hashed_zip = digest::digest(temp_zip)
+    
             if(use_s3){
                 put_object(
-                    file = file,
-                    object = paste0(hashed_data, "_", data_name, ".csv"),
+                    file = temp_zip,
+                    object = paste0(hashed_zip, ".zip"),
                     bucket = s3_bucket
                 ) 
-                if(isTruthy(zip_files)){
-                    put_object(
-                        file = zip_files,
-                        object = paste0(hashed_data, ".zip"),
-                        bucket = s3_bucket
-                    )
-                }
             }
+    
             if(use_ckan){
                 resource_create(package_id = ckan_package,
                                 description = "validated raw data upload to microplastic data portal",
-                                name = paste0(hashed_data, "_", data_name),
-                                upload = file)
-                
-                if(isTruthy(zip_files)){
-                    resource_create(package_id = ckan_package,
-                                    description = "validated zipped files",
-                                    name = hashed_data,
-                                    upload = zip_files)
-                }
+                                name = paste0(hashed_zip, ".zip"),
+                                upload = temp_zip)
             }
-            if(use_mongo){
-                database$insert(time_added |> mutate(name = paste0(hashed_data, "_", data_name)), na = "NA")
-            }
-        }        
     
     message(paste0("Data was successfully sent to the data portal at ", url_to_send))
 
@@ -479,7 +456,7 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
 
 #' Download Data from Remote Sources
 #'
-#' This function downloads data from remote sources like CKAN, AWS S3, and MongoDB.
+#' This function downloads data from remote sources like CKAN, AWS S3.
 #' It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
 #'
 #' @param hashed_data A character string representing the hashed identifier of the data to be downloaded.
@@ -490,12 +467,10 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
 #' @param s3_secret_key A character string representing the AWS S3 secret access key.
 #' @param s3_region A character string representing the AWS S3 region.
 #' @param s3_bucket A character string representing the AWS S3 bucket name.
-#' @param mongo_key A character string representing the MongoDB connection string.
 #'
 #' @importFrom shiny isTruthy
 #' @importFrom dplyr mutate_if
 #' @importFrom aws.s3 get_bucket get_object save_object
-#' @importFrom mongolite mongo
 #' @importFrom ckanr ckanr_setup package_show ckan_fetch
 #' 
 #' @return A named list containing the downloaded datasets.
@@ -509,24 +484,18 @@ remote_share <- function(validation, data_formatted, zip_files, verified, valid_
 #'                                      s3_key_id = "your_s3_key_id",
 #'                                      s3_secret_key = "your_s3_secret_key",
 #'                                      s3_region = "your_s3_region",
-#'                                      s3_bucket = "your_s3_bucket",
-#'                                      mongo_key = "your_mongo_key")
+#'                                      s3_bucket = "your_s3_bucket")
 #' }
 #' 
 #' @export
-remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key) {
+remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket) {
     
     download_all <- !shiny::isTruthy(hashed_data)
     use_ckan <- shiny::isTruthy(ckan_url) & shiny::isTruthy(ckan_key) & shiny::isTruthy(ckan_package)
-    use_mongo <- shiny::isTruthy(mongo_key)
     use_s3 <- shiny::isTruthy(s3_bucket)  
     
     if(use_ckan){
         ckanr::ckanr_setup(url = ckan_url, key = ckan_key)
-    }
-    
-    if(use_mongo) {
-        database <- mongolite::mongo(url = mongo_key)
     }
     
     if(use_s3){
@@ -592,42 +561,6 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
         }
     }
     
-    if(use_mongo  & !download_all){
-        # Assuming that the data is stored in a single collection with a field named 'hashed_data_prefix'
-        db_certs <- database$find('{}') |>
-            filter(grepl(hashed_data, name)) |>
-            filter(submission_time == max(submission_time, na.rm = T))# Replace collection_name with the actual name of the collection
-
-        #Split up the datasets here
-        dataset_name <- unique(db_certs$name[!is.na(db_certs$name)]) 
-        for(dataset in dataset_name){
-            filter_name = gsub(paste0(hashed_data, "_"), "", dataset)
-            filtered <- db_certs |>
-                filter(name == dataset) |>
-                mutate(submission_time = as.character(submission_time)) |>
-                mutate_if(is.POSIXct, as.character) |>
-                select(starts_with(paste0(filter_name, "_")), -matches(paste0("^", filter_name, "$")), c(submission_time))
-            names(filtered) <- gsub(paste0(filter_name, "_"), paste0(filter_name, "\\."), names(filtered))
-            data_downloaded[["mongo"]][[filter_name]] <- filtered  # Replace data with the actual field name for the data in your MongoDB documents
-        }
-        #data_downloaded[["mongo"]][["certificates"]] <- db_certs |> filter(is.na(name)) |> select(time, data, rules, package_version, web_hash)  # Replace data with the actual field name for the data in your MongoDB documents
-    }
-    
-    if(use_mongo  & download_all){
-        # Assuming that the data is stored in a single collection with a field named 'hashed_data_prefix'
-        db_certs <- database$find('{}')  # Replace collection_name with the actual name of the collection
-        #Split up the datasets here
-        dataset_name <- unique(db_certs$name[!is.na(db_certs$name)]) 
-        for(dataset in dataset_name){
-            filter_name = gsub(".*_", "", dataset)
-            filtered <- db_certs |>
-                filter(name == dataset) |>
-                select(starts_with(filter_name))
-            names(filtered) <- gsub(paste0(filter_name, "_"), paste0(filter_name, "\\."), names(filtered))
-            data_downloaded[["mongo"]][[filter_name]] <- filtered  # Replace data with the actual field name for the data in your MongoDB documents
-        }
-        #data_downloaded[["mongo"]][["certificates"]] <- db_certs |> filter(is.na(name)) |> select(time, data, rules, package_version, web_hash)  # Replace data with the actual field name for the data in your MongoDB documents
-    }
     return(data_downloaded)
 }
 

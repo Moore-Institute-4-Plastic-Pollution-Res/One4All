@@ -541,9 +541,14 @@ test_that("remote_download retrieves identical data from all sources", {
                                   data_names = c("methodology", "particles", "samples"),
                                   file_rules = test_rules)
     
+    test_file <- tempfile(pattern = "file", fileext = ".rds")
+    
+    save(valid_example, file = test_file)
+    
     # Perform the remote share
     test_remote <- remote_share(validation = result_valid, 
                                 data_formatted = result_valid$data_formatted, 
+                                files = test_file,
                                 verified = config$valid_key, 
                                 valid_key = config$valid_key, 
                                 valid_rules = digest::digest(test_rules), 
@@ -552,13 +557,11 @@ test_that("remote_download retrieves identical data from all sources", {
                                 ckan_package = config$ckan_package, 
                                 url_to_send = config$ckan_url_to_send, 
                                 rules = test_rules, 
-                                zip_files = NULL,
                                 results = valid_example$results, 
                                 s3_key_id = config$s3_key_id, 
                                 s3_secret_key = config$s3_secret_key, 
                                 s3_region = config$s3_region, 
                                 s3_bucket = config$s3_bucket, 
-                                mongo_key = config$mongo_key, 
                                 old_cert = NULL)
     
     # Download the data using remote_download
