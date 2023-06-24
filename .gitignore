@@ -1,3 +1,4 @@
 config*
 .Rproj.user
 .Rhistory
+inst/shiny/rsconnect*
