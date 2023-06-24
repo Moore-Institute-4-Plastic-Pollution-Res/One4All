@@ -515,7 +515,7 @@ remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package,
         aws.s3::save_object(object = s3_objects[[1]]$Key, file = file, bucket = s3_bucket)
         zip_files <- unzip(file, list = TRUE)$Name
         structured_data <- zip_files[grepl(".rds$", zip_files)]
-        unzip(file)
+        unzip(file, files = structured_data)
         data_downloaded[["s3"]] <- read_rds(structured_data)
     }
     
@@ -542,7 +542,7 @@ remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package,
         ckan_fetch(x = hashed_zip_resources[[1]]$url, store = "disk", path = file)
         zip_files <- unzip(file, list = TRUE)$Name
         structured_data <- zip_files[grepl(".rds$", zip_files)]
-        unzip(file)
+        unzip(file, files = structured_data)
         data_downloaded[["ckan"]] <- read_rds(structured_data)
     }
     
