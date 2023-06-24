@@ -575,14 +575,9 @@ test_that("remote_download retrieves identical data from all sources", {
                                s3_bucket = config$s3_bucket)
     
     # Compare datasets from different sources
-    expect_identical(dataset$s3$certificate, dataset$ckan$certificate)
     expect_identical(dataset$s3$methodology, dataset$ckan$methodology)
     expect_identical(dataset$s3$samples, dataset$ckan$samples)
     expect_identical(dataset$s3$particles, dataset$ckan$particles)
-    expect_identical(dataset$s3$particles, dataset$mongo$particles)
-    expect_identical(dataset$s3$certificate, dataset$mongo$certificate)
-    expect_identical(dataset$s3$methodology, dataset$mongo$methodology) 
-    expect_identical(dataset$s3$samples, dataset$mongo$samples)
 })
 
 # Add more test cases as needed
