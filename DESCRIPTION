@@ -26,7 +26,6 @@ Imports:
     data.table,
     ckanr,
     openxlsx,
-    mongolite,
     lexicon,
     readr,
     readxl,
