@@ -7,7 +7,7 @@
 remote_share(
   validation,
   data_formatted,
-  zip_files,
+  files,
   verified,
   valid_rules,
   valid_key,
@@ -21,7 +21,6 @@ remote_share(
   s3_secret_key,
   s3_region,
   s3_bucket,
-  mongo_key,
   old_cert = NULL
 )
 }
@@ -56,16 +55,14 @@ remote_share(
 
 \item{s3_bucket}{The name of the Amazon S3 bucket.}
 
-\item{mongo_key}{The API key for the MongoDB instance.}
-
-\item{old_cert}{(Optional) An old certificate to be uploaded alongside the new one.}
+\item{old_cert}{(Optional) An old certificate to be uploaded alongside the new one to override the previous submission with.}
 }
 \value{
 A list containing the status and message of the operation.
 }
 \description{
 This function uploads validated data to specified remote repositories,
-such as CKAN, MongoDB, and/or Amazon S3.
+such as CKAN and/or Amazon S3.
 }
 \examples{
 #Need to add. 

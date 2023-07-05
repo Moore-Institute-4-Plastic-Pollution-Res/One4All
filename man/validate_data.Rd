@@ -4,7 +4,12 @@
 \alias{validate_data}
 \title{Validate_data: Validate data based on specified rules.}
 \usage{
-validate_data(files_data, data_names = NULL, file_rules = NULL)
+validate_data(
+  files_data,
+  data_names = NULL,
+  file_rules = NULL,
+  zip_data = NULL
+)
 }
 \arguments{
 \item{files_data}{A list of file paths for the datasets to be validated.}

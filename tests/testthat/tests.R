@@ -2,8 +2,6 @@ library(testthat)
 
 # Read rules ----
 
-context("Test read_rules function")
-
 test_that("read_rules correctly reads a CSV file", {
     test_df <- data.frame(
         name = c("test1", "test2"),
@@ -16,6 +14,7 @@ test_that("read_rules correctly reads a CSV file", {
     write.csv(test_df, "test_rules.csv", row.names = FALSE)
     rules <- read_rules("test_rules.csv")
     expect_equal(rules, test_df)
+    file.remove("test_rules.csv")
 })
 
 test_that("read_rules returns error on unsupported file type", {
@@ -75,7 +74,6 @@ unlink("test_rules.csv")
 
 #read data ----
 # Assuming reformat_rules() is in your current environment.
-context("Testing reformat_rules")
 
 # Test when rules don't have a 'dataset' column
 test_that("rules without 'dataset' column are handled", {
@@ -180,7 +178,6 @@ test_that("read_data returns an error for mixed file types", {
 })
 
 #Name data ----
-context("name_data tests")
 
 test_that("name_data correctly handles csv file paths", {
     # Here you should replace with paths to your actual test csv files
@@ -218,7 +215,7 @@ test_that("certificate_df function returns a valid data frame", {
         data_formatted = data.frame(a = 1:3, b = 4:6),
         rules = validate::validator(a > 0, b > 0)
     )
-    result <- certificate_df(x, mongo_key = FALSE)
+    result <- certificate_df(x)
     
     # Check if the result is a data frame
     expect_true(is.data.frame(result))
@@ -451,10 +448,10 @@ test_that("create_valid_excel creates a valid Excel file", {
     temp_file_rules_csv <- tempfile(fileext = ".csv")
     write.csv(test_rules, temp_file_rules_csv, row.names = FALSE)
     
-    # Create the Excel file
     output_file <- "test_output.xlsx"
-    
-    suppressWarnings(workbook <- create_valid_excel(temp_file_rules_csv, file_name = output_file)) #TODO: Has warnings, perhaps add some example datasets and rules from water pact
+    # Create the Excel file
+
+    suppressWarnings(workbook <- create_valid_excel(temp_file_rules_csv)) #TODO: Has warnings, perhaps add some example datasets and rules from water pact
     
     openxlsx::saveWorkbook(wb = workbook, file = output_file, overwrite = T)
     # Check if the file exists
@@ -471,10 +468,11 @@ test_that("create_valid_excel creates a valid Excel file", {
     
     # Clean up: delete the output file
     file.remove(output_file)
+    
+    
 })
 
 #remote_download ----
-context("remote_download tests")
 
 # Add your setup code here if needed
 # This code will run before all the tests in this file
@@ -578,6 +576,7 @@ test_that("remote_download retrieves identical data from all sources", {
     expect_identical(dataset$s3$methodology, dataset$ckan$methodology)
     expect_identical(dataset$s3$samples, dataset$ckan$samples)
     expect_identical(dataset$s3$particles, dataset$ckan$particles)
+    file.remove(test_file)
 })
 
 # Add more test cases as needed

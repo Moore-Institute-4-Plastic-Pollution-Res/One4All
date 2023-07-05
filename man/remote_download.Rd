@@ -5,20 +5,17 @@
 \title{Download Data from Remote Sources}
 \usage{
 remote_download(
-  hashed_data = NULL,
+  hashed_zip = NULL,
   ckan_url,
   ckan_key,
   ckan_package,
   s3_key_id,
   s3_secret_key,
   s3_region,
-  s3_bucket,
-  mongo_key
+  s3_bucket
 )
 }
 \arguments{
-\item{hashed_data}{A character string representing the hashed identifier of the data to be downloaded.}
-
 \item{ckan_url}{A character string representing the CKAN base URL.}
 
 \item{ckan_key}{A character string representing the CKAN API key.}
@@ -33,13 +30,13 @@ remote_download(
 
 \item{s3_bucket}{A character string representing the AWS S3 bucket name.}
 
-\item{mongo_key}{A character string representing the MongoDB connection string.}
+\item{hashed_data}{A character string representing the hashed identifier of the data to be downloaded.}
 }
 \value{
 A named list containing the downloaded datasets.
 }
 \description{
-This function downloads data from remote sources like CKAN, AWS S3, and MongoDB.
+This function downloads data from remote sources like CKAN, AWS S3.
 It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
 }
 \examples{
@@ -51,8 +48,7 @@ It retrieves the data based on the hashed_data identifier and assumes the data i
                                      s3_key_id = "your_s3_key_id",
                                      s3_secret_key = "your_s3_secret_key",
                                      s3_region = "your_s3_region",
-                                     s3_bucket = "your_s3_bucket",
-                                     mongo_key = "your_mongo_key")
+                                     s3_bucket = "your_s3_bucket")
 }
 
 }

@@ -4,12 +4,10 @@
 \alias{certificate_df}
 \title{Generate a data frame with certificate information}
 \usage{
-certificate_df(x, mongo_key, time = Sys.time())
+certificate_df(x, time = Sys.time())
 }
 \arguments{
 \item{x}{A list containing `data_formatted` and `rules` elements.}
-
-\item{mongo_key}{key for the mongo db database. If it exists, a copy of the certificate will be stored there.}
 
 \item{time}{the time the certificate is generated, can be passed a value or uses current system time.}
 }

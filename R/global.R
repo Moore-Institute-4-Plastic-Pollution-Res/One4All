@@ -472,6 +472,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 #' @importFrom dplyr mutate_if
 #' @importFrom aws.s3 get_bucket get_object save_object
 #' @importFrom ckanr ckanr_setup package_show ckan_fetch
+#' @importFrom readr read_rds
 #' 
 #' @return A named list containing the downloaded datasets.
 #' 
