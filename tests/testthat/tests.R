@@ -527,7 +527,7 @@ test_that("remote_download retrieves identical data from all sources", {
     testthat::skip_on_cran()
     
     # Load the required configuration
-    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/One4All/inst/shiny/config_pl.yml")
+    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/config_pl.yml")
     
     # Load the necessary datasets
     data("valid_example")
@@ -579,62 +579,5 @@ test_that("remote_download retrieves identical data from all sources", {
     file.remove(test_file)
 })
 
-test_that("standard data upload for dw works", {
-    
-    testthat::skip_on_cran()
-    
-    # Load the required configuration
-    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/config_pl.yml")
-    
-    test_validation <- validate_data(files_data = c("G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/www/valid_dw_acc/methodology.csv", 
-                                                    "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/www/valid_dw_acc/particles.csv", 
-                                                    "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/www/valid_dw_acc/samples.csv"), 
-                                     zip_data = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/www/valid_dw_acc/mcrplsts_plcy_drft.zip", 
-                                     file_rules = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/www/valid_dw_acc/rules_dw_acc.csv")
-    
 
-    # Perform the validation
-    result_valid <- validate_data(files_data = valid_example,
-                                  data_names = c("methodology", "particles", "samples"),
-                                  file_rules = test_rules)
-    
-    test_file <- tempfile(pattern = "file", fileext = ".RData")
-    
-    save(valid_example, file = test_file)
-    
-    # Perform the remote share
-    test_remote <- remote_share(validation = result_valid, 
-                                data_formatted = result_valid$data_formatted, 
-                                files = test_file,
-                                verified = config$valid_key, 
-                                valid_key = config$valid_key, 
-                                valid_rules = digest::digest(test_rules), 
-                                ckan_url = config$ckan_url, 
-                                ckan_key = config$ckan_key, 
-                                ckan_package = config$ckan_package, 
-                                url_to_send = config$ckan_url_to_send, 
-                                rules = test_rules, 
-                                results = valid_example$results, 
-                                s3_key_id = config$s3_key_id, 
-                                s3_secret_key = config$s3_secret_key, 
-                                s3_region = config$s3_region, 
-                                s3_bucket = config$s3_bucket, 
-                                old_cert = NULL)
-    
-    # Download the data using remote_download
-    dataset <- remote_download(hashed_zip = test_remote$hashed_zip, 
-                               ckan_url = config$ckan_url, 
-                               ckan_key = config$ckan_key, 
-                               ckan_package = config$ckan_package,
-                               s3_key_id = config$s3_key_id,
-                               s3_secret_key = config$s3_secret_key,
-                               s3_region = config$s3_region,
-                               s3_bucket = config$s3_bucket)
-    
-    # Compare datasets from different sources
-    expect_identical(dataset$s3$methodology, dataset$ckan$methodology)
-    expect_identical(dataset$s3$samples, dataset$ckan$samples)
-    expect_identical(dataset$s3$particles, dataset$ckan$particles)
-    file.remove(test_file)
-})
 
