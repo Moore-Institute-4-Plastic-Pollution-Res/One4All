@@ -80,6 +80,7 @@ read_rules <- function(file_rules){
 #' 
 #' @param files_data List of files to be read
 #' @param data_names Optional vector of names for the data frames 
+#' @importFrom readxl excel_sheets
 #' @examples
 #' ## You can add examples of function usage here.
 #' 
@@ -104,7 +105,7 @@ read_data <- function(files_data, data_names = NULL){
                                            error = function(e) {stop(e$message)})    
             }
             if(length(as.character(files_data)) == 1){
-                sheets <- readxl::excel_sheets(files_data)
+                sheets <- excel_sheets(files_data)
                 data_formatted <- tryCatch(lapply(sheets, function(x){read_excel(files_data, sheet =  x)}),
                                            warning = function(w) {warning(w$message)}, 
                                            error = function(e) {stop(e$message)})    
@@ -273,8 +274,6 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
     
     data_formatted <- read_data(files_data = files_data, data_names = data_names)
     
-    names(data_formatted) <- name_data(files_data = files_data, data_names = data_names)
-    
     if (!"dataset" %in% names(rules) & length(names(data_formatted)) > 1) {
         stop("If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset.")
     }
@@ -306,7 +305,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
         warning(paste0("All variables in the rules csv should be in the data csv and vice versa for the validation to work correctly. Ignoring these unmatched variables ", paste0(all_variables[!(all_variables %in% validate::variables(rules_formatted)) | !(all_variables %in% unlist(lapply(data_formatted, names)))], collapse = ", ")))
     }
     
-    report <- lapply(data_names, function(x){
+    report <- lapply(names(data_formatted), function(x){
         validate::confront(data_formatted[[x]], validate::validator(.data=rules |> dplyr::filter(dataset == x))) 
     })
     
@@ -320,7 +319,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
         any(x$status == "error")
     }, FUN.VALUE = TRUE)
     
-    rules_list_formatted <- tryCatch(lapply(data_names, function(x) {
+    rules_list_formatted <- tryCatch(lapply(names(data_formatted), function(x) {
         validator(.data=rules |> filter(dataset == x))
     }), 
     warning = function(w) {
