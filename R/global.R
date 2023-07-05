@@ -312,7 +312,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
     results <- lapply(report, function(x) {
         validate::summary(x) |> 
             dplyr::mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |> 
-            dplyr::left_join(rules)
+            dplyr::left_join(rules, by = "name")
     })
     
     any_issues <- vapply(results, function(x) {
