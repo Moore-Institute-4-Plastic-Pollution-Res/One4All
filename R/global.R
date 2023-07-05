@@ -280,7 +280,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
     
     if ("dataset" %in% names(rules)) {
         if (!all(unique(rules$dataset) %in% names(data_formatted))) {
-            stop("If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists datasets that do not match the datasets shared.")
+            stop(paste0("If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists datasets ", paste(setdiff(unique(rules$dataset), names(data_formatted)), collapse = ", "),  " that do not match the datasets shared."))
         }
     }
     
