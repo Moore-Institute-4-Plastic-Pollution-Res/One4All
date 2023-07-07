@@ -396,7 +396,9 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 
     hashed_data <- digest(data_formatted)
     
-    structured_files <- paste(tempdir(), "\\", hashed_data, ".rds", sep = "")
+    
+    structured_files <- tempfile(pattern = hashed_data, fileext = ".rds")
+    
     
     saveRDS(data_formatted, file = structured_files)
     
@@ -426,7 +428,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
         files = c(files, old_cert)
     }
     
-    temp_zip <- file.path(tempdir(), "temp.zip")
+    temp_zip <- tempfile(pattern = "temp", fileext = ".zip")
     
     zip(zipfile = temp_zip, files = files, extras = '-j') # Zip the test file
     
