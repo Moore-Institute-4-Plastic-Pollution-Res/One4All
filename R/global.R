@@ -397,7 +397,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
     hashed_data <- digest(data_formatted)
     
     
-    structured_files <- tempfile(pattern = hashed_data, fileext = ".rds")
+    structured_files <- paste0(tempdir(), "\\", hashed_data, ".rds")
     
     
     saveRDS(data_formatted, file = structured_files)
@@ -417,7 +417,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
     }
     
     #Add certificate
-    certificate_file <- tempfile(pattern = "certificate", fileext = ".csv")
+    certificate_file <- paste0(tempdir(), "\\", "certificate.csv")
     
     data.table::fwrite(certificate_df(validation, time = submission_time), certificate_file)
     
@@ -428,7 +428,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
         files = c(files, old_cert)
     }
     
-    temp_zip <- tempfile(pattern = "temp", fileext = ".zip")
+    temp_zip <- paste0(tempdir(), "\\", "temp.zip")
     
     zip(zipfile = temp_zip, files = files, extras = '-j') # Zip the test file
     
@@ -513,7 +513,7 @@ remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package,
     if(use_s3 & !download_all){
         # Retrieve a list of objects from S3 bucket
         s3_objects <- get_bucket(bucket = s3_bucket, prefix = hashed_zip) 
-        file <- tempfile(fileext = ".zip")
+        file <- paste0(tempdir(), "\\", "temp.zip")
         aws.s3::save_object(object = s3_objects[[1]]$Key, file = file, bucket = s3_bucket)
         zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
         structured_data <- zip_files[grepl(".rds$", zip_files)]
@@ -527,9 +527,8 @@ remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package,
         for (obj in s3_objects) {
             if(grepl("^uploaded/", obj$Key)) next
             # Download each object
-            file <- tempfile(fileext = ".csv")
+            file <- paste0(tempdir(), "\\", "temp.zip")
             aws.s3::save_object(object = obj$Key, file = file, bucket = s3_bucket)
-            
             # Read the data and store it in a named list
             dataset_name <- gsub("\\.csv$", "", obj$Key)
             data_downloaded[["s3"]][[dataset_name]] <- read.csv(file)
@@ -540,7 +539,7 @@ remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package,
         resources <- package_show(ckan_package)$resources
         resources_names <- vapply(resources, function(x){x$name}, FUN.VALUE = character(1))
         hashed_zip_resources <- resources[grepl(hashed_zip, resources_names)]
-        file <- tempfile(fileext = ".zip")
+        file <- paste0(tempdir(), "\\", "temp.zip")
         ckan_fetch(x = hashed_zip_resources[[1]]$url, store = "disk", path = file)
         zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
         structured_data <- zip_files[grepl(".rds$", zip_files)]
