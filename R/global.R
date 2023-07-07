@@ -518,7 +518,7 @@ remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package,
         zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
         structured_data <- zip_files[grepl(".rds$", zip_files)]
         unzip(file, files = structured_data, exdir = tempdir())
-        data_downloaded[["s3"]] <- read_rds(structured_data)
+        data_downloaded[["s3"]] <- read_rds(paste0(tempdir(),"\\", structured_data))
     }
     
     if(use_s3 & download_all){
@@ -545,7 +545,7 @@ remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package,
         zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
         structured_data <- zip_files[grepl(".rds$", zip_files)]
         unzip(file, files = structured_data, exdir = tempdir())
-        data_downloaded[["ckan"]] <- read_rds(structured_data)
+        data_downloaded[["ckan"]] <- read_rds(paste0(tempdir(),"\\", structured_data))
     }
     
     if(use_ckan & download_all){
