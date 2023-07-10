@@ -928,29 +928,21 @@ create_valid_excel <- function(file_rules,
     wb
 }
 
-#' Check for Malicious Files in a Zip Archive
+#' Check for Malicious Files
 #'
-#' This function checks a zip archive for files with extensions 
-#' that could indicate malicious content. If a file with a potentially 
-#' malicious extension is found, the function returns TRUE; otherwise, it returns FALSE.
+#' This function checks for the presence of files with extensions known to be associated with malicious activities. 
+#' The function can be used to screen zip files or individual files for these potentially dangerous file types.
 #'
-#' @param zip_file A character string specifying the path to the zip archive to check.
+#' @param files A character vector of file paths. These can be paths to zip files or individual files.
+#' 
+#' @return A logical value indicating if any of the files in the input have a malicious file extension. Returns `TRUE` if any malicious file is found, otherwise `FALSE`.
 #'
-#' @return A logical value indicating whether the zip archive contains 
-#'         any files with potentially malicious extensions.
+#' @importFrom tools file_ext
 #'
 #' @examples
-#' ## Not run: 
-#' clean_zip <- "path_to_clean_zip_file.zip"
-#' malicious_zip <- "path_to_malicious_zip_file.zip"
-#' 
-#' # Check a clean zip file
-#' check_for_malicious_files(clean_zip) # Returns FALSE
-#' 
-#' # Check a malicious zip file
-#' check_for_malicious_files(malicious_zip) # Returns TRUE
-#' ## End(Not run)
-#'
+#' \dontrun{
+#'   check_for_malicious_files("path/to/your/file.zip")
+#' }
 #'
 #' @export
 check_for_malicious_files <- function(files) {
