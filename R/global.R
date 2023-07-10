@@ -928,5 +928,58 @@ create_valid_excel <- function(file_rules,
     wb
 }
 
+#' Check for Malicious Files in a Zip Archive
+#'
+#' This function checks a zip archive for files with extensions 
+#' that could indicate malicious content. If a file with a potentially 
+#' malicious extension is found, the function returns TRUE; otherwise, it returns FALSE.
+#'
+#' @param zip_file A character string specifying the path to the zip archive to check.
+#'
+#' @return A logical value indicating whether the zip archive contains 
+#'         any files with potentially malicious extensions.
+#'
+#' @examples
+#' ## Not run: 
+#' clean_zip <- "path_to_clean_zip_file.zip"
+#' malicious_zip <- "path_to_malicious_zip_file.zip"
+#' 
+#' # Check a clean zip file
+#' check_for_malicious_files(clean_zip) # Returns FALSE
+#' 
+#' # Check a malicious zip file
+#' check_for_malicious_files(malicious_zip) # Returns TRUE
+#' ## End(Not run)
+#'
+#'
+#' @export
+check_for_malicious_files <- function(files) {
+    # Define the malicious extensions
+    malicious_extensions <- c("_exe", "a6p", "ac", "acr", "action", "air", "apk", "app", 
+                              "applescript", "awk", "bas", "bat", "bin", "cgi", "chm", 
+                              "cmd", "com", "cpl", "crt", "csh", "dek", "dld", "dll", 
+                              "dmg", "drv", "ds", "ebm", "elf", "emf", "esh", "exe", 
+                              "ezs", "fky", "frs", "fxp", "gadget", "gpe", "gpu", "hlp", 
+                              "hms", "hta", "icd", "iim", "inf", "ins", "inx", "ipa", 
+                              "ipf", "isp", "isu", "jar", "js", "jse", "jsp", "jsx", 
+                              "kix", "ksh", "lib", "lnk", "mcr", "mel", "mem", "mpkg", 
+                              "mpx", "mrc", "ms", "msc", "msi", "msp", "mst", "mxe", 
+                              "obs", "ocx", "pas", "pcd", "pex", "pif", "pkg", "pl", 
+                              "plsc", "pm", "prc", "prg", "pvd", "pwc", "py", "pyc", 
+                              "pyo", "qpx", "rbx", "reg", "rgs", "rox", "rpj", "scar", 
+                              "scpt", "scr", "script", "sct", "seed", "sh", "shb", 
+                              "shs", "spr", "sys", "thm", "tlb", "tms", "u3p", "udf", 
+                              "url", "vb", "vbe", "vbs", "vbscript", "vdo", "vxd", 
+                              "wcm", "widget", "wmf", "workflow", "wpk", "ws", "wsc", 
+                              "wsf", "wsh", "xap", "xqt", "zlq")
+    
+        file_extensions <- tools::file_ext(files)
+        if (any(file_extensions %in% malicious_extensions)) {
+            return(TRUE)
+        }
+    
+    return(FALSE)
+}
+
 
 

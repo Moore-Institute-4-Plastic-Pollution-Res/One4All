@@ -580,4 +580,39 @@ test_that("remote_download retrieves identical data from all sources", {
 })
 
 
+test_that("check_for_malicious_files works correctly", {
+    # Create a temp directory to work in
+    tmp_dir <- tempdir()
+    
+    # Create a couple of text files
+    file.create(file.path(tmp_dir, "safe_file.txt"))
+    file.create(file.path(tmp_dir, "malicious_file.vbs"))
+    
+    # Navigate to the temp directory
+    old_dir <- getwd()
+    
+    setwd(tmp_dir)
+    
+    # Create zip archives
+    clean_zip <- "clean.zip"
+    malicious_zip <- "malicious.zip"
+    
+    # Zip the files
+    zip::zip(clean_zip, "safe_file.txt")
+    zip::zip(malicious_zip, c("malicious_file.vbs", "safe_file.txt"))
+    
+    # Test the function with zip files
+    files_in_zip_clean <- utils::unzip(clean_zip, list = TRUE)$Name
+    files_in_zip_malicious <- utils::unzip(malicious_zip, list = TRUE)$Name
+    
+    expect_false(check_for_malicious_files(files_in_zip_clean))
+    expect_true(check_for_malicious_files(files_in_zip_malicious))
+    
+    # Test the function with individual file paths
+    expect_false(check_for_malicious_files("safe_file.txt"))
+    expect_true(check_for_malicious_files("malicious_file.vbs"))
+    
+    # Navigate back to the original directory
+    setwd(old_dir)
+})
 
