@@ -353,8 +353,9 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
     
     results <- lapply(report, function(x) {
         validate::summary(x) |> 
-            dplyr::mutate(status = ifelse(fails > 0 | error | warning , "error", "success")) |> 
-            dplyr::left_join(rules, by = "name")
+            dplyr::left_join(rules, by = "name") |> 
+            dplyr::mutate(status = ifelse((fails > 0 & severity == "error") | error | warning , "error", "success")) |>
+            mutate(status = ifelse(fails > 0 & severity == "warning", "warning", status))
     })
     
     any_issues <- vapply(results, function(x) {
@@ -424,7 +425,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
         stop("Upload will not work because no upload methods are specified.")
     }
     
-    if(any(results$status == "error")){
+    if(any(validation$issues)){
         stop("There are errors in the dataset that persist. Until all errors are remedied, the data cannot be uploaded to the remote repository.")
     }
     
@@ -645,7 +646,7 @@ is.POSIXct <- function(x) inherits(x, "POSIXct")
 #' @export
 rules_broken <- function(results, show_decision){
     results |>
-        dplyr::filter(if(show_decision){status == "error"} else{status %in% c("error", "success")}) |>
+        dplyr::filter(if(show_decision){status == c("error", "warning")} else{status %in% c("error", "warning", "success")}) |>
         select(description, status, name, expression, everything())
 }
 
