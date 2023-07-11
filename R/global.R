@@ -941,7 +941,8 @@ create_valid_excel <- function(file_rules,
 #'
 #' @examples
 #' \dontrun{
-#'   check_for_malicious_files("path/to/your/file.zip")
+#'   check_for_malicious_files("path'(s)'/to/your/files")
+#'   check_for_malicious_files(utils::unzip("path/to/your/file.zip", list = TRUE)$Name)
 #' }
 #'
 #' @export
