@@ -270,6 +270,48 @@ reformat_rules <- function(rules, data_formatted, zip_data = NULL){
 #' @importFrom utils read.csv
 #' @export
 validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_data = NULL) {
+    if(check_for_malicious_files(c(files_data, file_rules))){
+        stop(paste("Data or rules files cannot be of any of these types:", "_exe", "a6p", "ac", "acr", "action", "air", "apk", "app", 
+                                                                              "applescript", "awk", "bas", "bat", "bin", "cgi", "chm", 
+                                                                              "cmd", "com", "cpl", "crt", "csh", "dek", "dld", "dll", 
+                                                                              "dmg", "drv", "ds", "ebm", "elf", "emf", "esh", "exe", 
+                                                                              "ezs", "fky", "frs", "fxp", "gadget", "gpe", "gpu", "hlp", 
+                                                                              "hms", "hta", "icd", "iim", "inf", "ins", "inx", "ipa", 
+                                                                              "ipf", "isp", "isu", "jar", "js", "jse", "jsp", "jsx", 
+                                                                              "kix", "ksh", "lib", "lnk", "mcr", "mel", "mem", "mpkg", 
+                                                                              "mpx", "mrc", "ms", "msc", "msi", "msp", "mst", "mxe", 
+                                                                              "obs", "ocx", "pas", "pcd", "pex", "pif", "pkg", "pl", 
+                                                                              "plsc", "pm", "prc", "prg", "pvd", "pwc", "py", "pyc", 
+                                                                              "pyo", "qpx", "rbx", "reg", "rgs", "rox", "rpj", "scar", 
+                                                                              "scpt", "scr", "script", "sct", "seed", "sh", "shb", 
+                                                                              "shs", "spr", "sys", "thm", "tlb", "tms", "u3p", "udf", 
+                                                                              "url", "vb", "vbe", "vbs", "vbscript", "vdo", "vxd", 
+                                                                              "wcm", "widget", "wmf", "workflow", "wpk", "ws", "wsc", 
+                                                                              "wsf", "wsh", "xap", "xqt", "zlq"))
+    }
+    if(!is.null(zip_data)){
+        if(check_for_malicious_files(utils::unzip(zip_data, list = T)$Name)){
+            stop(paste("Data or rules files cannot be of any of these types:", 
+                       "_exe", "a6p", "ac", "acr", "action", "air", "apk", "app", 
+                       "applescript", "awk", "bas", "bat", "bin", "cgi", "chm", 
+                       "cmd", "com", "cpl", "crt", "csh", "dek", "dld", "dll", 
+                       "dmg", "drv", "ds", "ebm", "elf", "emf", "esh", "exe", 
+                       "ezs", "fky", "frs", "fxp", "gadget", "gpe", "gpu", "hlp", 
+                       "hms", "hta", "icd", "iim", "inf", "ins", "inx", "ipa", 
+                       "ipf", "isp", "isu", "jar", "js", "jse", "jsp", "jsx", 
+                       "kix", "ksh", "lib", "lnk", "mcr", "mel", "mem", "mpkg", 
+                       "mpx", "mrc", "ms", "msc", "msi", "msp", "mst", "mxe", 
+                       "obs", "ocx", "pas", "pcd", "pex", "pif", "pkg", "pl", 
+                       "plsc", "pm", "prc", "prg", "pvd", "pwc", "py", "pyc", 
+                       "pyo", "qpx", "rbx", "reg", "rgs", "rox", "rpj", "scar", 
+                       "scpt", "scr", "script", "sct", "seed", "sh", "shb", 
+                       "shs", "spr", "sys", "thm", "tlb", "tms", "u3p", "udf", 
+                       "url", "vb", "vbe", "vbs", "vbscript", "vdo", "vxd", 
+                       "wcm", "widget", "wmf", "workflow", "wpk", "ws", "wsc", 
+                       "wsf", "wsh", "xap", "xqt", "zlq"))
+        }
+    }
+    
     rules <- read_rules(file_rules)
     
     data_formatted <- read_data(files_data = files_data, data_names = data_names)
