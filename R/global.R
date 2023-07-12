@@ -33,7 +33,10 @@ certificate_df <- function(x, time = Sys.time()){
 #' @param file_rules The file containing the rules. Can be a CSV or XLSX file, or a data frame.
 #'
 #' @examples
-#' read_rules("rules.csv") 
+#' \dontrun{
+#' read_rules("path/to/rules") 
+#' }
+#' 
 #' @return A data frame containing the rules.
 #' @export
 read_rules <- function(file_rules){
@@ -172,11 +175,14 @@ name_data <- function(files_data, data_names = NULL){
 #'
 #' @param rules A data.frame containing rules to be reformatted.
 #' @param data_formatted A named list of data.frames with data.
+#' @param zip_data A file path to a zip folder with additional data to check.
 #' @importFrom dplyr filter mutate bind_rows
 #' @importFrom data.table rbindlist
 #' @return A data.frame with reformatted rules.
 #' @examples
-#' reformat_rules(rules, data_formatted)
+#' data("test_rules")
+#' data("valid_example")
+#' reformat_rules(rules = test_rules, data_formatted = valid_example)
 #' @export
 reformat_rules <- function(rules, data_formatted, zip_data = NULL){
     #Add dataset if one doesn't exist so that everything else works. 
@@ -187,31 +193,31 @@ reformat_rules <- function(rules, data_formatted, zip_data = NULL){
     
     #Check for special function checking additional files 
     rules <- rules |>
-        dplyr::mutate(rule = ifelse(grepl("check_exists_in_zip(.*)", rule), 
-                             paste0('check_exists_in_zip(zip_path = "', zip_data, '", file_name = ', gsub("(check_exists_in_zip\\()|(\\))", "", rule), ') == TRUE'), 
-                             rule))
+        dplyr::mutate(rule = ifelse(grepl("check_exists_in_zip(.*)", .data$rule), 
+                             paste0('check_exists_in_zip(zip_path = "', zip_data, '", file_name = ', gsub("(check_exists_in_zip\\()|(\\))", "", .data$rule), ') == TRUE'), 
+                             .data$rule))
     
     #Circle back to add logic for multiple dfs
     #Check for special character "___" which is for assessing every column. 
     
     do_to_all <- rules |>
-        dplyr::filter(grepl("___", rule))
+        dplyr::filter(grepl("___", .data$rule))
     
     if(nrow(do_to_all) > 0){
         rules <- lapply(names(data_formatted), function(x){
-            rules_sub <- do_to_all |> dplyr::filter(dataset == x)
+            rules_sub <- do_to_all |> dplyr::filter(.data$dataset == x)
             lapply(colnames(data_formatted[[x]]), function(new_name){
                 rules_sub |>
-                    dplyr::mutate(rule = gsub("___", new_name, rule)) |>
-                    dplyr::mutate(name = paste0(new_name, "_", name))}) |>
+                    dplyr::mutate(rule = gsub("___", new_name, .data$rule)) |>
+                    dplyr::mutate(name = paste0(new_name, "_", .data$name))}) |>
                 data.table::rbindlist()}) |>
             data.table::rbindlist() |>
-            dplyr::bind_rows(rules |> dplyr::filter(!grepl("___", rule)))
+            dplyr::bind_rows(rules |> dplyr::filter(!grepl("___", .data$rule)))
     }
     
     # Check special character of is_foreign_key and if so then testing that foreign keys are exact. 
     foreign_keys <- rules |>
-        dplyr::filter(grepl("is_foreign_key(.*)", rule))
+        dplyr::filter(grepl("is_foreign_key(.*)", .data$rule))
     
     if(nrow(foreign_keys) > 0){
         columns <- gsub("(is_foreign_key\\()|(\\))", "", foreign_keys[["rule"]])
@@ -231,7 +237,7 @@ reformat_rules <- function(rules, data_formatted, zip_data = NULL){
                                      '")'))
         }) |>
             rbindlist() |>
-            bind_rows(rules |> filter(!grepl("is_foreign_key(.*)", rule)))
+            bind_rows(rules |> filter(!grepl("is_foreign_key(.*)", .data$rule)))
     }
     rules
 }
@@ -242,7 +248,8 @@ reformat_rules <- function(rules, data_formatted, zip_data = NULL){
 #' @param files_data A list of file paths for the datasets to be validated.
 #' @param data_names (Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths.
 #' @param file_rules A file path for the rules file, either in .csv or .xlsx format.
-#'
+#' @param zip_data A file path to a zip folder for validating unstructured data.
+#' 
 #' @return A list containing the following elements:
 #'   - data_formatted: A list of data frames with the validated data.
 #'   - data_names: A character vector of dataset names.
@@ -342,7 +349,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
                                     stop(e)
                                 })
     
-    if (is.null(rules_formatted) || (length(class(rules_formatted)) != 1 || class(rules_formatted) != "validator")) {
+    if (is.null(rules_formatted) || (length(class(rules_formatted)) != 1 || !inherits(rules_formatted, "validator"))) {
         stop("There was an error with reading the rules file.")
     }
     
@@ -359,8 +366,8 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
     results <- lapply(report, function(x) {
         validate::summary(x) |> 
             dplyr::left_join(rules, by = "name") |> 
-            dplyr::mutate(status = ifelse((fails > 0 & severity == "error") | error | warning , "error", "success")) |>
-            mutate(status = ifelse(fails > 0 & severity == "warning", "warning", status))
+            dplyr::mutate(status = ifelse((.data$fails > 0 & .data$severity == "error") | .data$error | .data$warning , "error", "success")) |>
+            mutate(status = ifelse(.data$fails > 0 & .data$severity == "warning", "warning", .data$status))
     })
     
     any_issues <- vapply(results, function(x) {
@@ -368,7 +375,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
     }, FUN.VALUE = TRUE)
     
     rules_list_formatted <- tryCatch(lapply(names(data_formatted), function(x) {
-        validator(.data=rules |> filter(dataset == x))
+        validator(.data=rules |> filter(.data$dataset == x))
     }), 
     warning = function(w) {
         warning(w)
@@ -394,6 +401,7 @@ list(data_formatted = data_formatted,
 #'
 #' @param validation A list containing validation information.
 #' @param data_formatted A list containing formatted data.
+#' @param files A vector of file paths to upload. 
 #' @param verified The secret key provided by the portal maintainer.
 #' @param valid_rules A list of valid rules for the dataset.
 #' @param valid_key A list of valid keys.
@@ -415,7 +423,7 @@ list(data_formatted = data_formatted,
 #' @importFrom digest digest
 #' @importFrom ckanr ckanr_setup resource_create
 #' @importFrom aws.s3 put_object
-#' @importFrom utils write.csv read.csv
+#' @importFrom utils write.csv read.csv zip
 #' 
 #' @examples
 #' #Need to add. 
@@ -508,7 +516,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 #' This function downloads data from remote sources like CKAN, AWS S3.
 #' It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
 #'
-#' @param hashed_data A character string representing the hashed identifier of the data to be downloaded.
+#' @param hashed_zip A character string representing the hashed identifier of the data to be downloaded.
 #' @param ckan_url A character string representing the CKAN base URL.
 #' @param ckan_key A character string representing the CKAN API key.
 #' @param ckan_package A character string representing the CKAN package identifier.
@@ -651,8 +659,8 @@ is.POSIXct <- function(x) inherits(x, "POSIXct")
 #' @export
 rules_broken <- function(results, show_decision){
     results |>
-        dplyr::filter(if(show_decision){status %in% c("error", "warning")} else{status %in% c("error", "warning", "success")}) |>
-        select(description, status, name, expression, everything())
+        dplyr::filter(if(show_decision){.data$status %in% c("error", "warning")} else{.data$status %in% c("error", "warning", "success")}) |>
+        select(.data$description, .data$status, .data$name, .data$expression, everything())
 }
 
 #' rows_for_rules
@@ -742,8 +750,9 @@ checkLuhn <- function(number) {
 #' @return A logical value indicating whether the file exists in the zip file (TRUE) or not (FALSE).
 #' @importFrom utils unzip
 #' @examples
-#' # Example usage:
+#' \dontrun{
 #' check_exists_in_zip(zip_path = "/path/to/your.zip", file_name = "file/in/zip.csv")
+#' }
 #' @export
 check_exists_in_zip <- function(zip_path, file_name) {
     # List files in the zip
@@ -817,7 +826,6 @@ test_profanity <- function(x){
 #' @param negStyle Style to apply for negative conditions (default is red text on a pink background).
 #' @param posStyle Style to apply for positive conditions (default is green text on a light green background).
 #' @param row_num Number of rows to create in the output file (default is 1000).
-#' @param file_name Name of the output Excel file (default is "conditionalFormattingExample.xlsx").
 #' @return A workbook object containing the formatted Excel file.
 #' @importFrom readr read_csv
 #' @importFrom readxl read_excel
@@ -827,7 +835,9 @@ test_profanity <- function(x){
 #' @importFrom openxlsx createWorkbook addWorksheet writeData freezePane dataValidation conditionalFormatting saveWorkbook createStyle protectWorksheet
 #' @importFrom tibble as_tibble tibble
 #' @importFrom utils read.csv
+#' @importFrom rlang .data
 #' @examples
+#' 
 #' data("test_rules")
 #' create_valid_excel(file_rules = test_rules)
 #' @export
@@ -866,28 +876,28 @@ create_valid_excel <- function(file_rules,
     
     if(nrow(do_to_all) > 0){
         rules <- lapply(data_names, function(x){
-            rules_sub <- do_to_all |> filter(dataset == x)
+            rules_sub <- do_to_all |> filter(.data$dataset == x)
             rules_sub_variables <- variables(validator(.data=rules_sub))
             lapply(rules_sub_variables, function(new_name){
                 rules_sub |>
-                    mutate(rule = gsub("___", new_name, rule)) |>
-                    mutate(name = paste0(new_name, "_", name))
+                    mutate(rule = gsub("___", new_name, .data$rule)) |>
+                    mutate(name = paste0(new_name, "_", .data$name))
             }) |>
                 rbindlist()
         }) |>
             rbindlist() |>
-            bind_rows(rules |> filter(!grepl("___", rule)))
+            bind_rows(rules |> filter(!grepl("___", .data$rule)))
     }
     
     rules <- rules |>
-        mutate(rule = gsub("(is_foreign_key\\()|(check_exists_in_zip\\()", "!is.na\\(", rule))
+        mutate(rule = gsub("(is_foreign_key\\()|(check_exists_in_zip\\()", "!is.na\\(", .data$rule))
     
     lookup_column_index <- 1
     wb <- createWorkbook()
     addWorksheet(wb, "RULES")
     writeData(wb, sheet = "RULES", x = rules, startCol = 1)
     for(sheet_num in 1:length(data_names)){ #Sheet level for loop
-        rules_all_raw <- rules |> filter(dataset == data_names[sheet_num])
+        rules_all_raw <- rules |> filter(.data$dataset == data_names[sheet_num])
         rules_all <- validator(.data = rules_all_raw)
         rule_variables <- variables(rules_all)
         sheet_name <- data_names[sheet_num]

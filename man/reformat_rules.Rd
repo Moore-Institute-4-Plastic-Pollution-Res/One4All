@@ -10,6 +10,8 @@ reformat_rules(rules, data_formatted, zip_data = NULL)
 \item{rules}{A data.frame containing rules to be reformatted.}
 
 \item{data_formatted}{A named list of data.frames with data.}
+
+\item{zip_data}{A file path to a zip folder with additional data to check.}
 }
 \value{
 A data.frame with reformatted rules.
@@ -19,5 +21,7 @@ This function is responsible for handling the rule reformating, dataset handling
 and foreign key checks.
 }
 \examples{
-reformat_rules(rules, data_formatted)
+data("test_rules")
+data("valid_example")
+reformat_rules(rules = test_rules, data_formatted = valid_example)
 }

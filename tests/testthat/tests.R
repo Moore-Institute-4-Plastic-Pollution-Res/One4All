@@ -462,7 +462,7 @@ test_that("create_valid_excel creates a valid Excel file", {
     
     # Check the presence of worksheets
     expect_equal(length(openxlsx::sheets(wb)), 5)
-    expect_true(all(c("Rules", "methodology", "Lookup", "particles", "samples") %in% openxlsx::sheets(wb)))
+    expect_true(all(c("RULES", "methodology", "LOOKUP", "particles", "samples") %in% openxlsx::sheets(wb)))
     
     # Perform additional checks on the worksheets as needed
     

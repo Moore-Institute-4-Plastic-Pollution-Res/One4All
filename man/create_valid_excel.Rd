@@ -19,8 +19,6 @@ create_valid_excel(
 \item{posStyle}{Style to apply for positive conditions (default is green text on a light green background).}
 
 \item{row_num}{Number of rows to create in the output file (default is 1000).}
-
-\item{file_name}{Name of the output Excel file (default is "conditionalFormattingExample.xlsx").}
 }
 \value{
 A workbook object containing the formatted Excel file.
@@ -30,6 +28,7 @@ This function creates an Excel file with conditional formatting and data validat
 based on the given validation rules in a CSV or Excel file.
 }
 \examples{
+
 data("test_rules")
 create_valid_excel(file_rules = test_rules)
 }

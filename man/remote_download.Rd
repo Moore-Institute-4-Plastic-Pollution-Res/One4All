@@ -16,6 +16,8 @@ remote_download(
 )
 }
 \arguments{
+\item{hashed_zip}{A character string representing the hashed identifier of the data to be downloaded.}
+
 \item{ckan_url}{A character string representing the CKAN base URL.}
 
 \item{ckan_key}{A character string representing the CKAN API key.}
@@ -29,8 +31,6 @@ remote_download(
 \item{s3_region}{A character string representing the AWS S3 region.}
 
 \item{s3_bucket}{A character string representing the AWS S3 bucket name.}
-
-\item{hashed_data}{A character string representing the hashed identifier of the data to be downloaded.}
 }
 \value{
 A named list containing the downloaded datasets.

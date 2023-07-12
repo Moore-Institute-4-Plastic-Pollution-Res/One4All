@@ -20,5 +20,8 @@ The function also checks that the rules do not contain sensitive words and that
 all the rules fields are character type.
 }
 \examples{
-read_rules("rules.csv") 
+\dontrun{
+read_rules("path/to/rules") 
+}
+
 }

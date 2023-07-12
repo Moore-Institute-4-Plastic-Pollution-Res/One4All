@@ -29,6 +29,8 @@ remote_share(
 
 \item{data_formatted}{A list containing formatted data.}
 
+\item{files}{A vector of file paths to upload.}
+
 \item{verified}{The secret key provided by the portal maintainer.}
 
 \item{valid_rules}{A list of valid rules for the dataset.}

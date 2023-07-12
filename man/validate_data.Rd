@@ -17,6 +17,8 @@ validate_data(
 \item{data_names}{(Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths.}
 
 \item{file_rules}{A file path for the rules file, either in .csv or .xlsx format.}
+
+\item{zip_data}{A file path to a zip folder for validating unstructured data.}
 }
 \value{
 A list containing the following elements:

@@ -30,7 +30,8 @@ Imports:
     readr,
     readxl,
     tibble,
-    aws.s3
+    aws.s3,
+    rlang
 Suggests:
     knitr,
     rmarkdown,

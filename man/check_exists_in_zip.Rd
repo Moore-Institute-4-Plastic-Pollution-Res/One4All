@@ -18,6 +18,7 @@ A logical value indicating whether the file exists in the zip file (TRUE) or not
 This function checks if a file with a given name exists in a specified zip file.
 }
 \examples{
-# Example usage:
+\dontrun{
 check_exists_in_zip(zip_path = "/path/to/your.zip", file_name = "file/in/zip.csv")
+}
 }
