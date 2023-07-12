@@ -102,10 +102,15 @@ read_data <- function(files_data, data_names = NULL){
             if(length(as.character(files_data)) > 1){
                 data_formatted <- tryCatch(lapply(files_data, function(x){read_excel(x)}),
                                            warning = function(w) {warning(w$message)}, 
-                                           error = function(e) {stop(e$message)})    
+                                           error = function(e) {stop(e$message)}) 
+                message("When multiple Excel files are uploaded only the first sheet from each is used.")
             }
             if(length(as.character(files_data)) == 1){
                 sheets <- excel_sheets(files_data)
+                sheets <- sheets[!sheets %in% c("LOOKUP", "RULES")]
+                if(is.null(data_names)){
+                    data_names <- sheets
+                }
                 data_formatted <- tryCatch(lapply(sheets, function(x){read_excel(files_data, sheet =  x)}),
                                            warning = function(w) {warning(w$message)}, 
                                            error = function(e) {stop(e$message)})    
@@ -879,8 +884,8 @@ create_valid_excel <- function(file_rules,
     
     lookup_column_index <- 1
     wb <- createWorkbook()
-    addWorksheet(wb, "Rules")
-    writeData(wb, sheet = "Rules", x = rules, startCol = 1)
+    addWorksheet(wb, "RULES")
+    writeData(wb, sheet = "RULES", x = rules, startCol = 1)
     for(sheet_num in 1:length(data_names)){ #Sheet level for loop
         rules_all_raw <- rules |> filter(dataset == data_names[sheet_num])
         rules_all <- validator(.data = rules_all_raw)
@@ -900,14 +905,14 @@ create_valid_excel <- function(file_rules,
             column_index <- which(rule_variables == variables(rule_test))
             if(any(grepl("(%vin%)|(%in%)", expression))){
                 if(lookup_column_index == 1){
-                    addWorksheet(wb, "Lookup")
+                    addWorksheet(wb, "LOOKUP")
                 }
                 values <- unlist(strsplit(gsub('(")|(\\))|(.*c\\()', "", as.character(expression[3])), ", "))
                 lookup_col <- LETTERS[lookup_column_index] 
                 df_lookup <- tibble(values)
                 names(df_lookup) <- paste0(variables(rule_test), "_lookup")
                 writeData(wb, 
-                          sheet = "Lookup", 
+                          sheet = "LOOKUP", 
                           x = df_lookup, 
                           startCol = lookup_column_index)
                 dataValidation(wb, 
@@ -915,7 +920,7 @@ create_valid_excel <- function(file_rules,
                                cols = column_index, 
                                rows = 2:row_num,
                                type = "list", 
-                               value = paste0("Lookup!$", lookup_col, "$2:$", lookup_col, "$", length(values) +1))  
+                               value = paste0("LOOKUP!$", lookup_col, "$2:$", lookup_col, "$", length(values) +1))  
                 lookup_column_index = lookup_column_index + 1
             }
             if(any(grepl("is_unique\\(.*\\)", expression))){
@@ -961,7 +966,7 @@ create_valid_excel <- function(file_rules,
             if(any(grepl("(%vin%)|(%in%)", expression))){
                 protectWorksheet(
                     wb,
-                    "Lookup",
+                    "LOOKUP",
                     protect = TRUE) #Protects the lookup table without a password just to prevent accidents.
             }
             #Need better way to deal with foreign keys, currently not working well. 
