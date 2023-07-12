@@ -379,7 +379,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
     })
 
 list(data_formatted = data_formatted,
-     data_names = data_names,
+     data_names = names(data_formatted),
      zip_data = if(exists("zip_data")){zip_data} else{NULL},
      report = report, 
      results = results, 
@@ -651,7 +651,7 @@ is.POSIXct <- function(x) inherits(x, "POSIXct")
 #' @export
 rules_broken <- function(results, show_decision){
     results |>
-        dplyr::filter(if(show_decision){status == c("error", "warning")} else{status %in% c("error", "warning", "success")}) |>
+        dplyr::filter(if(show_decision){status %in% c("error", "warning")} else{status %in% c("error", "warning", "success")}) |>
         select(description, status, name, expression, everything())
 }
 
@@ -880,7 +880,7 @@ create_valid_excel <- function(file_rules,
     }
     
     rules <- rules |>
-        filter(!grepl("is_foreign_key(.*)", rule))
+        mutate(rule = gsub("(is_foreign_key\\()|(check_exists_in_zip\\()", "!is.na\\(", rule))
     
     lookup_column_index <- 1
     wb <- createWorkbook()
