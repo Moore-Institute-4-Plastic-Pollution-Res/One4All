@@ -488,12 +488,10 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
     
     zip(zipfile = temp_zip, files = files, extras = '-j') # Zip the test file
     
-    hashed_zip = digest::digest(temp_zip)
-    
             if(use_s3){
                 put_object(
                     file = temp_zip,
-                    object = paste0(hashed_zip, ".zip"),
+                    object = paste0(hashed_data, ".zip"),
                     bucket = s3_bucket
                 ) 
             }
@@ -501,13 +499,13 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
             if(use_ckan){
                 resource_create(package_id = ckan_package,
                                 description = "validated raw data upload to microplastic data portal",
-                                name = paste0(hashed_zip, ".zip"),
+                                name = paste0(hashed_data, ".zip"),
                                 upload = temp_zip)
             }
     
     message(paste0("Data was successfully sent to the data portal at ", url_to_send))
 
-    return(list(hashed_zip = hashed_zip,
+    return(list(hashed_data = hashed_data,
                 submission_time = submission_time))
 }
 
@@ -516,7 +514,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 #' This function downloads data from remote sources like CKAN, AWS S3.
 #' It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
 #'
-#' @param hashed_zip A character string representing the hashed identifier of the data to be downloaded.
+#' @param hashed_data A character string representing the hashed identifier of the data to be downloaded.
 #' @param ckan_url A character string representing the CKAN base URL.
 #' @param ckan_key A character string representing the CKAN API key.
 #' @param ckan_package A character string representing the CKAN package identifier.
@@ -546,9 +544,9 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 #' }
 #' 
 #' @export
-remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket) {
+remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket) {
     
-    download_all <- !shiny::isTruthy(hashed_zip)
+    download_all <- !shiny::isTruthy(hashed_data)
     use_ckan <- shiny::isTruthy(ckan_url) & shiny::isTruthy(ckan_key) & shiny::isTruthy(ckan_package)
     use_s3 <- shiny::isTruthy(s3_bucket)  
     
@@ -568,7 +566,7 @@ remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package,
     
     if(use_s3 & !download_all){
         # Retrieve a list of objects from S3 bucket
-        s3_objects <- get_bucket(bucket = s3_bucket, prefix = hashed_zip) 
+        s3_objects <- get_bucket(bucket = s3_bucket, prefix = hashed_data) 
         file <- paste0(tempdir(), "\\", "temp.zip")
         aws.s3::save_object(object = s3_objects[[1]]$Key, file = file, bucket = s3_bucket)
         zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
@@ -594,9 +592,9 @@ remote_download <- function(hashed_zip = NULL, ckan_url, ckan_key, ckan_package,
     if(use_ckan & !download_all){
         resources <- package_show(ckan_package)$resources
         resources_names <- vapply(resources, function(x){x$name}, FUN.VALUE = character(1))
-        hashed_zip_resources <- resources[grepl(hashed_zip, resources_names)]
+        hashed_data_resources <- resources[grepl(hashed_data, resources_names)]
         file <- paste0(tempdir(), "\\", "temp.zip")
-        ckan_fetch(x = hashed_zip_resources[[1]]$url, store = "disk", path = file)
+        ckan_fetch(x = hashed_data_resources[[1]]$url, store = "disk", path = file)
         zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
         structured_data <- zip_files[grepl(".rds$", zip_files)]
         unzip(file, files = structured_data, exdir = tempdir())
