@@ -509,7 +509,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
                 submission_time = submission_time))
 }
 
-#' Download Data from Remote Sources
+#' Download Structured Data from Remote Sources
 #'
 #' This function downloads data from remote sources like CKAN, AWS S3.
 #' It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
@@ -588,6 +588,79 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
     
     return(data_downloaded)
 }
+
+#' Download Raw Data from Remote Sources
+#'
+#' This function downloads data from remote sources like CKAN and AWS S3.
+#' It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
+#'
+#' @param hashed_data A character string representing the hashed identifier of the data to be downloaded.
+#' @param file_path location and name of the zip file to create.
+#' @param ckan_url A character string representing the CKAN base URL.
+#' @param ckan_key A character string representing the CKAN API key.
+#' @param ckan_package A character string representing the CKAN package identifier.
+#' @param s3_key_id A character string representing the AWS S3 access key ID.
+#' @param s3_secret_key A character string representing the AWS S3 secret access key.
+#' @param s3_region A character string representing the AWS S3 region.
+#' @param s3_bucket A character string representing the AWS S3 bucket name.
+#'
+#' @importFrom shiny isTruthy
+#' @importFrom dplyr mutate_if
+#' @importFrom aws.s3 get_bucket get_object save_object
+#' @importFrom ckanr ckanr_setup package_show ckan_fetch
+#' @importFrom readr read_rds
+#' 
+#' @return A named list containing the downloaded datasets.
+#' 
+#' @examples
+#' \dontrun{
+#'   downloaded_data <- remote_download(hashed_data = "example_hash",
+#'                                      file_path = "your/path/file.zip",
+#'                                      ckan_url = "https://example.com",
+#'                                      ckan_key = "your_ckan_key",
+#'                                      ckan_package = "your_ckan_package",
+#'                                      s3_key_id = "your_s3_key_id",
+#'                                      s3_secret_key = "your_s3_secret_key",
+#'                                      s3_region = "your_s3_region",
+#'                                      s3_bucket = "your_s3_bucket")
+#' }
+#' 
+#' @export
+remote_raw_download <- function(hashed_data = NULL, file_path = NULL, ckan_url = NULL, ckan_key = NULL, ckan_package = NULL, s3_key_id = NULL, s3_secret_key = NULL, s3_region = NULL, s3_bucket = NULL) {
+    
+    use_ckan <- shiny::isTruthy(ckan_url) & shiny::isTruthy(ckan_key) & shiny::isTruthy(ckan_package)
+    use_s3 <- shiny::isTruthy(s3_bucket)  
+    
+    if(use_ckan & use_s3){
+        stop("This downloader only supports downloading files from S3 or CKAN, not both. The files are identical so there isn't a need to download both.")
+    }
+    
+    if(use_ckan){
+        ckanr::ckanr_setup(url = ckan_url, key = ckan_key)
+    }
+    
+    if(use_s3){
+        Sys.setenv(
+            "AWS_ACCESS_KEY_ID" = s3_key_id,
+            "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
+            "AWS_DEFAULT_REGION" = s3_region
+        )
+    }
+    
+    if(use_s3){
+        # Retrieve a list of objects from S3 bucket
+        s3_objects <- get_bucket(bucket = s3_bucket, prefix = hashed_data) 
+        aws.s3::save_object(object = s3_objects[[1]]$Key, file = file_path, bucket = s3_bucket)
+    }
+    
+    if(use_ckan){
+        resources <- package_show(ckan_package)$resources
+        resources_names <- vapply(resources, function(x){x$name}, FUN.VALUE = character(1))
+        hashed_data_resources <- resources[grepl(hashed_data, resources_names)]
+        ckan_fetch(x = hashed_data_resources[[length(hashed_data_resources)]]$url, store = "disk", path = file_path)
+    }
+}
+
 
 #' Check if an object is of class POSIXct
 #'
