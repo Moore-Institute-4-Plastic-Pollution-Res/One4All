@@ -13,7 +13,7 @@ rows_for_rules(data_formatted, report, broken_rules, rows)
 
 \item{broken_rules}{A data frame with broken rules information.}
 
-\item{rows}{A vector of row indices specifying which rules to check for violations.}
+\item{rows}{A vector of row indices specifying which rules from the suite of rules with errors to check for violations.}
 }
 \value{
 A data frame with rows in the data that violate the specified rules.
@@ -36,5 +36,5 @@ broken_rules <- rules_broken(results = result_invalid$results[[1]], show_decisio
 violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[1]], 
                                  report = result_invalid$report[[1]],
                                  broken_rules = broken_rules,
-                                 rows = 2)
+                                 rows = 1)
 }
