@@ -527,7 +527,7 @@ test_that("remote_download retrieves identical data from all sources", {
     testthat::skip_on_cran()
     
     # Load the required configuration
-    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/config_pl.yml")
+    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/config_pl_for_tests.yml")
     
     # Load the necessary datasets
     data("valid_example")
@@ -563,7 +563,7 @@ test_that("remote_download retrieves identical data from all sources", {
                                 old_cert = NULL)
     
     # Download the data using remote_download
-    dataset <- remote_download(hashed_zip = test_remote$hashed_zip, 
+    dataset <- remote_download(hashed_data = test_remote$hashed_data, 
                                ckan_url = config$ckan_url, 
                                ckan_key = config$ckan_key, 
                                ckan_package = config$ckan_package,

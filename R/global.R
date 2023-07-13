@@ -594,7 +594,7 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
         resources_names <- vapply(resources, function(x){x$name}, FUN.VALUE = character(1))
         hashed_data_resources <- resources[grepl(hashed_data, resources_names)]
         file <- paste0(tempdir(), "\\", "temp.zip")
-        ckan_fetch(x = hashed_data_resources[[1]]$url, store = "disk", path = file)
+        ckan_fetch(x = hashed_data_resources[[length(hashed_data_resources)]]$url, store = "disk", path = file)
         zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
         structured_data <- zip_files[grepl(".rds$", zip_files)]
         unzip(file, files = structured_data, exdir = tempdir())
@@ -603,7 +603,6 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
     
     if(use_ckan & download_all){
         resources <- package_show(ckan_package)$resources
-
         for (res in resources) {
             data <- ckan_fetch(x = res$url)
             dataset_name <- res$name

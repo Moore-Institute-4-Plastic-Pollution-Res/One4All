@@ -5,7 +5,7 @@
 \title{Download Data from Remote Sources}
 \usage{
 remote_download(
-  hashed_zip = NULL,
+  hashed_data = NULL,
   ckan_url,
   ckan_key,
   ckan_package,
@@ -16,7 +16,7 @@ remote_download(
 )
 }
 \arguments{
-\item{hashed_zip}{A character string representing the hashed identifier of the data to be downloaded.}
+\item{hashed_data}{A character string representing the hashed identifier of the data to be downloaded.}
 
 \item{ckan_url}{A character string representing the CKAN base URL.}
 
