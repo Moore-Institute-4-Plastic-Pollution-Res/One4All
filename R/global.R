@@ -605,16 +605,14 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
 #' @param s3_bucket A character string representing the AWS S3 bucket name.
 #'
 #' @importFrom shiny isTruthy
-#' @importFrom dplyr mutate_if
 #' @importFrom aws.s3 get_bucket get_object save_object
 #' @importFrom ckanr ckanr_setup package_show ckan_fetch
-#' @importFrom readr read_rds
 #' 
-#' @return A named list containing the downloaded datasets.
+#' @return Any return objects from the downloads. 
 #' 
 #' @examples
 #' \dontrun{
-#'   downloaded_data <- remote_download(hashed_data = "example_hash",
+#'   downloaded_data <- remote_raw_download(hashed_data = "example_hash",
 #'                                      file_path = "your/path/file.zip",
 #'                                      ckan_url = "https://example.com",
 #'                                      ckan_key = "your_ckan_key",
@@ -660,7 +658,6 @@ remote_raw_download <- function(hashed_data = NULL, file_path = NULL, ckan_url =
         ckan_fetch(x = hashed_data_resources[[length(hashed_data_resources)]]$url, store = "disk", path = file_path)
     }
 }
-
 
 #' Check if an object is of class POSIXct
 #'
