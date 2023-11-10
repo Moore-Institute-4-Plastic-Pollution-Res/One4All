@@ -12,7 +12,9 @@ remote_download(
   s3_key_id,
   s3_secret_key,
   s3_region,
-  s3_bucket
+  s3_bucket,
+  mongo_key,
+  mongo_collection
 )
 }
 \arguments{
@@ -48,7 +50,9 @@ It retrieves the data based on the hashed_data identifier and assumes the data i
                                      s3_key_id = "your_s3_key_id",
                                      s3_secret_key = "your_s3_secret_key",
                                      s3_region = "your_s3_region",
-                                     s3_bucket = "your_s3_bucket")
+                                     s3_bucket = "your_s3_bucket",
+                                     mongo_key = "mongo_key",
+                                     mongo_collection = "mongo_collection")
 }
 
 }
