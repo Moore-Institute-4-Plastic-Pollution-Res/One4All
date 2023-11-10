@@ -1,5 +1,5 @@
 
-# Functions ----
+# Fun Functions ----
 #' @title Generate a data frame with certificate information
 #'
 #' @description This function creates a data frame with certificate information including the current time,
