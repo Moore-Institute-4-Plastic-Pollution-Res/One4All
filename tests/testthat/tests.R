@@ -732,19 +732,3 @@ test_that("Update MongoDB Data Works", {
     # Assert that the update was successful
     expect_true(success2)
 })
-
-# Modify MongoDB structure
-test_that("Modify MongoDB Structure Works", {
-    
-    testthat::skip_on_cran()
-    
-    # Load the required configuration
-    config <- config::get(file = "config_pl_for_tests.yml")
-    
-    # Call the modifyMongoDB function with the MongoDB connection and parameters
-    success3 <- modifyMongoDB(config$mongo_collection, config$mongo_key)
-    
-    # Assert that the update was successful and it is a list
-    expect_type(success3, "list")
-})
-

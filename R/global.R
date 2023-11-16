@@ -723,58 +723,6 @@ updatemongomultiple <- function(multiple_existing_records, field_path2, updated_
     })
 }
 
-#' Modify MongoDB structure
-#'
-#' This function connects to a MongoDB collection, retrieves records, processes the data, 
-#' creates a merged document, and inserts it back into the collection.
-#'
-#' @param collection_name The name of the MongoDB collection to process.
-#' @param mongodb_url The URL for connecting to the MongoDB database.
-#' @return A list containing the merged document and the insert result.
-#' @examples
-#' \dontrun{
-#' # Replace 'MongoDB1' and 'mongodb_url' with the appropriate collection name and MongoDB URL
-#' result <- processMongoDBData(collection_name = "MongoDB1", 
-#'                              mongodb_url = "mongodb+srv://username:password@cluster.mongodb.net/database")
-#' }
-#' @export
-modifyMongoDB <- function(mongo_collection, mongo_key) {
-    print("modifyMongoDB function called")
-    
-    mongo_conn <- mongo(collection = mongo_collection, url = mongo_key)
-    
-    all_records <- mongo_conn$find('{"processed": {"$ne": true}}')
-    
-    methodology <- list()
-    particles <- list()
-    samples <- list()
-    certificate <- list()
-    
-    for (i in 1:length(all_records)) {
-        methodology_data <- all_records[i]$methodology
-        particles_data <- all_records[i]$particles
-        samples_data <- all_records[i]$samples
-        certificates_data <- all_records[i]$certificate
-        
-        methodology <- c(methodology, methodology_data)
-        particles <- c(particles, particles_data)
-        samples <- c(samples, samples_data)
-        certificate <- c(certificate, certificates_data)
-    }
-    
-    merged_document <- list(
-        methodology = methodology,
-        particles = particles,
-        samples = samples,
-        certificate = certificate,
-        processed = TRUE
-    )
-    
-    insert_result <- mongo_conn$insert(merged_document)
-    
-    return(list(merged_document = merged_document, insert_result = insert_result))
-}
-
 #' Download Raw Data from Remote Sources
 #'
 #' This function downloads data from remote sources like CKAN and AWS S3.
