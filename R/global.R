@@ -356,7 +356,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
     all_variables <- unique(c(validate::variables(rules_formatted), unlist(lapply(data_formatted, names))))
     
     if (!(all(all_variables %in% validate::variables(rules_formatted)) & all(all_variables %in% unlist(lapply(data_formatted, names))))) {
-        warning(paste0("All variables in the rules csv should be in the data csv and vice versa for the validation to work correctly. Ignoring these unmatched variables ", paste0(all_variables[!(all_variables %in% validate::variables(rules_formatted)) | !(all_variables %in% unlist(lapply(data_formatted, names)))], collapse = ", ")))
+        warning(paste0("All variables in the rules csv should be in the data csv and vice versa for the validation to work correctly. Download the Data Template for an example of correctly formatted upload. Ignoring these unmatched variables ", paste0(all_variables[!(all_variables %in% validate::variables(rules_formatted)) | !(all_variables %in% unlist(lapply(data_formatted, names)))], collapse = ", ")))
     }
     
     report <- lapply(names(data_formatted), function(x){
@@ -874,7 +874,28 @@ rows_for_rules <- function(data_formatted,
                            report,
                            broken_rules,
                            rows){
-    violating(data_formatted, report[broken_rules[rows, "name"]])
+    tryCatch({
+        violating(data_formatted, report[broken_rules[rows, "name"]])
+    }, warning = function(w) {
+        if(broken_rules[rows, "items"] == 0){
+            warning("Column being assessed by the rule is not in the dataset.")
+            return(data_formatted)
+        }
+        if(broken_rules[rows, "items"] == 1 & nrow(data_formatted) != 1){
+            warning("This rule applies to the entire dataset.")
+            return(data_formatted)
+        }
+        
+    }, error = function(e) {
+        if(broken_rules[rows, "items"] == 0){
+            warning("Column being assessed by the rule is not in the dataset.")
+            return(data_formatted)
+        }
+        if(broken_rules[rows, "items"] == 1 & nrow(data_formatted) != 1){
+            warning("This rule applies to the entire dataset.")
+            return(data_formatted)
+        }
+    })
 }
 
 #acknowledgement https://github.com/adamjdeacon/checkLuhn/blob/master/R/checkLuhn.R
@@ -932,7 +953,7 @@ checkLuhn <- function(number) {
 #' }
 #' @export
 check_exists_in_zip <- function(zip_path, file_name) {
-    if(is.null(zip_path)) return(rep(FALSE, lenth(file_name)))
+    if(is.null(zip_path) || zip_path == "") return(rep(FALSE, length(file_name)))
     # List files in the zip
     zip_files <- unzip(zip_path, list = TRUE)$Name
     # Check if file_name is in the list of files
