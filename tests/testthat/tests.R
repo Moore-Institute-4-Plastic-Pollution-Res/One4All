@@ -133,13 +133,18 @@ test_that("'check_exists_in_zip' rules are handled", {
     
     zip_data <- "fakedir\\test.zip"
     
+    bad_data <- NULL
+    
     data_formatted <- list(data1 = data.frame(file = "rules.csv"))
     
     result <- reformat_rules(rules, data_formatted, zip_data)
+    result2 <- reformat_rules(rules, data_formatted, bad_data)
     
     expect_s3_class(result, "data.frame")
     expect_equal(nrow(result), 1)
     expect_equal(result$rule, "check_exists_in_zip(zip_path = \"fakedir\\test.zip\", file_name = file) == TRUE")
+    expect_equal(result2$rule, "check_exists_in_zip(zip_path = \"\", file_name = file) == TRUE")
+    
 })
 
 # read data ----
@@ -315,7 +320,9 @@ sample_data <- data.frame(
 # Validation rules
 rules <- validate::validator(
     col1 > 0,
-    col2 <= 9
+    col2 <= 9,
+    col3 == "test",
+    nrow(.) == 4
 )
 
 # Generate a validation report
@@ -334,6 +341,8 @@ test_that("rows_for_rules returns violating rows", {
     expect_equal(nrow(violating_rows), 3)
     expect_equal(violating_rows$col1, c(-2, -4, 5))
     expect_equal(violating_rows$col2, c(7, 9, 10))
+    expect_identical(rows_for_rules(sample_data, report, broken_rules, c(3)), sample_data) |> expect_warning()
+    expect_identical(rows_for_rules(sample_data, report, broken_rules, c(4)), sample_data) |> expect_warning()
 })
 
 #Check Luhn ----
@@ -517,6 +526,12 @@ test_that("check_exists_in_zip correctly identifies existing files in a zip", {
     
     expect_true(check_exists_in_zip(zip_path = test_zip, file_name = "test_file.txt"))
     expect_false(check_exists_in_zip(zip_path = test_zip, file_name = "non_existing_file.txt"))
+    expect_false(check_exists_in_zip(zip_path = NULL, file_name = "non_existing_file.txt"))
+    expect_false(check_exists_in_zip(zip_path = NULL, file_name = NA))
+    expect_false(check_exists_in_zip(zip_path = "", file_name = NA))
+    expect_false(check_exists_in_zip(zip_path = test_zip, file_name = NA))
+    expect_identical(check_exists_in_zip(zip_path = NULL, file_name = c(NA, NA)), c(F, F))
+    
     unlink(test_file)
     unlink(test_zip)
 })
@@ -527,7 +542,7 @@ test_that("remote_download retrieves identical data from all sources", {
     testthat::skip_on_cran()
     
     # Load the required configuration
-    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/config_pl_for_tests.yml")
+    config <- config::get(file = "config_pl_for_tests.yml")
     
     # Load the necessary datasets
     data("valid_example")
@@ -559,7 +574,9 @@ test_that("remote_download retrieves identical data from all sources", {
                                 s3_key_id = config$s3_key_id, 
                                 s3_secret_key = config$s3_secret_key, 
                                 s3_region = config$s3_region, 
-                                s3_bucket = config$s3_bucket, 
+                                s3_bucket = config$s3_bucket,
+                                mongo_key = config$mongo_key,
+                                mongo_collection = config$mongo_collection,
                                 old_cert = NULL)
     
     # Download the data using remote_download
@@ -570,15 +587,16 @@ test_that("remote_download retrieves identical data from all sources", {
                                s3_key_id = config$s3_key_id,
                                s3_secret_key = config$s3_secret_key,
                                s3_region = config$s3_region,
-                               s3_bucket = config$s3_bucket)
-    
+                               s3_bucket = config$s3_bucket,
+                               mongo_key = config$mongo_key,
+                               mongo_collection = config$mongo_collection)
+
     # Compare datasets from different sources
-    expect_identical(dataset$s3$methodology, dataset$ckan$methodology)
-    expect_identical(dataset$s3$samples, dataset$ckan$samples)
-    expect_identical(dataset$s3$particles, dataset$ckan$particles)
+    expect_identical(dataset$s3$methodology, dataset$ckan$methodology, dataset$mongodb$methodology)
+    expect_identical(dataset$s3$samples, dataset$ckan$samples, dataset$mongodb$samples)
+    expect_identical(dataset$s3$particles, dataset$ckan$particles, dataset$mongodb$particles)
     file.remove(test_file)
 })
-
 
 #Test locally only ----
 test_that("remote_download retrieves zip data from all ckan and s3", {
@@ -586,7 +604,7 @@ test_that("remote_download retrieves zip data from all ckan and s3", {
     testthat::skip_on_cran()
     
     # Load the required configuration
-    config <- config::get(file = "G:/My Drive/MooreInstitute/Projects/PeoplesLab/Code/Microplastic_Data_Portal/code/validator/config_pl_for_tests.yml")
+    config <- config::get(file = "config_pl_for_tests.yml")
     
     # Load the necessary datasets
     data("valid_example")
@@ -618,7 +636,9 @@ test_that("remote_download retrieves zip data from all ckan and s3", {
                                 s3_key_id = config$s3_key_id, 
                                 s3_secret_key = config$s3_secret_key, 
                                 s3_region = config$s3_region, 
-                                s3_bucket = config$s3_bucket, 
+                                s3_bucket = config$s3_bucket,
+                                mongo_key = config$mongo_key,
+                                mongo_collection = config$mongo_collection,
                                 old_cert = NULL)
     
     test_file_zip <- tempfile(pattern = "file", fileext = ".zip")
@@ -690,3 +710,40 @@ test_that("check_for_malicious_files works correctly", {
     setwd(old_dir)
 })
 
+#Update MongoDB Data- Single Query
+test_that("Update MongoDB Data Works", {
+    
+    testthat::skip_on_cran()
+    
+    # Load the required configuration
+    config <- config::get(file = "config_pl_for_tests.yml")
+    
+    existing_record_id <- "6527260827276a6fca07bba1"
+    field_path <- "certificate.0.time"
+    updated_data <- "2023-11-01 14:03:42"
+                                              
+    # Call the updatemongo function with the MongoDB connection and parameters
+    success <- updatemongo(existing_record_id, field_path, updated_data, config$mongo_collection, config$mongo_key)
+    
+    # Assert that the update was successful
+    expect_true(success)
+})
+
+#Update MongoDB Data- Multiple Queries
+test_that("Update MongoDB Data Works", {
+    
+    testthat::skip_on_cran()
+    
+    # Load the required configuration
+    config <- config::get(file = "config_pl_for_tests.yml")
+    
+    multiple_existing_records <- c("6527260827276a6fca07bba1", "6527260f27276a6fca07bba2", "6527266ab4b56b2a500ecb41", "65272673b4b56b2a500ecb43", "65281330d8e827f62c0fd6b1", "65281345d8e827f62c0fd6b2", "65281e0e87453ca0ce092731", "652820bd87453ca0ce092734", "65282106087336b9480ba971","6528210d087336b9480ba972", "65282c1a3819938e33049e61", "65282c3a3819938e33049e63", "65282e2ec7121230b9024491", "652838729ce2b6ae4e0b9d71", "65283dcc5f688f262b039e71", "65283e875f688f262b039e72")
+    field_path2 <- "certificate.0.time"
+    updated_data2 <- "2023-11-01 14:03:42"
+    
+    # Call the updatemongo function with the MongoDB connection and parameters
+    success2 <- updatemongomultiple(multiple_existing_records, field_path2, updated_data2, config$mongo_collection, config$mongo_key)
+    
+    # Assert that the update was successful
+    expect_true(success2)
+})
