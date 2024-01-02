@@ -18,6 +18,7 @@ navbar:
         icon: fa-home
         text: "Home"
         href: index.html
+
   right:
     - icon: fa-github fa-lg
       href: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git
@@ -31,5 +32,17 @@ home:
         title: GitHub
         text: |
           <a class="github-button" href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git" data-size="large" data-show-count="true" aria-label="Star Moore-Institute-4-Plastic-Pollution-Res/One4All.git">Star</a>
-
+  
 # URL (where the pkgdown website will be hosted)
+
+# Footer
+footer:
+  structure:
+    left: developed
+  components:
+    developed: "Developed by [MIPPR](https://mooreplasticresearch.org/staff/)."
+
+
+
+
+
