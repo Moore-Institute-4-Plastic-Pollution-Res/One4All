@@ -32,9 +32,7 @@ home:
         title: GitHub
         text: |
           <a class="github-button" href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git" data-size="large" data-show-count="true" aria-label="Star Moore-Institute-4-Plastic-Pollution-Res/One4All.git">Star</a>
-  
-# URL (where the pkgdown website will be hosted)
-
+        
 # Footer
 footer:
   structure:
@@ -42,7 +40,4 @@ footer:
   components:
     developed: "Developed by [MIPPR](https://mooreplasticresearch.org/staff/)."
 
-
-
-
-
+# URL (where the pkgdown website will be hosted)
