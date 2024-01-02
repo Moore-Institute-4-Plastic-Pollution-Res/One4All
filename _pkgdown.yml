@@ -40,6 +40,6 @@ footer:
   structure:
     left: developed
   components:
-    developed: "Developed by [MIPPR](https://mooreplasticresearch.org/staff/)."
+    developed: "Developed by [Moore Institute for Plastic Pollution Research](https://mooreplasticresearch.org/staff/)."
 
 # URL (where the pkgdown website will be hosted)
