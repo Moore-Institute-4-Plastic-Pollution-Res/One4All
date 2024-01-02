@@ -7,7 +7,7 @@ The One4All package is an R package designed to streamline data validation and f
 
 ## Installation
 
-## If you don't have the remotes package installed, first run:
+### If you don't have the remotes package installed, first run:
 ``` r
 # install.packages("remotes")
 remotes::install_github("Moore-Institute-4-Plastic-Pollution-Res/One4All")
