@@ -133,13 +133,18 @@ test_that("'check_exists_in_zip' rules are handled", {
     
     zip_data <- "fakedir\\test.zip"
     
+    bad_data <- NULL
+    
     data_formatted <- list(data1 = data.frame(file = "rules.csv"))
     
     result <- reformat_rules(rules, data_formatted, zip_data)
+    result2 <- reformat_rules(rules, data_formatted, bad_data)
     
     expect_s3_class(result, "data.frame")
     expect_equal(nrow(result), 1)
     expect_equal(result$rule, "check_exists_in_zip(zip_path = \"fakedir\\test.zip\", file_name = file) == TRUE")
+    expect_equal(result2$rule, "check_exists_in_zip(zip_path = \"\", file_name = file) == TRUE")
+    
 })
 
 # read data ----
@@ -315,7 +320,9 @@ sample_data <- data.frame(
 # Validation rules
 rules <- validate::validator(
     col1 > 0,
-    col2 <= 9
+    col2 <= 9,
+    col3 == "test",
+    nrow(.) == 4
 )
 
 # Generate a validation report
@@ -334,6 +341,8 @@ test_that("rows_for_rules returns violating rows", {
     expect_equal(nrow(violating_rows), 3)
     expect_equal(violating_rows$col1, c(-2, -4, 5))
     expect_equal(violating_rows$col2, c(7, 9, 10))
+    expect_identical(rows_for_rules(sample_data, report, broken_rules, c(3)), sample_data) |> expect_warning()
+    expect_identical(rows_for_rules(sample_data, report, broken_rules, c(4)), sample_data) |> expect_warning()
 })
 
 #Check Luhn ----
@@ -517,6 +526,12 @@ test_that("check_exists_in_zip correctly identifies existing files in a zip", {
     
     expect_true(check_exists_in_zip(zip_path = test_zip, file_name = "test_file.txt"))
     expect_false(check_exists_in_zip(zip_path = test_zip, file_name = "non_existing_file.txt"))
+    expect_false(check_exists_in_zip(zip_path = NULL, file_name = "non_existing_file.txt"))
+    expect_false(check_exists_in_zip(zip_path = NULL, file_name = NA))
+    expect_false(check_exists_in_zip(zip_path = "", file_name = NA))
+    expect_false(check_exists_in_zip(zip_path = test_zip, file_name = NA))
+    expect_identical(check_exists_in_zip(zip_path = NULL, file_name = c(NA, NA)), c(F, F))
+    
     unlink(test_file)
     unlink(test_zip)
 })
