@@ -1,0 +1,35 @@
+# Website title and description
+title: One4All
+
+# Theme and styling options
+template:
+  bootstrap: 5
+  bootswatch: sandstone
+  bslib:
+    pkgdown-nav-height: 100px
+  includes:
+    in_header: |
+      <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+# Navbar settings
+navbar:
+  left:
+    -home:
+        icon: fa-home
+        text: "Home"
+        href: index.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git
+
+# Homepage customization
+home:
+  sidebar:
+    structure: [star, links, license, community, citation, authors, dev]
+    components:
+      star:
+        title: GitHub
+        text: |
+          <a class="github-button" href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git" data-size="large" data-show-count="true" aria-label="Star Moore-Institute-4-Plastic-Pollution-Res/One4All.git">Star</a>
+
+# URL (where the pkgdown website will be hosted)
