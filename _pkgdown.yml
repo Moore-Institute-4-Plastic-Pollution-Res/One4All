@@ -14,11 +14,13 @@ template:
 # Navbar settings
 navbar:
   left:
-    -home:
-        icon: fa-home
-        text: "Home"
-        href: index.html
-
+    - home:
+      icon: fa-home
+      text: "Home"
+      href: index.html
+    - icon: fa-file-code-o
+      text: "Reference"
+      href: reference/index.html
   right:
     - icon: fa-github fa-lg
       href: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git
@@ -34,7 +36,51 @@ home:
         title: GitHub
         text: |
           <a class="github-button" href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git" data-size="large" data-show-count="true" aria-label="Star Moore-Institute-4-Plastic-Pollution-Res/One4All.git">Star</a>
-        
+
+# Reference customization
+reference:
+- title: "<b>Checks</b>"
+  desc: All functions for checks.
+  contents:
+  - '`checkLuhn`'
+  - '`check_exists_in_zip`'
+  - '`check_for_malicious_files`'
+  - '`check_images`'
+  - '`check_other_hyperlinks`'
+  - '`is.POSIXct`'
+  - '`test_profanity`'
+  
+- title: "<b>Examples</b>"
+  desc: Invalid and valid data examples.
+  contents:
+  - '`invalid_example`'
+  - '`valid_example`'
+  
+- title: "<b>Download and sharing</b>"
+  desc: All functions for downloading and sharing data.
+  contents:
+  - '`remote_download`'
+  - '`remote_raw_download`'
+  - '`remote_share`'
+  
+- title: "<b>Rules</b>"
+  desc: All functions for rules
+  contents:
+  - '`rows_for_rules`'
+  - '`rules_broken`'
+  - '`test_rules`'
+  - '`reformat_rules`'
+  - '`read_rules`'
+
+- title: "<b>Data</b>"
+  desc: All functions for data
+  contents:
+  - '`certificate_df`'
+  - '`create_valid_excel`'
+  - '`name_data`'
+  - '`read_data`'
+  - '`validate_data`'
+  
 # Footer
 footer:
   structure:
@@ -42,4 +88,5 @@ footer:
   components:
     developed: "Developed by [Moore Institute for Plastic Pollution Research](https://mooreplasticresearch.org/staff/)."
 
-# URL (where the pkgdown website will be hosted)
+# URL
+url: https://Moore-Institute-4-Plastic-Pollution-Res.github.io/One4All/

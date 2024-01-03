@@ -1,0 +1,43 @@
+---
+title: "Validator App Tutorial"
+author: "Win Cowger, Hannah Sherrod"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Validator App Tutorial}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE
+)
+```
+
+## Document Overview
+
+This document outlines a workflow to utilize the validator app from the Microplastics Data Portal. After reading this document, users will have a better understanding of the processes involved in creating this app and how to use it. The purpose of this tool is not only for validating data, but for sharing data as well, to promote open-source resources. For more documentation about the R package, please see the [One4All package vignette](enter package here).
+
+## Background: Rules
+
+Here is important information on how the app validates and shares data. There is a set of rules created using excel that is applied to the app which allows the app to know what data is valid or not. These rules correspond to each column which are then separated into three tables, methodology, samples, and particles. Each rule has a description and a valid example so that the user knows what data to input under what column. Under the '_Help' page, there is also a tutorial video that is a visual form of this document. Along with the video, there is a Sample Rules, Valid Sample Data, and Invalid Sample Data for users to download and view.
+
+```
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```
+
+## Running the App
+
+To access the validator app, go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git) and link it directly to your own device in R studio. After setting up the github to your device, go to the validator folder and select the global.R, ui.R, or server.R. From here, select the command 'run_app' which will display the app.
+
+## Sharing Data
+
+Once the app is open, upload your data by selecting the 'Upload Data' tab. Your local folder tab will then be displayed where you can select from your csv or xlsx files along with a corresponding zip file (acceptable data formats are csv, xlsx, and zip files). Once the files have been selected, click open and a screen will appear with the option to share your uploaded data. If this is an update to a previous submission, select that tab and upload the previous certificate from your local device. However, if this is a new submission, then follow the rest of the prompt on the screen. If an input key is required, it will be requested on the screen under the 'Input Key' box (the key will have been provided to you ahead of time) and select 'OK' after entering the key. If no input key is required, the 'Input Key' box will not be displayed and simply select 'OK'. If your data was successfully uploaded, a new display, 'Successful Remote Data Sharing', will appear. If the data was not successfully uploaded, a different display will appear marking which columns need to be reevaluated. The validating data section below provides instruction on how to correct invalid data.
+
+## Validating Data
+
+If you simply want to validate your data, select cancel on the 'Would you like to share your uploaded data' screen. Your data should now be displayed amongst three boxes- methodology, samples, and particles. Each of these tables automatically display the number of successes, warnings, and errors in your data. To further view the details, click on a table which will display two boxes, 'Issues Raised' and 'Issues Selected'. If there are any errors or warnings, those columns will be highlighted in yellow or red, respectively, in the 'Issues Raised' box. To view all data, including successes, switch the tool toggle labeled 'Errors only?' to off. The description of each rule and its status (success/warning/error) are defined for the user to identify what rule was violated. By clicking on one of the highlighted boxes, the data entries that need to be fixed from that column will then be displayed and highlighted in the 'Issues Selected' box.
+
