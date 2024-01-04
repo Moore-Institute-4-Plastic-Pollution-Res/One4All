@@ -25,8 +25,8 @@ navbar:
       icon: fa-university
       text: "Articles"
       menu:
-      - text: Validator App Tutorial
-        href: "app.html"
+      - text: Validator App
+        href: articles/app.html
   right:
     - icon: fa-github fa-lg
       href: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git
@@ -93,6 +93,3 @@ footer:
     left: developed
   components:
     developed: "Developed by [Moore Institute for Plastic Pollution Research](https://mooreplasticresearch.org/staff/)."
-
-# URL
-url: https://Moore-Institute-4-Plastic-Pollution-Res.github.io/One4All/
