@@ -21,6 +21,12 @@ navbar:
     - icon: fa-file-code-o
       text: "Reference"
       href: reference/index.html
+    - tutorials:
+      icon: fa-university
+      text: "Articles"
+      menu:
+      - text: Validator App Tutorial
+        href: "vignettes/app.Rmd"
   right:
     - icon: fa-github fa-lg
       href: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git
