@@ -25,8 +25,10 @@ navbar:
       icon: fa-university
       text: "Articles"
       menu:
-      - text: Validator App
+      - text: Validator App Tutorial
         href: articles/app.html
+      - text: One4All Package Tutorial
+        href: articles/package.html
   right:
     - icon: fa-github fa-lg
       href: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git
@@ -42,7 +44,7 @@ home:
         title: GitHub
         text: |
           <a class="github-button" href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git" data-size="large" data-show-count="true" aria-label="Star Moore-Institute-4-Plastic-Pollution-Res/One4All.git">Star</a>
-
+    
 # Reference customization
 reference:
 - title: "<b>Checks</b>"

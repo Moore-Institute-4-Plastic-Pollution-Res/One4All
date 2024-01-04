@@ -1,0 +1,205 @@
+---
+title: "One4All Package Tutorial"
+author: "Win Cowger, Hannah Sherrod"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{One4All Package Tutorial}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE
+)
+```
+
+## Document Overview
+
+This document outlines the One4All package and highlights the main functions relevant to the validator app. After reading this document, users will have a better understanding of the development of the validator app and the functions within it. 
+
+
+The One4All package is the backbone of the validator app. If you are looking for a tutorial on how to use the app itself see the [Validator App Tutorial](app.html).
+
+## Installation
+
+After installing the R package, read in the following library:
+```{r setup}
+library(One4All)
+```
+
+## Running the App
+
+To access the validator app, go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git) and link it directly to your own device in R studio. After setting up the github to your device, go to the validator folder and select the global.R, ui.R, or server.R. From here, select the command `'Run App'` which will display the app.
+
+## Where is this data shared?
+
+The validator app allows users to not only validate their data, but to share their data as well, promoting open-source resources. The purpose of this section is to provide background information on how and where the data is sent. 
+
+
+In the One4All package, the remote share function shares the validated data to three remote repositories, including MongoDB, CKAN, and/or AmazonS3. The purpose of having three options is for user preference on where to share their data: 
+
+
+**MongoDB** is a NoSQL database that stores data in BSON format, allowing for flexible data structures.
+
+**CKAN** is an open-source data portal platform, allowing for managing and sharing datasets.
+
+**Amazon S3** is a cloud-based object storage service, providing scalable and durable storage for a wide variety of data types.
+
+The `'remote_share'` function is shown below.
+```{r}
+remote_share <- function(validation, data_formatted, files, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, mongo_collection, old_cert = NULL){
+    
+    use_ckan <- isTruthy(ckan_url) & isTruthy(ckan_key) & isTruthy(ckan_package)
+    use_s3 <- isTruthy(s3_bucket)
+    use_mongodb <- isTruthy(mongo_key) & isTruthy(mongo_collection)
+    
+    if(!(use_ckan| use_s3| use_mongodb)){
+        stop("Upload will not work because no upload methods are specified.")
+    }
+    
+    if(any(validation$issues)){
+        stop("There are errors in the dataset that persist. Until all errors are remedied, the data cannot be uploaded to the remote repository.")
+    }
+    
+    if(!any(digest(as.data.frame(rules)) %in% valid_rules)){
+        stop("If you are using a key to upload data to a remote repo then there must be a valid pair with the rules you are using in our internal database.")
+    }
+    
+    if(!any(verified %in% valid_key)){
+        stop("You must have a valid key provided by the portal maintainer to use this feature.")
+    }
+    
+    hashed_data <- digest(data_formatted)
+    
+    structured_files <- paste0(tempdir(), "\\", hashed_data, ".rds")
+    
+    saveRDS(data_formatted, file = structured_files)
+    
+    submission_time <- as.double(as.POSIXlt(Sys.time(), "GMT"))
+    
+    if(use_ckan){
+        ckanr::ckanr_setup(url = ckan_url, key = ckan_key)
+    }    
+    
+    if(use_s3){
+        Sys.setenv(
+            "AWS_ACCESS_KEY_ID" = s3_key_id,
+            "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
+            "AWS_DEFAULT_REGION" = s3_region
+        )
+    }
+    
+    
+    #Add certificate
+    certificate_file <- paste0(tempdir(), "\\", "certificate.csv")
+    certificate <- certificate_df(validation, time = submission_time)
+    data.table::fwrite(certificate, certificate_file)
+    
+    data_formatted2 <- data_formatted
+    data_formatted2$certificate <- certificate
+    data_formatted2 <- toJSON(data_formatted2)
+    
+    if(use_mongodb) {
+        mongo_conn <- mongo(collection = mongo_collection, url = mongo_key)
+        mongo_conn$insert(data_formatted2)
+    }
+    
+    files = c(files, structured_files, certificate_file)
+    
+    #Add old certificate
+    if(isTruthy(old_cert)){
+        files = c(files, old_cert)
+    }
+    
+    temp_zip <- paste0(tempdir(), "\\", "temp.zip")
+    
+    zip(zipfile = temp_zip, files = files, extras = '-j') # Zip the test file
+    
+    if(use_s3){
+        put_object(
+            file = temp_zip,
+            object = paste0(hashed_data, ".zip"),
+            bucket = s3_bucket
+        )
+    }
+    
+    if(use_ckan){
+        resource_create(package_id = ckan_package,
+                        description = "validated raw data upload to microplastic data portal",
+                        name = paste0(hashed_data, ".zip"),
+                        upload = temp_zip)
+    }
+    
+    
+    message(paste0("Data was successfully sent to the data portal at ", url_to_send))
+    
+    return(list(hashed_data = hashed_data,
+                submission_time = submission_time))
+}
+```
+
+## How is the data downloaded?
+
+The `'remote_download'` function from the One4All package allows users to download shared data from MongoDB, CKAN, and/or AmazonS3. The data is retrieved based on the '`hashed_data`' identifier and assumes the data is stored using the same naming conventions provided in the '`remote_share`' function.
+
+The `'remote_download'` function is shown below.
+```{r}
+remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, mongo_collection) {
+    
+    use_ckan <- shiny::isTruthy(ckan_url) & shiny::isTruthy(ckan_key) & shiny::isTruthy(ckan_package)
+    use_s3 <- shiny::isTruthy(s3_bucket)
+    use_mongodb <- shiny::isTruthy(mongo_key) & shiny::isTruthy(mongo_collection)
+    
+    if(use_ckan){
+        ckanr::ckanr_setup(url = ckan_url, key = ckan_key)
+    }
+    
+    if(use_s3){
+        Sys.setenv(
+            "AWS_ACCESS_KEY_ID" = s3_key_id,
+            "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
+            "AWS_DEFAULT_REGION" = s3_region
+        )
+    }
+    
+    if(use_mongodb) {
+        mongo_conn <- mongo(collection = mongo_collection, url = mongo_key)
+    }
+    
+    data_downloaded <- list()
+    
+    if(use_s3){
+        # Retrieve a list of objects from S3 bucket
+        s3_objects <- get_bucket(bucket = s3_bucket, prefix = hashed_data)
+        file <- tempfile(pattern = "temp", fileext = ".zip")
+        aws.s3::save_object(object = s3_objects[[1]]$Key, file = file, bucket = s3_bucket)
+        zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
+        structured_data <- zip_files[grepl(".rds$", zip_files)]
+        unzip(file, files = structured_data, exdir = tempdir())
+        data_downloaded[["s3"]] <- read_rds(paste0(tempdir(),"/", structured_data))
+    }
+    
+    if(use_ckan){
+        resources <- package_show(ckan_package)$resources
+        resources_names <- vapply(resources, function(x){x$name}, FUN.VALUE = character(1))
+        hashed_data_resources <- resources[grepl(hashed_data, resources_names)]
+        file <- tempfile(pattern = "temp", fileext = ".zip")
+        ckan_fetch(x = hashed_data_resources[[length(hashed_data_resources)]]$url, store = "disk", path = file)
+        zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
+        structured_data <- zip_files[grepl(".rds$", zip_files)]
+        unzip(file, files = structured_data, exdir = tempdir())
+        data_downloaded[["ckan"]] <- read_rds(paste0(tempdir(),"/", structured_data))
+    }
+    
+    if(use_mongodb){
+        mongo_query <- toJSON(list("unique_id" = hashed_data))
+        mongo_data <- mongo_conn$find(query = mongo_query)
+        data_downloaded[["mongodb"]] <- mongo_data
+    }
+    return(data_downloaded)
+}
+```

@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 ## Document Overview
 
-This document outlines a workflow to utilize the validator app from the Microplastics Data Portal. After reading this document, users will have a better understanding of the processes involved in creating this app and how to use it. The purpose of this tool not only is to validate data, but to share data as well, promoting open-source resources. For more documentation about the R package, please see the [One4All package vignette](enter package here).
+This document outlines a workflow to utilize the validator app from the Microplastics Data Portal. After reading this document, users will have a better understanding of the processes involved in creating this app and how to use it. The purpose of this tool is to not only validate data, but to share data as well, promoting open-source resources. For more documentation about the R package, please see the [One4All Package Tutorial](package.html).
 
 ## Background: Rules
 
