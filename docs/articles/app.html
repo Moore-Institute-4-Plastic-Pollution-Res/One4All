@@ -94,7 +94,7 @@
                         <h4 data-toc-skip class="author">Win Cowger,
 Hannah Sherrod</h4>
             
-            <h4 data-toc-skip class="date">2024-01-04</h4>
+            <h4 data-toc-skip class="date">2024-01-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/HEAD/vignettes/app.Rmd" class="external-link"><code>vignettes/app.Rmd</code></a></small>
       <div class="d-none name"><code>app.Rmd</code></div>
@@ -110,23 +110,36 @@ the Microplastics Data Portal. After reading this document, users will
 have a better understanding of the processes involved in creating this
 app and how to use it. The purpose of this tool is to not only validate
 data, but to share data as well, promoting open-source resources. For
-more documentation about the R package, please see the <a href="package.html">One4All Package Tutorial</a>.</p>
+more documentation about the One4All R package, please see the <a href="package.html">One4All Package Tutorial</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="background-rules">Background: Rules<a class="anchor" aria-label="anchor" href="#background-rules"></a>
 </h2>
 <p>This section discusses how the app validates and shares data. First
-and foremost, there is a set of existing rules created in excel that is
+and foremost, there is an existing set of rules created in excel that is
 applied to the app prior to user usage. These rules allow the app to
-verify if the user’s data is valid. Each rule corresponds to a column of
-data, which is then collectively separated into three tables-
-methodology, samples, and particles.</p>
+verify the validity of a user’s data once they’ve uploaded it in the
+app. The rules sheet consists of multiple columns, including a name,
+description, dataset, valid example, severity, and the rule itself (see
+below for more details).</p>
+<p><strong>Name:</strong> The name of the row.
+<code>'(ex. Amount)'</code></p>
+<p><strong>Description:</strong> A description of the rule itself and
+its requirements.
+<code>'(ex. If there are two or more identical particles (in every aspect), upload it once and indicate the number of identical particles here as a whole number)'</code></p>
+<p><strong>Dataset:</strong> Labeled ‘particles’, ‘methodology’, or
+‘samples’. <code>'(ex. partices)'</code></p>
+<p><strong>Valid_example:</strong> A valid example of the rule.
+<code>'(ex. 2)'</code></p>
+<p><strong>Severity:</strong> The severity of the rule, labeled either a
+‘warning’ or an ‘error’. Warnings will still allow the data to be
+shared, whereas an error will need to be restructured.
+<code>'(ex. warning)'</code></p>
+<p><strong>Rule:</strong> The rule itself that the validator app reads
+to validate data (written in r code).
+<code>'(ex. Amount &gt;= 2 | is.na(Amount))'</code></p>
 <p>Under the <code>'_Help'</code> tab within the app, there is a sample
-rules sheet that the user can download to properly structure their data.
-Each rule is followed by a description and an example. Within the same
-tab, there is also a video tutorial, valid example data, and invalid
-example data for the user to view and download as well.</p>
-<p><img src="appimages/RulesExampleValidator.png" width="891" style="display: block; margin: auto;"></p>
+rules sheet for users to download and view.</p>
 </div>
 <div class="section level2">
 <h2 id="running-the-app">Running the App<a class="anchor" aria-label="anchor" href="#running-the-app"></a>
@@ -135,7 +148,21 @@ example data for the user to view and download as well.</p>
 and link it directly to your own device in R studio. After setting up
 the github to your device, go to the validator folder and select the
 global.R, ui.R, or server.R. From here, select the command
-<code>'Run App'</code> which will display the app.</p>
+<code>'Run App'</code> which will then display the app.</p>
+</div>
+<div class="section level2">
+<h2 id="how-to-structure-your-data">How to structure your data<a class="anchor" aria-label="anchor" href="#how-to-structure-your-data"></a>
+</h2>
+<p>Download the valid example data under the <code>'_Help'</code> tab
+within the app. To properly structure your data follow the example by
+creating three sheets: one for methodology, samples, and particles. Copy
+the columns from the valid example into each of these sheets. Each
+column corresponds to one of the rules from the rule sheet, so refer
+back to the sample rules for the requirements. Although it is necessary
+for all columns to be labeled, the validator app encompasses a wide
+variety of data, so it is not a requirement for all of the columns to be
+filled. The columns that you don’t fill out can be left blank.</p>
+<p><img src="appimages/RulesExampleValidator.png" width="891" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="sharing-data">Sharing Data<a class="anchor" aria-label="anchor" href="#sharing-data"></a>
@@ -155,8 +182,8 @@ it is required it will have been provided to you from us ahead of time.
 Following this, if your data was successfully uploaded, a new display,
 <code>'Successful Remote Data Sharing'</code>, will appear. If the data
 was not successfully uploaded, a display will appear marking which
-columns need to be reevaluated. The validating data section below
-provides instruction on how to correct invalid data.</p>
+columns need to be reevaluated. The <code>'Validating Data'</code>
+section below provides instructions on how to correct invalid data.</p>
 <p><img src="appimages/SuccessValidator.png" width="876" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
@@ -170,8 +197,8 @@ successes, warnings, and errors in your data. To further view the
 details, click on a table which will display two boxes,
 <code>'Issues Raised'</code> and <code>'Issues Selected'</code>. If
 there are any errors or warnings, those columns will be highlighted in
-yellow or red, respectively, in the ‘Issues Raised’ box. To view all
-data, including successes, switch the tool toggle labeled
+yellow or red, respectively in the ‘Issues Raised’ box. To view all
+statuses, including successes, switch the tool toggle labeled
 <code>'Errors only?'</code> to off. The description of each rule and its
 status (success/warning/error) are defined for the user to identify what
 rule was violated. By clicking on one of the highlighted boxes, the data

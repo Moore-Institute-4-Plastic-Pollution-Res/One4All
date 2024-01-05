@@ -19,8 +19,7 @@ knitr::opts_chunk$set(
 
 ## Document Overview
 
-This document outlines the One4All package and highlights the main functions relevant to the validator app. After reading this document, users will have a better understanding of the development of the validator app and the functions within it. 
-
+This document outlines the One4All package and highlights the main functions relevant to using the validator app. After reading this document, users will have a better understanding of the validator app development and the main functions within it. 
 
 The One4All package is the backbone of the validator app. If you are looking for a tutorial on how to use the app itself see the [Validator App Tutorial](app.html).
 
@@ -48,6 +47,8 @@ In the One4All package, the remote share function shares the validated data to t
 **CKAN** is an open-source data portal platform, allowing for managing and sharing datasets.
 
 **Amazon S3** is a cloud-based object storage service, providing scalable and durable storage for a wide variety of data types.
+
+A key will be provided to the user ahead of time for where they want to share their data.
 
 The `'remote_share'` function is shown below.
 ```{r}
@@ -144,7 +145,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 
 ## How is the data downloaded?
 
-The `'remote_download'` function from the One4All package allows users to download shared data from MongoDB, CKAN, and/or AmazonS3. The data is retrieved based on the '`hashed_data`' identifier and assumes the data is stored using the same naming conventions provided in the '`remote_share`' function.
+The `'remote_download'` function from the One4All package allows users to download shared data from MongoDB, CKAN, and/or AmazonS3. The data is retrieved based on the `'hashed_data'` identifier and assumes the data is stored using the same naming conventions provided in the `'remote_share'` function.
 
 The `'remote_download'` function is shown below.
 ```{r}

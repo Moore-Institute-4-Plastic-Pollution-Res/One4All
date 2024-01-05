@@ -94,7 +94,7 @@
                         <h4 data-toc-skip class="author">Win Cowger,
 Hannah Sherrod</h4>
             
-            <h4 data-toc-skip class="date">2024-01-04</h4>
+            <h4 data-toc-skip class="date">2024-01-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/HEAD/vignettes/package.Rmd" class="external-link"><code>vignettes/package.Rmd</code></a></small>
       <div class="d-none name"><code>package.Rmd</code></div>
@@ -106,9 +106,9 @@ Hannah Sherrod</h4>
 <h2 id="document-overview">Document Overview<a class="anchor" aria-label="anchor" href="#document-overview"></a>
 </h2>
 <p>This document outlines the One4All package and highlights the main
-functions relevant to the validator app. After reading this document,
-users will have a better understanding of the development of the
-validator app and the functions within it.</p>
+functions relevant to using the validator app. After reading this
+document, users will have a better understanding of the validator app
+development and the main functions within it.</p>
 <p>The One4All package is the backbone of the validator app. If you are
 looking for a tutorial on how to use the app itself see the <a href="app.html">Validator App Tutorial</a>.</p>
 </div>
@@ -146,6 +146,8 @@ allowing for managing and sharing datasets.</p>
 <p><strong>Amazon S3</strong> is a cloud-based object storage service,
 providing scalable and durable storage for a wide variety of data
 types.</p>
+<p>A key will be provided to the user ahead of time for where they want
+to share their data.</p>
 <p>The <code>'remote_share'</code> function is shown below.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">remote_share</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">validation</span>, <span class="va">data_formatted</span>, <span class="va">files</span>, <span class="va">verified</span>, <span class="va">valid_rules</span>, <span class="va">valid_key</span>, <span class="va">ckan_url</span>, <span class="va">ckan_key</span>, <span class="va">ckan_package</span>, <span class="va">url_to_send</span>, <span class="va">rules</span>, <span class="va">results</span>, <span class="va">s3_key_id</span>, <span class="va">s3_secret_key</span>, <span class="va">s3_region</span>, <span class="va">s3_bucket</span>, <span class="va">mongo_key</span>, <span class="va">mongo_collection</span>, <span class="va">old_cert</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">{</span></span>
@@ -243,9 +245,9 @@ types.</p>
 </h2>
 <p>The <code>'remote_download'</code> function from the One4All package
 allows users to download shared data from MongoDB, CKAN, and/or
-AmazonS3. The data is retrieved based on the ‘<code>hashed_data</code>’
+AmazonS3. The data is retrieved based on the <code>'hashed_data'</code>
 identifier and assumes the data is stored using the same naming
-conventions provided in the ‘<code>remote_share</code>’ function.</p>
+conventions provided in the <code>'remote_share'</code> function.</p>
 <p>The <code>'remote_download'</code> function is shown below.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">remote_download</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">hashed_data</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">ckan_url</span>, <span class="va">ckan_key</span>, <span class="va">ckan_package</span>, <span class="va">s3_key_id</span>, <span class="va">s3_secret_key</span>, <span class="va">s3_region</span>, <span class="va">s3_bucket</span>, <span class="va">mongo_key</span>, <span class="va">mongo_collection</span><span class="op">)</span> <span class="op">{</span></span>
