@@ -99,46 +99,21 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">read_data</span><span class="op">(</span>files_data <span class="op">=</span> <span class="va">valid_example</span>, data_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"methodology"</span>, <span class="st">"particles"</span>, <span class="st">"samples"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $methodology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                        MethodologyID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 https://www.waterboards.ca.gov/drinking_water/certlic/drinkingwater/documents/microplastics/mcrplsts_plcy_drft.pdf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   SamplingDevice AirFiltration AirFiltrationType ClothingPolicy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 10 L Glass Jar           Yes         Honeywell            Yes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   NonplasticPolicy SealedEnvironment SealedEnvironmentType SieveMeshSizes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              Yes                No             Glove Box  50, 300, 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  FilterType FilterDiameter FilterPoreSize       VisIDMethod</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 gold coated polycarbonate             45             10 Visual Microscopy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   VisualSoftware PickingStrategy VisMagnification MatIDMethod MatIDSoftware</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        Image J             Dry               10        FTIR    Open Specy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   MethodDetectionLimit SpikedCount MatIDThreshold SpikedRecovery</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                   10        1000            0.8             80</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $particles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ParticleID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1_23jreh334</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                        MethodologyID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 https://www.waterboards.ca.gov/drinking_water/certlic/drinkingwater/documents/microplastics/mcrplsts_plcy_drft.pdf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SampleID                                                           PhotoID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 23jreh334 https://www.sei.org/wp-content/uploads/2021/02/microplastics-.jpg</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                    SpectraID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 https://raw.githubusercontent.com/wincowgerDEV/OpenSpecy-package/main/inst/extdata/fitr_nitrocellulose.jdx</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   FinalAnalysisDate      Comments      Polymer Morphology Color Length Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        2023-02-11 Spectra noisy Polyethylene     Sphere White    100   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Height Mass SurfaceArea  Volume Tactile</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    100  0.1    31415.93 1000000  Ridgid</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $samples</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SampleID                              OwnerOrganization</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 23jreh334 Moore Institute for Plastic Pollution Research</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             AnalysisOrganization</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Moore Institute for Plastic Pollution Research</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                            ReportingOrganization Latitude Longitude</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Moore Institute for Plastic Pollution Research 33.74697 -118.1154</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   CollectionStartDateTime SampleVolume    SampleType CollectionEndDateTime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        2023-01-03 10:30          100 Environmental      2023-01-03 17:30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         SpatialFile         Matrix                            SiteName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 test.com/line.kml Drinking Water Riverside County Water Municipality</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 659 × 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    methodology particles samples ``    ``    ``    ``    ``       ``    `` ``   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> doi.org/10… <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    grab  <span style="color: #BB0000;">NA</span>     0.45  <span style="text-decoration: underline;">9</span>600 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 649 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: `` &lt;lgl&gt;, `` &lt;lgl&gt;, `` &lt;lgl&gt;, `` &lt;lgl&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
