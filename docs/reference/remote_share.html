@@ -189,9 +189,28 @@ such as CKAN, Amazon S3, and/or MongoDB</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Need to add. </span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">shared_data</span> <span class="op">&lt;-</span> <span class="fu">remote_share</span><span class="op">(</span>validation <span class="op">=</span> <span class="va">result_valid</span>,</span></span>
+<span class="r-in"><span>                            data_formatted <span class="op">=</span> <span class="va">result_valid</span><span class="op">$</span><span class="va">data_formatted</span>,</span></span>
+<span class="r-in"><span>                            files <span class="op">=</span> <span class="va">test_file</span>,</span></span>
+<span class="r-in"><span>                            verified <span class="op">=</span> <span class="st">"your_verified_key"</span>,</span></span>
+<span class="r-in"><span>                            valid_key <span class="op">=</span> <span class="st">"your_valid_key"</span>,</span></span>
+<span class="r-in"><span>                            valid_rules <span class="op">=</span> <span class="fu">digest</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/digest/man/digest.html" class="external-link">digest</a></span><span class="op">(</span><span class="va">test_rules</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                            ckan_url <span class="op">=</span> <span class="st">"https://example.com"</span>,</span></span>
+<span class="r-in"><span>                            ckan_key <span class="op">=</span> <span class="st">"your_ckan_key"</span>,</span></span>
+<span class="r-in"><span>                            ckan_package <span class="op">=</span> <span class="st">"your_ckan_package"</span>,</span></span>
+<span class="r-in"><span>                            url_to_send <span class="op">=</span> <span class="st">"https://your-url-to-send.com"</span>,</span></span>
+<span class="r-in"><span>                            rules <span class="op">=</span> <span class="va">test_rules</span>,</span></span>
+<span class="r-in"><span>                            results <span class="op">=</span> <span class="va">valid_example</span><span class="op">$</span><span class="va">results</span>,</span></span>
+<span class="r-in"><span>                            s3_key_id <span class="op">=</span> <span class="st">"your_s3_key_id"</span>,</span></span>
+<span class="r-in"><span>                            s3_secret_key <span class="op">=</span> <span class="st">"your_s3_secret_key"</span>,</span></span>
+<span class="r-in"><span>                            s3_region <span class="op">=</span> <span class="st">"your_s3_region"</span>,</span></span>
+<span class="r-in"><span>                            s3_bucket <span class="op">=</span> <span class="st">"your_s3_bucket"</span>,</span></span>
+<span class="r-in"><span>                            mongo_key <span class="op">=</span> <span class="st">"your_mongo_key"</span>,</span></span>
+<span class="r-in"><span>                            mongo_collection <span class="op">=</span> <span class="st">"your_mongo_collection"</span>,</span></span>
+<span class="r-in"><span>                            old_cert <span class="op">=</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

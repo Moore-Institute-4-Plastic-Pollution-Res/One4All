@@ -73,6 +73,27 @@ This function uploads validated data to specified remote repositories,
 such as CKAN, Amazon S3, and/or MongoDB
 }
 \examples{
-#Need to add. 
-
+\dontrun{
+shared_data <- remote_share(validation = result_valid,
+                            data_formatted = result_valid$data_formatted,
+                            files = test_file,
+                            verified = "your_verified_key",
+                            valid_key = "your_valid_key",
+                            valid_rules = digest::digest(test_rules),
+                            ckan_url = "https://example.com",
+                            ckan_key = "your_ckan_key",
+                            ckan_package = "your_ckan_package",
+                            url_to_send = "https://your-url-to-send.com",
+                            rules = test_rules,
+                            results = valid_example$results,
+                            s3_key_id = "your_s3_key_id",
+                            s3_secret_key = "your_s3_secret_key",
+                            s3_region = "your_s3_region",
+                            s3_bucket = "your_s3_bucket",
+                            mongo_key = "your_mongo_key",
+                            mongo_collection = "your_mongo_collection",
+                            old_cert = NULL
+)
 }
+}
+

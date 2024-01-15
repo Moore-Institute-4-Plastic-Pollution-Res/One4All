@@ -18,3 +18,10 @@ A data frame with certificate information.
 This function creates a data frame with certificate information including the current time,
 data and rule hashes, package version, and web hash.
 }
+\examples{
+\dontrun{
+certificate_df(x = list(data_formatted = data.frame(a = 1:3, b = 4:6),
+                        rules = validate::validator(a > 0, b > 0)),
+               time = Sys.time())
+}
+}
