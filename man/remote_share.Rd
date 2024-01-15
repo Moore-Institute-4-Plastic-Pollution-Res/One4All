@@ -96,4 +96,3 @@ shared_data <- remote_share(validation = result_valid,
 )
 }
 }
-
