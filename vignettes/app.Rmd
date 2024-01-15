@@ -1,6 +1,6 @@
 ---
 title: "Validator App Tutorial"
-author: "Win Cowger, Hannah Sherrod"
+author: "Hannah Sherrod, Win Cowger"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >

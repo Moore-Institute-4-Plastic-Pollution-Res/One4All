@@ -3,7 +3,10 @@ Type: Package
 Title: Validate, Share, and Download Data
 Version: 0.1
 Date: 2023-04-23
-Authors@R: c(person("Win", "Cowger", role = c("cre", "aut"),
+Authors@R: c((person("Hannah", "Sherrod", role = c("cre", "aut"),
+      email = "hannah@mooreplasticresearch.org",
+      comment = c(ORCID = "0009-0001-0497-8693")),
+      person("Win", "Cowger", role = c("cre", "aut"),
       email = "wincowger@gmail.com",
       comment = c(ORCID = "0000-0001-9226-3104")),
     person("Hannah", "Hapich", role = c("ctb"),
