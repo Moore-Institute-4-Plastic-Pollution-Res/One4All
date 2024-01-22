@@ -18,6 +18,6 @@ A list of data frames
 Read and format data from csv or xlsx files
 }
 \examples{
-## You can add examples of function usage here.
-
+read_data(files_data = valid_example, data_names = c("methodology", "particles", "samples"))
 }
+

@@ -1,0 +1,393 @@
+---
+title: "One4All Package Tutorial"
+author: "Hannah Sherrod, Win Cowger"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{One4All Package Tutorial}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE
+)
+```
+
+## Document Overview
+
+This document outlines the One4All package and highlights the main functions to validate data without using the One4All app. It is the user's choice whether to work in the validator app or to use the One4All package to validate and share data. After reading this document, users will also have a better understanding of the validator app development and the main functions within it.
+
+The One4All package is the backbone of the validator app. If you are looking for a tutorial on how to use the app itself see the [Validator App Tutorial](app.html).
+
+## Installation
+
+After installing the R package, read in the following library:
+```{r setup}
+library(One4All)
+```
+
+## Running the App
+
+To access the validator app, go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git) and link it directly to your own device in R studio. After setting up the github to your device, go to the validator folder and select the global.R, ui.R, or server.R. From here, select the command `'Run App'` which will display the app.
+
+## Validate Data: Overview
+
+If you choose to validate your data through the One4All package, the following code is described in sections below. The parameters are also defined in each section.
+
+```{r}
+validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_data = NULL) {
+    if(check_for_malicious_files(c(files_data, file_rules))){
+        stop(paste("Data or rules files cannot be of any of these types:", "_exe", "a6p", "ac", "acr", "action", "air", "apk", "app",
+                   "applescript", "awk", "bas", "bat", "bin", "cgi", "chm",
+                   "cmd", "com", "cpl", "crt", "csh", "dek", "dld", "dll",
+                   "dmg", "drv", "ds", "ebm", "elf", "emf", "esh", "exe",
+                   "ezs", "fky", "frs", "fxp", "gadget", "gpe", "gpu", "hlp",
+                   "hms", "hta", "icd", "iim", "inf", "ins", "inx", "ipa",
+                   "ipf", "isp", "isu", "jar", "js", "jse", "jsp", "jsx",
+                   "kix", "ksh", "lib", "lnk", "mcr", "mel", "mem", "mpkg",
+                   "mpx", "mrc", "ms", "msc", "msi", "msp", "mst", "mxe",
+                   "obs", "ocx", "pas", "pcd", "pex", "pif", "pkg", "pl",
+                   "plsc", "pm", "prc", "prg", "pvd", "pwc", "py", "pyc",
+                   "pyo", "qpx", "rbx", "reg", "rgs", "rox", "rpj", "scar",
+                   "scpt", "scr", "script", "sct", "seed", "sh", "shb",
+                   "shs", "spr", "sys", "thm", "tlb", "tms", "u3p", "udf",
+                   "url", "vb", "vbe", "vbs", "vbscript", "vdo", "vxd",
+                   "wcm", "widget", "wmf", "workflow", "wpk", "ws", "wsc",
+                   "wsf", "wsh", "xap", "xqt", "zlq"))
+    }
+    if(!is.null(zip_data)){
+        if(check_for_malicious_files(utils::unzip(zip_data, list = T)$Name)){
+            stop(paste("Data or rules files cannot be of any of these types:",
+                       "_exe", "a6p", "ac", "acr", "action", "air", "apk", "app",
+                       "applescript", "awk", "bas", "bat", "bin", "cgi", "chm",
+                       "cmd", "com", "cpl", "crt", "csh", "dek", "dld", "dll",
+                       "dmg", "drv", "ds", "ebm", "elf", "emf", "esh", "exe",
+                       "ezs", "fky", "frs", "fxp", "gadget", "gpe", "gpu", "hlp",
+                       "hms", "hta", "icd", "iim", "inf", "ins", "inx", "ipa",
+                       "ipf", "isp", "isu", "jar", "js", "jse", "jsp", "jsx",
+                       "kix", "ksh", "lib", "lnk", "mcr", "mel", "mem", "mpkg",
+                       "mpx", "mrc", "ms", "msc", "msi", "msp", "mst", "mxe",
+                       "obs", "ocx", "pas", "pcd", "pex", "pif", "pkg", "pl",
+                       "plsc", "pm", "prc", "prg", "pvd", "pwc", "py", "pyc",
+                       "pyo", "qpx", "rbx", "reg", "rgs", "rox", "rpj", "scar",
+                       "scpt", "scr", "script", "sct", "seed", "sh", "shb",
+                       "shs", "spr", "sys", "thm", "tlb", "tms", "u3p", "udf",
+                       "url", "vb", "vbe", "vbs", "vbscript", "vdo", "vxd",
+                       "wcm", "widget", "wmf", "workflow", "wpk", "ws", "wsc",
+                       "wsf", "wsh", "xap", "xqt", "zlq"))
+        }
+    }
+    
+    rules <- read_rules(file_rules)
+    
+    data_formatted <- read_data(files_data = files_data, data_names = data_names)
+    
+    if (!"dataset" %in% names(rules) & length(names(data_formatted)) > 1) {
+        stop("If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset.")
+    }
+    
+    if ("dataset" %in% names(rules)) {
+        if (!all(unique(rules$dataset) %in% names(data_formatted))) {
+            stop(paste0("If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists datasets ", paste(setdiff(unique(rules$dataset), names(data_formatted)), collapse = ", "),  " that do not match the datasets shared."))
+        }
+    }
+    
+    rules <- reformat_rules(rules = rules, data_formatted = data_formatted, zip_data = zip_data)
+    
+    rules_formatted <- tryCatch(validate::validator(.data=rules),
+                                warning = function(w) {
+                                    warning(w)
+                                    NULL
+                                },
+                                error = function(e) {
+                                    stop(e)
+                                })
+    
+    if (is.null(rules_formatted) || (length(class(rules_formatted)) != 1 || !inherits(rules_formatted, "validator"))) {
+        stop("There was an error with reading the rules file.")
+    }
+    
+    all_variables <- unique(c(validate::variables(rules_formatted), unlist(lapply(data_formatted, names))))
+    
+    if (!(all(all_variables %in% validate::variables(rules_formatted)) & all(all_variables %in% unlist(lapply(data_formatted, names))))) {
+        warning(paste0("All variables in the rules csv should be in the data csv and vice versa for the validation to work correctly. Download the Data Template for an example of correctly formatted upload. Ignoring these unmatched variables ", paste0(all_variables[!(all_variables %in% validate::variables(rules_formatted)) | !(all_variables %in% unlist(lapply(data_formatted, names)))], collapse = ", ")))
+    }
+    
+    report <- lapply(names(data_formatted), function(x){
+        validate::confront(data_formatted[[x]], validate::validator(.data=rules |> dplyr::filter(dataset == x)))
+    })
+    
+    results <- lapply(report, function(x) {
+        validate::summary(x) |>
+            dplyr::left_join(rules, by = "name") |>
+            dplyr::mutate(status = ifelse((.data$fails > 0 & .data$severity == "error") | .data$error | .data$warning , "error", "success")) |>
+            mutate(status = ifelse(.data$fails > 0 & .data$severity == "warning", "warning", .data$status))
+    })
+    
+    any_issues <- vapply(results, function(x) {
+        any(x$status == "error")
+    }, FUN.VALUE = TRUE)
+    
+    rules_list_formatted <- tryCatch(lapply(names(data_formatted), function(x) {
+        validator(.data=rules |> filter(.data$dataset == x))
+    }),
+    warning = function(w) {
+        warning(w)
+        NULL
+    },
+    error = function(e) {
+        stop(e)
+    })
+    
+    list(data_formatted = data_formatted,
+         data_names = names(data_formatted),
+         zip_data = if(exists("zip_data")){zip_data} else{NULL},
+         report = report,
+         results = results,
+         rules = rules_list_formatted,
+         issues = any_issues)
+}
+```
+
+## Validate Data: Reading and Formatting Data
+
+The function below is the main function that validates data using the One4All package. Replace the four parameters defined below with your actual values or file paths. The `'data_names'` should be replaced with the tables from the rules sheet.
+
+**`'files_data'`**: A list of file paths for the datasets to be validated (either csv or xlsx).
+
+**`'data_names'`**: (Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths
+
+**`'file_rules'`**: A file path for the rules file, either in .csv or .xlsx format.
+
+**`'zip_data'`**: A file path to a zip folder for validating unstructured data.
+
+```{r, eval=FALSE}
+validate_data(
+  files_data,
+  data_names = NULL,
+  file_rules = NULL,
+  zip_data = NULL
+)
+```
+
+#### Check for malicious files
+
+The function below checks for malicious files using the function. If any of the provided files appear to have a malicious extension, the function will stop and raise an error. The argument, `'files'`, is a character vector of file paths. These can be paths to zip or individual files. If any malicious file is found, the code will return 'TRUE', otherwise it will say 'FALSE'.
+
+```{r, eval=FALSE}
+check_for_malicious_files(files)
+```
+
+#### Read rules
+
+The function below reads rules from a file or a data frame. Acceptable file formats are csv or xlsx.
+
+```{r, eval=FALSE}
+read_rules(file_rules)
+```
+
+#### Read data
+
+The function reads and formats data from csv or xlsx files. The argument, `'files_data'`, is the list of files to be read, and `'data_names'`, is the optional vector of names for the data frames.
+
+```{r, eval=FALSE}
+read_data(files_data, data_names = NULL)
+```
+
+## Validate Data: Validation Reporting
+
+The function below uses the `'validate::confront'` function to generate a validation report for each dataset. It applies the rules to each dataset using the `'validate::validator'` function.
+
+```{r, eval=FALSE}
+report <- lapply(names(data_formatted), function(x){
+    validate::confront(data_formatted[[x]], validate::validator(.data=rules |> dplyr::filter(dataset == x)))
+})
+```
+
+## Validate Data: Results summary
+
+The function below creates a summary of validation results by linking the results with the rules and determining the status (success, warning, or error).
+
+```{r, eval=FALSE}
+results <- lapply(report, function(x) {
+    validate::summary(x) |>
+        dplyr::left_join(rules, by = "name") |>
+        dplyr::mutate(status = ifelse((.data$fails > 0 & .data$severity == "error") | .data$error | .data$warning , "error", "success")) |>
+        mutate(status = ifelse(.data$fails > 0 & .data$severity == "warning", "warning", .data$status))
+})
+```
+
+## Where is this data shared?
+
+The validator app allows users to not only validate their data, but to share their data as well, promoting open-source resources. The purpose of this section is to provide background information on how and where the data is sent. 
+
+
+In the One4All package, the remote share function shares the validated data to three remote repositories, including MongoDB, CKAN, and/or AmazonS3. The purpose of having three options is for user preference on where to share their data: 
+
+
+**MongoDB** is a NoSQL database that stores data in BSON format, allowing for flexible data structures.
+
+**CKAN** is an open-source data portal platform, allowing for managing and sharing datasets.
+
+**Amazon S3** is a cloud-based object storage service, providing scalable and durable storage for a wide variety of data types.
+
+A key will be provided to the user ahead of time for where they want to share their data.
+
+The `'remote_share'` function is shown below.
+```{r}
+remote_share <- function(validation, data_formatted, files, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, mongo_collection, old_cert = NULL){
+    
+    use_ckan <- isTruthy(ckan_url) & isTruthy(ckan_key) & isTruthy(ckan_package)
+    use_s3 <- isTruthy(s3_bucket)
+    use_mongodb <- isTruthy(mongo_key) & isTruthy(mongo_collection)
+    
+    if(!(use_ckan| use_s3| use_mongodb)){
+        stop("Upload will not work because no upload methods are specified.")
+    }
+    
+    if(any(validation$issues)){
+        stop("There are errors in the dataset that persist. Until all errors are remedied, the data cannot be uploaded to the remote repository.")
+    }
+    
+    if(!any(digest(as.data.frame(rules)) %in% valid_rules)){
+        stop("If you are using a key to upload data to a remote repo then there must be a valid pair with the rules you are using in our internal database.")
+    }
+    
+    if(!any(verified %in% valid_key)){
+        stop("You must have a valid key provided by the portal maintainer to use this feature.")
+    }
+    
+    hashed_data <- digest(data_formatted)
+    
+    structured_files <- paste0(tempdir(), "\\", hashed_data, ".rds")
+    
+    saveRDS(data_formatted, file = structured_files)
+    
+    submission_time <- as.double(as.POSIXlt(Sys.time(), "GMT"))
+    
+    if(use_ckan){
+        ckanr::ckanr_setup(url = ckan_url, key = ckan_key)
+    }    
+    
+    if(use_s3){
+        Sys.setenv(
+            "AWS_ACCESS_KEY_ID" = s3_key_id,
+            "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
+            "AWS_DEFAULT_REGION" = s3_region
+        )
+    }
+    
+    
+    #Add certificate
+    certificate_file <- paste0(tempdir(), "\\", "certificate.csv")
+    certificate <- certificate_df(validation, time = submission_time)
+    data.table::fwrite(certificate, certificate_file)
+    
+    data_formatted2 <- data_formatted
+    data_formatted2$certificate <- certificate
+    data_formatted2 <- toJSON(data_formatted2)
+    
+    if(use_mongodb) {
+        mongo_conn <- mongo(collection = mongo_collection, url = mongo_key)
+        mongo_conn$insert(data_formatted2)
+    }
+    
+    files = c(files, structured_files, certificate_file)
+    
+    #Add old certificate
+    if(isTruthy(old_cert)){
+        files = c(files, old_cert)
+    }
+    
+    temp_zip <- paste0(tempdir(), "\\", "temp.zip")
+    
+    zip(zipfile = temp_zip, files = files, extras = '-j') # Zip the test file
+    
+    if(use_s3){
+        put_object(
+            file = temp_zip,
+            object = paste0(hashed_data, ".zip"),
+            bucket = s3_bucket
+        )
+    }
+    
+    if(use_ckan){
+        resource_create(package_id = ckan_package,
+                        description = "validated raw data upload to microplastic data portal",
+                        name = paste0(hashed_data, ".zip"),
+                        upload = temp_zip)
+    }
+    
+    
+    message(paste0("Data was successfully sent to the data portal at ", url_to_send))
+    
+    return(list(hashed_data = hashed_data,
+                submission_time = submission_time))
+}
+```
+
+## How is the data downloaded?
+
+The `'remote_download'` function from the One4All package allows users to download shared data from MongoDB, CKAN, and/or AmazonS3. The data is retrieved based on the `'hashed_data'` identifier and assumes the data is stored using the same naming conventions provided in the `'remote_share'` function.
+
+The `'remote_download'` function is shown below.
+```{r}
+remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, mongo_collection) {
+    
+    use_ckan <- shiny::isTruthy(ckan_url) & shiny::isTruthy(ckan_key) & shiny::isTruthy(ckan_package)
+    use_s3 <- shiny::isTruthy(s3_bucket)
+    use_mongodb <- shiny::isTruthy(mongo_key) & shiny::isTruthy(mongo_collection)
+    
+    if(use_ckan){
+        ckanr::ckanr_setup(url = ckan_url, key = ckan_key)
+    }
+    
+    if(use_s3){
+        Sys.setenv(
+            "AWS_ACCESS_KEY_ID" = s3_key_id,
+            "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
+            "AWS_DEFAULT_REGION" = s3_region
+        )
+    }
+    
+    if(use_mongodb) {
+        mongo_conn <- mongo(collection = mongo_collection, url = mongo_key)
+    }
+    
+    data_downloaded <- list()
+    
+    if(use_s3){
+        # Retrieve a list of objects from S3 bucket
+        s3_objects <- get_bucket(bucket = s3_bucket, prefix = hashed_data)
+        file <- tempfile(pattern = "temp", fileext = ".zip")
+        aws.s3::save_object(object = s3_objects[[1]]$Key, file = file, bucket = s3_bucket)
+        zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
+        structured_data <- zip_files[grepl(".rds$", zip_files)]
+        unzip(file, files = structured_data, exdir = tempdir())
+        data_downloaded[["s3"]] <- read_rds(paste0(tempdir(),"/", structured_data))
+    }
+    
+    if(use_ckan){
+        resources <- package_show(ckan_package)$resources
+        resources_names <- vapply(resources, function(x){x$name}, FUN.VALUE = character(1))
+        hashed_data_resources <- resources[grepl(hashed_data, resources_names)]
+        file <- tempfile(pattern = "temp", fileext = ".zip")
+        ckan_fetch(x = hashed_data_resources[[length(hashed_data_resources)]]$url, store = "disk", path = file)
+        zip_files <- unzip(file, list = TRUE, exdir = tempdir())$Name
+        structured_data <- zip_files[grepl(".rds$", zip_files)]
+        unzip(file, files = structured_data, exdir = tempdir())
+        data_downloaded[["ckan"]] <- read_rds(paste0(tempdir(),"/", structured_data))
+    }
+    
+    if(use_mongodb){
+        mongo_query <- toJSON(list("unique_id" = hashed_data))
+        mongo_data <- mongo_conn$find(query = mongo_query)
+        data_downloaded[["mongodb"]] <- mongo_data
+    }
+    return(data_downloaded)
+}
+```

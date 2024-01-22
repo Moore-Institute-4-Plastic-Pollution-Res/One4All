@@ -1,0 +1,97 @@
+# Website title and description
+title: One4All
+
+# Theme and styling options
+template:
+  bootstrap: 5
+  bootswatch: sandstone
+  bslib:
+    pkgdown-nav-height: 100px
+  includes:
+    in_header: |
+      <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+# Navbar settings
+navbar:
+  left:
+    - home:
+      icon: fa-home
+      text: "Home"
+      href: index.html
+    - icon: fa-file-code-o
+      text: "Reference"
+      href: reference/index.html
+    - tutorials:
+      icon: fa-university
+      text: "Articles"
+      menu:
+      - text: Validator App Tutorial
+        href: articles/app.html
+      - text: One4All Package Tutorial
+        href: articles/package.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git
+    - icon: fa-twitter fa-lg
+      href: https://twitter.com/MoorePlasticRes
+
+# Homepage customization
+home:
+  sidebar:
+    structure: [star, links, license, community, citation, authors, dev]
+    components:
+      star:
+        title: GitHub
+        text: |
+          <a class="github-button" href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git" data-size="large" data-show-count="true" aria-label="Star Moore-Institute-4-Plastic-Pollution-Res/One4All.git">Star</a>
+    
+# Reference customization
+reference:
+- title: "<b>Checks</b>"
+  desc: All functions for checks.
+  contents:
+  - '`checkLuhn`'
+  - '`check_exists_in_zip`'
+  - '`check_for_malicious_files`'
+  - '`check_images`'
+  - '`check_other_hyperlinks`'
+  - '`is.POSIXct`'
+  - '`test_profanity`'
+  
+- title: "<b>Examples</b>"
+  desc: Invalid and valid data examples.
+  contents:
+  - '`invalid_example`'
+  - '`valid_example`'
+  
+- title: "<b>Download and sharing</b>"
+  desc: All functions for downloading and sharing data.
+  contents:
+  - '`remote_download`'
+  - '`remote_raw_download`'
+  - '`remote_share`'
+  
+- title: "<b>Rules</b>"
+  desc: All functions for rules
+  contents:
+  - '`rows_for_rules`'
+  - '`rules_broken`'
+  - '`test_rules`'
+  - '`reformat_rules`'
+  - '`read_rules`'
+
+- title: "<b>Data</b>"
+  desc: All functions for data
+  contents:
+  - '`certificate_df`'
+  - '`create_valid_excel`'
+  - '`name_data`'
+  - '`read_data`'
+  - '`validate_data`'
+  
+# Footer
+footer:
+  structure:
+    left: developed
+  components:
+    developed: "Developed by [Moore Institute for Plastic Pollution Research](https://mooreplasticresearch.org/staff/)."

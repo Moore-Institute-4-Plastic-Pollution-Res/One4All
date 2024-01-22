@@ -5,8 +5,8 @@
 #' @format A list with 3 data frames:
 #' \describe{
 #'   \item{data_frame_1}{A data frame with 18 variables: MethodologyID, SamplingDevice, AirFiltration, AirFiltrationType, ClothingPolicy, NonplasticPolicy, SealedEnvironment, SealedEnvironmentType, SieveMeshSizes, FilterType, FilterDiameter, FilterPoreSize, VisIDMethod, VisualSoftware, PickingStrategy, VisMagnification, MatIDMethod, MatIDSoftware}
-#'   \item{data_frame_2}{A data frame with 17 variables: ParticleID, MethodologyID, SampleID, PhotoID, SpectraID, FinalAnalysisDate, Comments, Polymer, Morphology, Color, Length, Width, Height, Mass, SurfaceArea, Volume, Tactile}
-#'   \item{data_frame_3}{A data frame with 8 variables: SampleID, OwnerOrganization, AnalysisOrganization, ReportingOrganization, Latitude, Longitude, CollectionDate, SampleVolume}
+#'   \item{data_frame_2}{A data frame with 8 variables: SampleID, OwnerOrganization, AnalysisOrganization, ReportingOrganization, Latitude, Longitude, CollectionDate, SampleVolume}
+#'   \item{data_frame_3}{A data frame with 17 variables: ParticleID, MethodologyID, SampleID, PhotoID, SpectraID, FinalAnalysisDate, Comments, Polymer, Morphology, Color, Length, Width, Height, Mass, SurfaceArea, Volume, Tactile}
 #' }
 #' 
 #' @examples 

@@ -28,7 +28,7 @@ This function creates an Excel file with conditional formatting and data validat
 based on the given validation rules in a CSV or Excel file.
 }
 \examples{
-
+\dontrun{
 data("test_rules")
 create_valid_excel(file_rules = test_rules)
-}
+}}

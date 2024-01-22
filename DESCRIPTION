@@ -3,12 +3,15 @@ Type: Package
 Title: Validate, Share, and Download Data
 Version: 0.1
 Date: 2023-04-23
-Authors@R: c(person("Win", "Cowger", role = c("cre", "aut"),
+Authors@R: c(person("Hannah", "Sherrod", role = c("cre", "aut"),
+      email = "hannah@mooreplasticresearch.org",
+      comment = c(ORCID = "0009-0001-0497-8693")),
+      person("Win", "Cowger", role = c("aut"),
       email = "wincowger@gmail.com",
       comment = c(ORCID = "0000-0001-9226-3104")),
-    person("Hannah", "Hapich", role = c("ctb"),
+      person("Hannah", "Hapich", role = c("ctb"),
       comment = c(ORCID = "0000-0003-0000-6632")))
-Description: This pacakge is funded by the National Renewable Energy Laboratory and the Possibility Lab, and maintained by the Moore Institute for Plastic Pollution Research.
+Description: This package is funded by the National Renewable Energy Laboratory and the Possibility Lab, and maintained by the Moore Institute for Plastic Pollution Research.
 URL: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All
 BugReports: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/issues
 License: CC BY 4.0
