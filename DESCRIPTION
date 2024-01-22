@@ -12,7 +12,7 @@ Authors@R: c(person("Hannah", "Sherrod", role = c("cre", "aut"),
       person("Hannah", "Hapich", role = c("ctb"),
       comment = c(ORCID = "0000-0003-0000-6632")))
 Description: This package is funded by the National Renewable Energy Laboratory and the Possibility Lab, and maintained by the Moore Institute for Plastic Pollution Research.
-URL: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All
+URL: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All, https://moore-institute-4-plastic-pollution-res.github.io/One4All/
 BugReports: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/issues
 License: CC BY 4.0
 Encoding: UTF-8
@@ -34,7 +34,10 @@ Imports:
     readxl,
     tibble,
     aws.s3,
-    rlang
+    rlang,
+    jsonlite,
+    mongolite,
+    httr
 Suggests:
     knitr,
     rmarkdown,
