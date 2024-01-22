@@ -33,6 +33,10 @@ remote_download(
 \item{s3_region}{A character string representing the AWS S3 region.}
 
 \item{s3_bucket}{A character string representing the AWS S3 bucket name.}
+
+\item{mongo_key}{A character string representing the mongo key.}
+
+\item{mongo_collection}{A character string representing the mongo collection.}
 }
 \value{
 A named list containing the downloaded datasets.
