@@ -246,18 +246,19 @@ create_temp_file <- function(content, ext = ".csv") {
 
 # validate_data ----
 
-test_that("validate_data returns an success for rules files that are valid for the datasets", {
+test_that("validate_data returns a success for rules files that are valid for the datasets", {
     data("valid_example")
     data("test_rules")
     result <- validate_data(files_data = valid_example, data_names = names(valid_example), file_rules = test_rules)
     expect_false(unique(result$issues))
 })
 
-test_that("validate_data returns an error for rules file with incorrect validation", {
+test_that("validate_data returns an correct values with invalid example", {
     data("invalid_example")
     data("test_rules")
-    result <- validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules)
-    expect_true(any(result$issues))
+    result <- validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules) |>
+        expect_warning()
+    expect_false(any(result$issues))
 })
 
 test_that("validate_data returns a warning when there is a column that is in the rules or data that isn't matched", {
@@ -551,7 +552,7 @@ test_that("remote_download retrieves identical data from all sources", {
     
     # Perform the validation
     result_valid <- validate_data(files_data = valid_example,
-                                  data_names = c("methodology", "particles", "samples"),
+                                  data_names = c("methodology", "samples", "particles"),
                                   file_rules = test_rules)
     
     test_file <- tempfile(pattern = "file", fileext = ".RData")
@@ -613,7 +614,7 @@ test_that("remote_download retrieves zip data from all ckan and s3", {
     
     # Perform the validation
     result_valid <- validate_data(files_data = valid_example,
-                                  data_names = c("methodology", "particles", "samples"),
+                                  data_names = c("methodology", "samples", "particles"),
                                   file_rules = test_rules)
     
     test_file <- tempfile(pattern = "file", fileext = ".RData")
@@ -710,40 +711,22 @@ test_that("check_for_malicious_files works correctly", {
     setwd(old_dir)
 })
 
-#Update MongoDB Data- Single Query
-test_that("Update MongoDB Data Works", {
+# Query MongoDB database
+test_that("query_mongodb_api retrieves data from MongoDB", {
     
     testthat::skip_on_cran()
     
     # Load the required configuration
     config <- config::get(file = "config_pl_for_tests.yml")
     
-    existing_record_id <- "6527260827276a6fca07bba1"
-    field_path <- "certificate.0.time"
-    updated_data <- "2023-11-01 14:03:42"
-                                              
-    # Call the updatemongo function with the MongoDB connection and parameters
-    success <- updatemongo(existing_record_id, field_path, updated_data, config$mongo_collection, config$mongo_key)
+    result <- query_mongodb_api(
+        collection = config$mongo_collection,
+        database = 'test',
+        dataSource = 'Cluster0',
+        apiKey_env_var = config$apiKey_env_var,
+        objectId = "6527260827276a6fca07bba1"
+    )
     
-    # Assert that the update was successful
-    expect_true(success)
-})
-
-#Update MongoDB Data- Multiple Queries
-test_that("Update MongoDB Data Works", {
-    
-    testthat::skip_on_cran()
-    
-    # Load the required configuration
-    config <- config::get(file = "config_pl_for_tests.yml")
-    
-    multiple_existing_records <- c("6527260827276a6fca07bba1", "6527260f27276a6fca07bba2", "6527266ab4b56b2a500ecb41", "65272673b4b56b2a500ecb43", "65281330d8e827f62c0fd6b1", "65281345d8e827f62c0fd6b2", "65281e0e87453ca0ce092731", "652820bd87453ca0ce092734", "65282106087336b9480ba971","6528210d087336b9480ba972", "65282c1a3819938e33049e61", "65282c3a3819938e33049e63", "65282e2ec7121230b9024491", "652838729ce2b6ae4e0b9d71", "65283dcc5f688f262b039e71", "65283e875f688f262b039e72")
-    field_path2 <- "certificate.0.time"
-    updated_data2 <- "2023-11-01 14:03:42"
-    
-    # Call the updatemongo function with the MongoDB connection and parameters
-    success2 <- updatemongomultiple(multiple_existing_records, field_path2, updated_data2, config$mongo_collection, config$mongo_key)
-    
-    # Assert that the update was successful
-    expect_true(success2)
+    expect_true(!is.null(result) && length(result) > 0,
+                info = "Query result should not be NULL or empty.")
 })

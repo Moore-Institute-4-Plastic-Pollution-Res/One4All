@@ -360,7 +360,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
     }
     
     report <- lapply(names(data_formatted), function(x){
-        validate::confront(data_formatted[[x]], validate::validator(.data=rules |> dplyr::filter(dataset == x)))
+        validate::confront(data_formatted[[x]], validate::validator(.data=rules |> dplyr::filter(.data$dataset == x)))
     })
     
     results <- lapply(report, function(x) {
@@ -618,111 +618,6 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
     return(data_downloaded)
 }
 
-#' Update MongoDB Data- Single Query
-#' 
-#' This function updates a single document in MongoDB
-#' 
-#' @param existing_record_id ID of the existing MongoDB document to update.
-#' @param updated_data Data to update in the document.
-#'
-#' @return TRUE if the update is successful, FALSE otherwise
-#'
-#' @examples
-#' \dontrun{
-#' # Establish a MongoDB connection using a config object
-#' config <- list(mongo_collection = "your_mongo_collection",
-#'                mongo_key = "your_mongo_key")
-#'                
-#' # Update an existing MongoDB document
-#' existing_record_id <- "12345"
-#' field_path <- "certificate.0.time"
-#' updated_data <- "2023-10-24 21:22:42"
-#' updatemongo(existing_record_id, field_path, updated_data)
-#' }
-#' 
-#' @export
-updatemongo <- function(existing_record_id, field_path, updated_data, mongo_collection, mongo_key) {
-    
-    message("Updating MongoDB data")
-    
-    print(existing_record_id)
-    
-    mongo_conn <- mongo(collection = mongo_collection, url = mongo_key)
-    
-    query <- paste('{"_id": {"$oid": "', existing_record_id, '"}}', sep = '')
-    update <- paste('{"$set": {"', field_path, '": "', updated_data, '"}}', sep = '')
-
-    # Perform the actual update operation
-    tryCatch({
-        mongo_conn$update(
-            query = query,  # Construct query with _id as string
-            update = update,
-            upsert = FALSE,
-            multiple = FALSE
-        )
-        
-        message("MongoDB data successfully updated.")
-        return(TRUE)
-    }, error = function(e) {
-        message("Error updating MongoDB data: ", e$message)
-        return(FALSE)
-    })
-}
-
-#' Update MongoDB Data- Multiple Queries
-#' 
-#' This function updates multiple documents in MongoDB
-#' 
-#' @param existing_record_id ID of the existing MongoDB document to update.
-#' @param updated_data Data to update in the document.
-#'
-#' @return TRUE if the update is successful, FALSE otherwise
-#'
-#' @examples
-#' \dontrun{
-#' # Establish a MongoDB connection using a config object
-#' config <- list(mongo_collection = "your_mongo_collection",
-#'                mongo_key = "your_mongo_key")
-#'                
-#' # Update an existing MongoDB document
-#' existing_record_id <- "12345"
-#' field_path <- "certificate.0.time"
-#' updated_data <- "2023-10-24 21:22:42"
-#' updatemongo(existing_record_id, field_path, updated_data)
-#' }
-#' 
-#' @export
-updatemongomultiple <- function(multiple_existing_records, field_path2, updated_data2, mongo_collection, mongo_key) {
-    
-    message("Updating MongoDB data")
-    
-    print(multiple_existing_records)
-    
-    mongo_conn <- mongo(collection = mongo_collection, url = mongo_key)
-    
-    # Construct the query without spaces
-    query2 <- paste('{"_id": {"$in": [', paste('{"$oid": "', multiple_existing_records,'"}', collapse = ','), ']}}', sep = '')
-    query2 <- gsub(" ", "", query2)
-    
-    update2 <- paste('{"$set": {"', field_path2, '": "', updated_data2, '"}}', sep = '')
-    
-    # Perform the actual update operation
-    tryCatch({
-        mongo_conn$update(
-            query = query2,  # Construct query with _id as string
-            update = update2,
-            upsert = FALSE,
-            multiple = TRUE
-        )
-        
-        message("MongoDB data successfully updated.")
-        return(TRUE)
-    }, error = function(e) {
-        message("Error updating MongoDB data: ", e$message)
-        return(FALSE)
-    })
-}
-
 #' Download Raw Data from Remote Sources
 #'
 #' This function downloads data from remote sources like CKAN and AWS S3.
@@ -837,7 +732,7 @@ is.POSIXct <- function(x) inherits(x, "POSIXct")
 rules_broken <- function(results, show_decision){
     results |>
         dplyr::filter(if(show_decision){.data$status %in% c("error", "warning")} else{.data$status %in% c("error", "warning", "success")}) |>
-        select(description, status, name, expression, everything())
+        select("description", "status", "name", "expression", everything())
 }
 
 #' rows_for_rules
@@ -1229,4 +1124,61 @@ check_for_malicious_files <- function(files) {
     }
     
     return(FALSE)
+}
+
+#' Query MongoDB database
+#'
+#' This function queries a mongodb database by specifying the collection, database, data source, API key, and objectID.
+#' 
+#' @param collection The name of the MongoDB collection to query.
+#' @param database The name of the MongoDB database.
+#' @param dataSource The data source information.
+#' @param apiKey The API key for authentication
+#' @param objectID The object ID for the findOne operation.
+#'
+#' @return A result containing the outcome of the findOne operation.
+#'
+#' @examples
+#' Sys.setenv("MONGODB_API_KEY" = 'oHUi48HmGj7wNFapFJNI6Wj7upVNbPKzksNNbl7hizWtQaym4loFn7YlMtfIKJpZ')
+#' objectId <- '6527260827276a6fca07bba1'
+#' result <- query_mongodb_api(
+#'   collection = 'MongoDB1',
+#'   database = 'test',
+#'   dataSource = 'Cluster0',
+#'   apiKey_env_var = "MONGODB_API_KEY",
+#'   objectId = objectId
+#' )
+#' print(result)
+#' 
+#' @import httr
+#' @export
+query_mongodb_api <- function(collection, database, dataSource, apiKey_env_var, objectId) {
+    # Get the API key from the environment variable
+    apiKey <- Sys.getenv(apiKey_env_var, "")
+    
+    # Construct the URL
+    url <- 'https://us-west-2.aws.data.mongodb-api.com/app/data-crrct/endpoint/data/v1/action/findOne'
+    
+    # Set up headers
+    headers <- c(
+        'Content-Type' = 'application/json',
+        'Access-Control-Request-Headers' = '*',
+        'api-key' = apiKey
+    )
+    
+    # Create the body of the request
+    body <- list(
+        collection = collection,
+        database = database,
+        dataSource = dataSource,
+        projection = list("_id" = 1)  # Adjust projection as needed
+    )
+    
+    # Make the POST request
+    response <- httr::POST(url, add_headers(.headers = headers), body = body, encode = "json")
+    
+    # Check the response
+    result <- httr::content(response, "parsed")
+    
+    return(result)
 }
