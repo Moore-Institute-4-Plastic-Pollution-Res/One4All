@@ -41,7 +41,7 @@ Under the `'_Help'` tab within the app, there is a sample rules sheet for users 
 
 ## Running the App
 
-To access the validator app, go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git) and link it directly to your own device in R studio. After setting up the github to your device, go to the validator folder and select the global.R, ui.R, or server.R. From here, select the command `'Run App'` which will then display the app.
+To access the validator app, go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) and link it directly to your own device in R studio. After setting up the github to your device, go to the validator folder and select the global.R, ui.R, or server.R. From here, select the command `'Run App'` which will then display the app.
 
 ## How to structure your data
 
