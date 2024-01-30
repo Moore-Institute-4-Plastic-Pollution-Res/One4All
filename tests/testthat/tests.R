@@ -730,3 +730,15 @@ test_that("query_mongodb_api retrieves data from MongoDB", {
     expect_true(!is.null(result) && length(result) > 0,
                 info = "Query result should not be NULL or empty.")
 })
+
+# Run app
+tmp <- file.path(tempdir(), "Validator-testthat")
+dir.create(tmp, showWarnings = F)
+
+test_that("run_app() wrapper doesn't produce errors", {
+    run_app(path = tmp, test_mode = T) |>
+        expect_silent()
+})
+
+# Tidy up
+unlink(tmp, recursive = T)

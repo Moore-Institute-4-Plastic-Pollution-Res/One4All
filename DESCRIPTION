@@ -16,9 +16,20 @@ Authors@R: c(person("Hannah", "Sherrod", role = c("cre", "aut"),
       person("Win", "Cowger", role = c("aut"),
       email = "wincowger@gmail.com",
       comment = c(ORCID = "0000-0001-9226-3104")),
+      person("Scott", "Coffin", role = c("ctb")),
+      person("Tony", "Hale", role = c("ctb")),
+      person("Diana", "Lin", role = c("ctb")),
+      person("Gemma", "Shusterman", role = c("ctb")),
+      person("Rebecca", "Sutton", role = c("ctb")),
+      person("Adam", "Wong", role = c("ctb")),
       person("Haig", "Minasian", role = c("ctb")),
       person("Holden", "Ford", role = c("ctb")),
-      person("Anja", "Oca", role = c("ctb")))
+      person("Anja", "Oca", role = c("ctb")),
+      person("Richard", "Nelson", role = c("ctb")),
+      person("Shelly", "Moore", role = c("ctb")),
+      person("Leah", "Thornton Hampton", role = c("ctb")),
+      person("Libby", "Heeren", role = c("ctb")),
+      person("Gabriel", "Daiess", role = c("ctb")))
 Description: Designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a CSV or excel and apply them to a dataset. Funded by the National Renewable Energy Laboratory and the Possibility Lab, and maintained by the Moore Institute for Plastic Pollution Research.
 URL: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All, https://moore-institute-4-plastic-pollution-res.github.io/One4All/
 BugReports: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/issues
