@@ -30,10 +30,13 @@ Authors@R: c(person("Hannah", "Sherrod", role = c("cre", "aut"),
       person("Leah", "Thornton Hampton", role = c("ctb")),
       person("Libby", "Heeren", role = c("ctb")),
       person("Gabriel", "Daiess", role = c("ctb")))
-Description: Designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a CSV or excel and apply them to a dataset. Funded by the National Renewable Energy Laboratory and the Possibility Lab, and maintained by the Moore Institute for Plastic Pollution Research.
+Description: Designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a 'CSV' or 'Excel' and apply them to a dataset.
 URL: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All, https://moore-institute-4-plastic-pollution-res.github.io/One4All/
 BugReports: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/issues
 License: CC BY 4.0
+Funders:
+    National Renewable Energy Laboratory: https://www.nrel.gov/
+    Possibility Lab: https://possibilitylab.berkeley.edu/
 Encoding: UTF-8
 LazyLoad: true
 LazyData: true
