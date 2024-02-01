@@ -46,6 +46,10 @@ home:
         text: |
           <a class="github-button" href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git" data-size="large" data-show-count="true" aria-label="Star Moore-Institute-4-Plastic-Pollution-Res/One4All.git">Star</a>
 reference:
+- title: <b>Run app</b>
+  desc: How to run app.
+  contents:
+  - '`run_app`'
 - title: <b>Checks</b>
   desc: All functions for checks.
   contents:
@@ -83,6 +87,7 @@ reference:
   - '`name_data`'
   - '`read_data`'
   - '`validate_data`'
+  - '`query_mongodb_api`'
 footer:
   structure:
     left: developed
