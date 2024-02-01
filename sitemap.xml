@@ -58,6 +58,9 @@
     <loc>https://moore-institute-4-plastic-pollution-res.github.io/One4All/reference/name_data.html</loc>
   </url>
   <url>
+    <loc>https://moore-institute-4-plastic-pollution-res.github.io/One4All/reference/query_mongodb_api.html</loc>
+  </url>
+  <url>
     <loc>https://moore-institute-4-plastic-pollution-res.github.io/One4All/reference/read_data.html</loc>
   </url>
   <url>
@@ -80,6 +83,9 @@
   </url>
   <url>
     <loc>https://moore-institute-4-plastic-pollution-res.github.io/One4All/reference/rules_broken.html</loc>
+  </url>
+  <url>
+    <loc>https://moore-institute-4-plastic-pollution-res.github.io/One4All/reference/run_app.html</loc>
   </url>
   <url>
     <loc>https://moore-institute-4-plastic-pollution-res.github.io/One4All/reference/test_profanity.html</loc>
