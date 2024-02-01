@@ -1,8 +1,11 @@
 library(testthat)
 
 # Read rules ----
+temp_dir <- tempdir()
+temp_csv_path <- file.path(temp_dir, "test_rules.csv")
 
 test_that("read_rules correctly reads a CSV file", {
+    
     test_df <- data.frame(
         name = c("test1", "test2"),
         description = c("description1", "description2"),
@@ -11,10 +14,10 @@ test_that("read_rules correctly reads a CSV file", {
         stringsAsFactors = FALSE
     )
     
-    write.csv(test_df, "test_rules.csv", row.names = FALSE)
-    rules <- read_rules("test_rules.csv")
+    write.csv(test_df, temp_csv_path, row.names = FALSE)
+    rules <- read_rules(temp_csv_path)
     expect_equal(rules, test_df)
-    file.remove("test_rules.csv")
+    file.remove(temp_csv_path)
 })
 
 test_that("read_rules returns error on unsupported file type", {
@@ -28,8 +31,8 @@ test_that("read_rules returns error when required columns are missing", {
         stringsAsFactors = FALSE
     )
     
-    write.csv(test_df, "test_rules.csv", row.names = FALSE)
-    expect_error(read_rules("test_rules.csv"), 'Uploaded rules format is not currently supported, please provide a rules file with column names, "name", "description", "severity", "rule".')
+    write.csv(test_df, temp_csv_path, row.names = FALSE)
+    expect_error(read_rules(temp_csv_path), 'Uploaded rules format is not currently supported, please provide a rules file with column names, "name", "description", "severity", "rule".')
 })
 
 test_that("read_rules returns error when sensitive words are in rules", {
@@ -41,8 +44,8 @@ test_that("read_rules returns error when sensitive words are in rules", {
         stringsAsFactors = FALSE
     )
     
-    write.csv(test_df, "test_rules.csv", row.names = FALSE)
-    expect_error(read_rules("test_rules.csv"), 'At this time we are unable to support any rules with the words "config" or "secret" in them as they could be malicious.')
+    write.csv(test_df, temp_csv_path, row.names = FALSE)
+    expect_error(read_rules(temp_csv_path), 'At this time we are unable to support any rules with the words "config" or "secret" in them as they could be malicious.')
 })
 
 test_that("read_rules returns error when words besides error or warning are in severity", {
@@ -53,8 +56,8 @@ test_that("read_rules returns error when words besides error or warning are in s
         rule = c("rule1", "rule2")
     )
     
-    write.csv(test_df, "test_rules.csv", row.names = FALSE)
-    expect_error(read_rules("test_rules.csv"), 'severity in the rules file can only be "error" or "warning"')
+    write.csv(test_df, temp_csv_path, row.names = FALSE)
+    expect_error(read_rules(temp_csv_path), 'severity in the rules file can only be "error" or "warning"')
 })
 
 test_that("read_rules returns error when columns are not all character type", {
@@ -65,12 +68,12 @@ test_that("read_rules returns error when columns are not all character type", {
         rule = c(1, 2)
     )
     
-    write.csv(test_df, "test_rules.csv", row.names = FALSE)
-    expect_error(read_rules("test_rules.csv"), 'Uploaded rules format is not currently supported, please provide a rules file with columns that are all character type.')
+    write.csv(test_df, temp_csv_path, row.names = FALSE)
+    expect_error(read_rules(temp_csv_path), 'Uploaded rules format is not currently supported, please provide a rules file with columns that are all character type.')
 })
 
 # Clean up
-unlink("test_rules.csv")
+unlink(temp_csv_path)
 
 #read data ----
 # Assuming reformat_rules() is in your current environment.
@@ -730,3 +733,15 @@ test_that("query_mongodb_api retrieves data from MongoDB", {
     expect_true(!is.null(result) && length(result) > 0,
                 info = "Query result should not be NULL or empty.")
 })
+
+# Run app
+tmp <- file.path(tempdir(), "Validator-testthat")
+dir.create(tmp, showWarnings = F)
+
+test_that("run_app() wrapper doesn't produce errors", {
+    run_app(path = tmp, test_mode = T) |>
+        expect_silent()
+})
+
+# Tidy up
+unlink(tmp, recursive = T)

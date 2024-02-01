@@ -489,6 +489,8 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
     if(use_mongodb) {
         mongo_conn <- mongo(collection = mongo_collection, url = mongo_key)
         mongo_conn$insert(data_formatted2)
+        
+        message(paste0("Data was successfully sent to the data portal at ", mongo_collection))
     }
     
     files = c(files, structured_files, certificate_file)
@@ -508,6 +510,8 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
             object = paste0(hashed_data, ".zip"),
             bucket = s3_bucket
         )
+        
+        message(paste0("Data was successfully sent to the data portal at ", s3_bucket))
     }
     
     if(use_ckan){
@@ -515,10 +519,10 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
                         description = "validated raw data upload to microplastic data portal",
                         name = paste0(hashed_data, ".zip"),
                         upload = temp_zip)
+        
+        message(paste0("Data was successfully sent to the data portal at ", url_to_send))
     }
     
-    
-    message(paste0("Data was successfully sent to the data portal at ", url_to_send))
     
     return(list(hashed_data = hashed_data,
                 submission_time = submission_time))
@@ -1181,4 +1185,62 @@ query_mongodb_api <- function(collection, database, dataSource, apiKey_env_var, 
     result <- httr::content(response, "parsed")
     
     return(result)
+}
+
+#' @title Run Validator app
+#'
+#' @description
+#' This wrapper function starts the user interface of the validator app.
+#'
+#' @details
+#' After running this function the validator GUI should open in a separate
+#' window or in your computer browser.
+#'
+#' @param path to store the downloaded app files; defaults to \code{"system"}
+#' pointing to \code{system.file(package = "One4All")}.
+#' @param log logical; enables/disables logging to \code{\link[base]{tempdir}()}
+#' @param ref git reference; could be a commit, tag, or branch name. Defaults to
+#' "main". Only change this in case of errors.
+#' @param test_mode logical; for internal testing only.
+#' @param \dots arguments passed to \code{\link[shiny]{runApp}()}.
+#'
+#' @return
+#' This function normally does not return any value, see
+#' \code{\link[shiny]{runGitHub}()}.
+#'
+#' @examples
+#' \dontrun{
+#' run_app()
+#' }
+#'
+#' @author
+#' Hannah Sherrod, Nick Leong, Hannah Hapich, Fabian Gomez, Win Cowger
+#'
+#' @seealso
+#' \code{\link[shiny]{runGitHub}()}
+#'
+#' @importFrom shiny runGitHub shinyOptions
+#' @importFrom utils installed.packages
+#' @export
+run_app <- function(path = "system", log = TRUE, ref = "main",
+                    test_mode = FALSE, ...) {
+    pkg <- c("shiny", "dplyr", "DT", "shinythemes", "shinyWidgets", "validate", "digest", "data.table",
+             "bs4Dash", "ckanr", "purrr", "shinyjs", "sentimentr", "listviewer", "RCurl", "readxl", "stringr",
+             "openxlsx", "config", "aws.s3", "One4All", "mongolite")
+    
+    miss <- pkg[!(pkg %in% installed.packages()[ , "Package"])]
+    
+    if(length(miss)) stop("run_app() requires the following packages: ",
+                          paste(paste0("'", miss, "'"), collapse = ", "),
+                          call. = F)
+    
+    dd <- ifelse(path == "system",
+                 system.file(package = "One4All"),
+                 path)
+    
+    Sys.setenv(R_CONFIG_ACTIVE = "run_app")
+    
+    options(shiny.logfile = log)
+    if(!test_mode)
+        runGitHub("Microplastic_Data_Portal", "Moore-Institute-4-Plastic-Pollution-Res", subdir = "code/validator")
 }
