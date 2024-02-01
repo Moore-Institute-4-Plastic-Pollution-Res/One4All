@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{validate_data}
 \alias{validate_data}
-\title{Validate_data: Validate data based on specified rules.}
+\title{Validate data based on specified rules}
 \usage{
 validate_data(
   files_data,

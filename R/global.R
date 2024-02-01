@@ -1137,22 +1137,24 @@ check_for_malicious_files <- function(files) {
 #' @param collection The name of the MongoDB collection to query.
 #' @param database The name of the MongoDB database.
 #' @param dataSource The data source information.
-#' @param apiKey The API key for authentication
-#' @param objectID The object ID for the findOne operation.
+#' @param apiKey_env_var The API key for authentication
+#' @param objectId The object ID for the findOne operation.
 #'
 #' @return A result containing the outcome of the findOne operation.
 #'
 #' @examples
-#' Sys.setenv("MONGODB_API_KEY" = 'oHUi48HmGj7wNFapFJNI6Wj7upVNbPKzksNNbl7hizWtQaym4loFn7YlMtfIKJpZ')
-#' objectId <- '6527260827276a6fca07bba1'
+#' \dontrun{
+#' Sys.setenv("MONGODB_API_KEY" = 'your_mongodb_api_key')
+#' objectId <- 'example_object_id'
 #' result <- query_mongodb_api(
-#'   collection = 'MongoDB1',
-#'   database = 'test',
-#'   dataSource = 'Cluster0',
+#'   collection = 'your_mongodb_collection',
+#'   database = 'your_database',
+#'   dataSource = 'your_dataSource',
 #'   apiKey_env_var = "MONGODB_API_KEY",
 #'   objectId = objectId
 #' )
 #' print(result)
+#' }
 #' 
 #' @import httr
 #' @export

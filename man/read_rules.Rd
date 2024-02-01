@@ -15,7 +15,7 @@ A data frame containing the rules.
 \description{
 This function reads rules from a file or a data frame. 
 The file can be in csv or xlsx format. 
-The data should have the column names "name", "description", "severity", "rule".
+The data should have the column names "name", "description", "dataset", "valid example", "severity", "rule".
 The function also checks that the rules do not contain sensitive words and that 
 all the rules fields are character type.
 }

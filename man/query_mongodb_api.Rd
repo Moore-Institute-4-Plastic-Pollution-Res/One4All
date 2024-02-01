@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{query_mongodb_api}
 \alias{query_mongodb_api}
-\title{Query MongoDB database}
+\title{Query a mongoDB database}
 \usage{
 query_mongodb_api(collection, database, dataSource, apiKey_env_var, objectId)
 }
