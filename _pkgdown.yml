@@ -47,7 +47,7 @@ home:
           <a class="github-button" href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git" data-size="large" data-show-count="true" aria-label="Star Moore-Institute-4-Plastic-Pollution-Res/One4All.git">Star</a>
 reference:
 - title: <b>Run app</b>
-  desc: How to run app.
+  desc: How to run the app.
   contents:
   - '`run_app`'
 - title: <b>Checks</b>
@@ -92,5 +92,5 @@ footer:
   structure:
     left: developed
   components:
-    developed: Developed by [Moore Institute for Plastic Pollution Research](https://mooreplasticresearch.org/staff/).
+    developed: Developed by [Moore Institute for Plastic Pollution Research](https://mooreplasticresearch.org/).
 

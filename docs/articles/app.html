@@ -94,7 +94,7 @@
                         <h4 data-toc-skip class="author">Hannah Sherrod,
 Win Cowger</h4>
             
-            <h4 data-toc-skip class="date">2024-01-26</h4>
+            <h4 data-toc-skip class="date">2024-02-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/HEAD/vignettes/app.Rmd" class="external-link"><code>vignettes/app.Rmd</code></a></small>
       <div class="d-none name"><code>app.Rmd</code></div>
@@ -116,12 +116,13 @@ more documentation about the One4All R package, please see the <a href="package.
 <h2 id="background-rules">Background: Rules<a class="anchor" aria-label="anchor" href="#background-rules"></a>
 </h2>
 <p>This section discusses how the app validates and shares data. First
-and foremost, there is an existing set of rules created in excel that is
-applied to the app prior to user usage. These rules allow the app to
-verify the validity of a user’s data once they’ve uploaded it in the
-app. The rules sheet consists of multiple columns, including a name,
-description, dataset, valid example, severity, and the rule itself (see
-below for more details).</p>
+and foremost, there is an existing set of rules created in Excel that is
+applied to the validator app prior to user usage. These rules allow the
+app to validate the user’s data once they’ve uploaded it to the app. The
+rules sheet consists of six columns, including name, description,
+dataset, valid example, severity, and the rule itself (see below for
+more details). Download the sample rules under the ’_Help’ tab in the
+validator app to view the rules.</p>
 <p><strong>Name:</strong> The name of the row.
 <code>'(ex. Amount)'</code></p>
 <p><strong>Description:</strong> A description of the rule itself and
@@ -133,77 +134,79 @@ its requirements.
 <code>'(ex. 2)'</code></p>
 <p><strong>Severity:</strong> The severity of the rule, labeled either a
 ‘warning’ or an ‘error’. Warnings will still allow the data to be
-shared, whereas an error will need to be restructured.
+shared, whereas an error will need to be fixed.
 <code>'(ex. warning)'</code></p>
-<p><strong>Rule:</strong> The rule itself that the validator app reads
-to validate data (written in r code).
-<code>'(ex. Amount &gt;= 2 | is.na(Amount))'</code></p>
-<p>Under the <code>'_Help'</code> tab within the app, there is a sample
-rules sheet for users to download and view.</p>
+<p><strong>Rule:</strong> The rule that validates the data (written in r
+code). <code>'(ex. Amount &gt;= 2 | is.na(Amount))'</code></p>
 </div>
 <div class="section level2">
 <h2 id="running-the-app">Running the App<a class="anchor" aria-label="anchor" href="#running-the-app"></a>
 </h2>
-<p>To access the validator app, go to our <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">GitHub</a>
-and link it directly to your own device in R studio. After setting up
-the github to your device, go to the validator folder and select the
-global.R, ui.R, or server.R. From here, select the command
-<code>'Run App'</code> which will then display the app.</p>
+<p>To access the validator app, go to our <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal" class="external-link">GitHub</a>
+and link it directly to your own device in R. After setting up the
+github to your device, go to the validator folder, select the global.R,
+ui.R, or server.R, and run the app.</p>
+<p>If using the R package, read in the library and run the following
+command, <code><a href="../reference/run_app.html">run_app()</a></code>.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">One4All</a></span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="how-to-structure-your-data">How to structure your data<a class="anchor" aria-label="anchor" href="#how-to-structure-your-data"></a>
 </h2>
 <p>Download the valid example data under the <code>'_Help'</code> tab
-within the app. To properly structure your data follow the example by
-creating three sheets: one for methodology, samples, and particles. Copy
-the columns from the valid example into each of these sheets. Each
-column corresponds to one of the rules from the rule sheet, so refer
-back to the sample rules for the requirements. Although it is necessary
-for all columns to be labeled, the validator app encompasses a wide
-variety of data, so it is not a requirement for all of the columns to be
-filled. The columns that you don’t fill out can be left blank.</p>
+within the app. To properly structure your data, keep the columns but
+replace the data with your own. It is important that the columns remain
+the same because each column corresponds to a rule from the rules
+sheet.</p>
+<p>Although it is necessary for all of the columns to be present, the
+validator app encompasses a wide variety of data, so it is not a
+requirement for every column to have data. The columns that don’t
+pertain to your dataset can be left blank.</p>
 <p><img src="appimages/RulesExampleValidator.png" width="891" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="sharing-data">Sharing Data<a class="anchor" aria-label="anchor" href="#sharing-data"></a>
 </h2>
-<p>Once the app is open, upload your data by selecting the ‘Upload Data’
-tab. Your local folder tab will then be displayed where you can select
-from your csv or xlsx files along with the corresponding zip file.
-Acceptable data formats are csv, xlsx, and zip files. Once the files
-have been selected, click open and a screen will appear with the option
-to share your uploaded data. If this is an update to a previous
-submission, select that tab and upload the previous certificate from
-your local device. However, if this is a new submission, then follow the
-rest of the prompt on the screen.</p>
+<p>Once the app is loaded, upload your data by selecting the ‘Upload
+Data’ icon. Your local folder will display where you can select from
+your CSV or XLSX files along with a corresponding zip file. The
+validator app accepts data formats of CSV, XLSX, and zip files. After
+selecting the files, a screen will appear with the option to share your
+uploaded data.</p>
+<p>If this is an update to a previous submission, select that icon and
+upload the previous certificate from your local device. If this is a new
+submission, then follow the rest of the prompt on the screen.</p>
 <p><img src="appimages/UploadDataValidator.png" width="894" style="display: block; margin: auto;"></p>
 <p>An input key is optional and should only be provided if required. If
-it is required it will have been provided to you from us ahead of time.
-Following this, if your data was successfully uploaded, a new display,
-<code>'Successful Remote Data Sharing'</code>, will appear. If the data
-was not successfully uploaded, a display will appear marking which
-columns need to be reevaluated. The <code>'Validating Data'</code>
-section below provides instructions on how to correct invalid data.</p>
-<p><img src="appimages/SuccessValidator.png" width="876" style="display: block; margin: auto;"></p>
+it is required, it will have been provided to you ahead of time by the
+maintainer.</p>
+<p>If your data was successfully uploaded, a new screen,
+<code>'Successful Remote Data Sharing'</code>, will display. If the data
+was not successfully uploaded, a separate screen will display showing
+the columns that were invalid. The <code>'Validating Data'</code>
+section below provides instructions on how to correct invalid data.
+Reupload the data once all errors have been corrected.</p>
+<p><img src="appimages/SuccessValidator.png" width="438" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="validating-data">Validating Data<a class="anchor" aria-label="anchor" href="#validating-data"></a>
 </h2>
 <p>If you simply want to validate your data, select cancel on the
 <code>'Would you like to share your uploaded data'</code> screen. Your
-data should now be displayed among three boxes- methodology, samples,
-and particles. Each of these tables automatically display the number of
-successes, warnings, and errors in your data. To further view the
-details, click on a table which will display two boxes,
-<code>'Issues Raised'</code> and <code>'Issues Selected'</code>. If
-there are any errors or warnings, those columns will be highlighted in
-yellow or red, respectively in the ‘Issues Raised’ box. To view all
-statuses, including successes, switch the tool toggle labeled
-<code>'Errors only?'</code> to off. The description of each rule and its
-status (success/warning/error) are defined for the user to identify what
-rule was violated. By clicking on one of the highlighted boxes, the data
-entries that need to be fixed from that column will then be displayed
-and highlighted in the ‘Issues Selected’ box.</p>
+data will display among three boxes- methodology, samples, and
+particles. Each of these tables will separate the columns from your data
+into successes, warnings, and errors.</p>
+<p>To view the details, click on a table which will then display two
+boxes, <code>'Issues Raised'</code> and <code>'Issues Selected'</code>.
+The <code>'Issues Raised'</code> box will highlight the warnings and
+errors in yellow or red, respectively. Click on an
+<code>'Issues Raised'</code> column and the entries that are invalid
+will appear to the right in the <code>'Issues Selected'</code> box. To
+view all statuses, including successes, switch the tool toggle labeled
+<code>'Errors only?'</code> off.</p>
 <p><img src="appimages/TablesImageValidator.png" width="895" style="display: block; margin: auto;"></p>
 <p><img src="appimages/ErrorImageValidator.png" width="888" style="display: block; margin: auto;"></p>
 </div>
@@ -215,7 +218,7 @@ and highlighted in the ‘Issues Selected’ box.</p>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://mooreplasticresearch.org/staff/" class="external-link">Moore Institute for Plastic Pollution Research</a>.</p>
+<p>Developed by <a href="https://mooreplasticresearch.org/" class="external-link">Moore Institute for Plastic Pollution Research</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
