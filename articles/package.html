@@ -94,7 +94,7 @@
                         <h4 data-toc-skip class="author">Hannah Sherrod,
 Win Cowger</h4>
             
-            <h4 data-toc-skip class="date">2024-02-01</h4>
+            <h4 data-toc-skip class="date">2024-02-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/HEAD/vignettes/package.Rmd" class="external-link"><code>vignettes/package.Rmd</code></a></small>
       <div class="d-none name"><code>package.Rmd</code></div>
@@ -106,13 +106,14 @@ Win Cowger</h4>
 <h2 id="document-overview">Document Overview<a class="anchor" aria-label="anchor" href="#document-overview"></a>
 </h2>
 <p>This document outlines the One4All package and highlights the main
-functions to validate data without using the One4All app. It is the
+functions to validate data without using the validator app. It is the
 user’s choice whether to work in the validator app or to use the One4All
-package to validate and share data. After reading this document, users
-will also have a better understanding of the validator app development
-and the main functions within it.</p>
+package. After reading this document, users will have a better
+understanding of the One4All package development and the main functions
+to validate and share data. To access the One4All package, go to our <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">GitHub</a>
+and link it directly to your own device in R.</p>
 <p>The One4All package is the backbone of the validator app. If you are
-looking for a tutorial on how to use the app itself see the <a href="app.html">Validator App Tutorial</a>.</p>
+looking for a tutorial on how to use the app see the <a href="app.html">Validator App Tutorial</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -120,150 +121,25 @@ looking for a tutorial on how to use the app itself see the <a href="app.html">V
 <p>After installing the R package, read in the following library:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">One4All</a></span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="running-the-app">Running the App<a class="anchor" aria-label="anchor" href="#running-the-app"></a>
-</h2>
-<p>To access the validator app, go to our <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">GitHub</a>
-and link it directly to your own device in R studio. After setting up
-the github to your device, go to the validator folder and select the
-global.R, ui.R, or server.R. From here, select the command
-<code>'Run App'</code> which will display the app.</p>
-</div>
-<div class="section level2">
-<h2 id="validate-data-overview">Validate Data: Overview<a class="anchor" aria-label="anchor" href="#validate-data-overview"></a>
-</h2>
-<p>If you choose to validate your data through the One4All package, the
-following code is described in sections below. The parameters are also
-defined in each section.</p>
+<p>To run the app, run the command <code><a href="../reference/run_app.html">run_app()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">validate_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">files_data</span>, <span class="va">data_names</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">file_rules</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">zip_data</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="../reference/check_for_malicious_files.html">check_for_malicious_files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">files_data</span>, <span class="va">file_rules</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Data or rules files cannot be of any of these types:"</span>, <span class="st">"_exe"</span>, <span class="st">"a6p"</span>, <span class="st">"ac"</span>, <span class="st">"acr"</span>, <span class="st">"action"</span>, <span class="st">"air"</span>, <span class="st">"apk"</span>, <span class="st">"app"</span>,</span>
-<span>                   <span class="st">"applescript"</span>, <span class="st">"awk"</span>, <span class="st">"bas"</span>, <span class="st">"bat"</span>, <span class="st">"bin"</span>, <span class="st">"cgi"</span>, <span class="st">"chm"</span>,</span>
-<span>                   <span class="st">"cmd"</span>, <span class="st">"com"</span>, <span class="st">"cpl"</span>, <span class="st">"crt"</span>, <span class="st">"csh"</span>, <span class="st">"dek"</span>, <span class="st">"dld"</span>, <span class="st">"dll"</span>,</span>
-<span>                   <span class="st">"dmg"</span>, <span class="st">"drv"</span>, <span class="st">"ds"</span>, <span class="st">"ebm"</span>, <span class="st">"elf"</span>, <span class="st">"emf"</span>, <span class="st">"esh"</span>, <span class="st">"exe"</span>,</span>
-<span>                   <span class="st">"ezs"</span>, <span class="st">"fky"</span>, <span class="st">"frs"</span>, <span class="st">"fxp"</span>, <span class="st">"gadget"</span>, <span class="st">"gpe"</span>, <span class="st">"gpu"</span>, <span class="st">"hlp"</span>,</span>
-<span>                   <span class="st">"hms"</span>, <span class="st">"hta"</span>, <span class="st">"icd"</span>, <span class="st">"iim"</span>, <span class="st">"inf"</span>, <span class="st">"ins"</span>, <span class="st">"inx"</span>, <span class="st">"ipa"</span>,</span>
-<span>                   <span class="st">"ipf"</span>, <span class="st">"isp"</span>, <span class="st">"isu"</span>, <span class="st">"jar"</span>, <span class="st">"js"</span>, <span class="st">"jse"</span>, <span class="st">"jsp"</span>, <span class="st">"jsx"</span>,</span>
-<span>                   <span class="st">"kix"</span>, <span class="st">"ksh"</span>, <span class="st">"lib"</span>, <span class="st">"lnk"</span>, <span class="st">"mcr"</span>, <span class="st">"mel"</span>, <span class="st">"mem"</span>, <span class="st">"mpkg"</span>,</span>
-<span>                   <span class="st">"mpx"</span>, <span class="st">"mrc"</span>, <span class="st">"ms"</span>, <span class="st">"msc"</span>, <span class="st">"msi"</span>, <span class="st">"msp"</span>, <span class="st">"mst"</span>, <span class="st">"mxe"</span>,</span>
-<span>                   <span class="st">"obs"</span>, <span class="st">"ocx"</span>, <span class="st">"pas"</span>, <span class="st">"pcd"</span>, <span class="st">"pex"</span>, <span class="st">"pif"</span>, <span class="st">"pkg"</span>, <span class="st">"pl"</span>,</span>
-<span>                   <span class="st">"plsc"</span>, <span class="st">"pm"</span>, <span class="st">"prc"</span>, <span class="st">"prg"</span>, <span class="st">"pvd"</span>, <span class="st">"pwc"</span>, <span class="st">"py"</span>, <span class="st">"pyc"</span>,</span>
-<span>                   <span class="st">"pyo"</span>, <span class="st">"qpx"</span>, <span class="st">"rbx"</span>, <span class="st">"reg"</span>, <span class="st">"rgs"</span>, <span class="st">"rox"</span>, <span class="st">"rpj"</span>, <span class="st">"scar"</span>,</span>
-<span>                   <span class="st">"scpt"</span>, <span class="st">"scr"</span>, <span class="st">"script"</span>, <span class="st">"sct"</span>, <span class="st">"seed"</span>, <span class="st">"sh"</span>, <span class="st">"shb"</span>,</span>
-<span>                   <span class="st">"shs"</span>, <span class="st">"spr"</span>, <span class="st">"sys"</span>, <span class="st">"thm"</span>, <span class="st">"tlb"</span>, <span class="st">"tms"</span>, <span class="st">"u3p"</span>, <span class="st">"udf"</span>,</span>
-<span>                   <span class="st">"url"</span>, <span class="st">"vb"</span>, <span class="st">"vbe"</span>, <span class="st">"vbs"</span>, <span class="st">"vbscript"</span>, <span class="st">"vdo"</span>, <span class="st">"vxd"</span>,</span>
-<span>                   <span class="st">"wcm"</span>, <span class="st">"widget"</span>, <span class="st">"wmf"</span>, <span class="st">"workflow"</span>, <span class="st">"wpk"</span>, <span class="st">"ws"</span>, <span class="st">"wsc"</span>,</span>
-<span>                   <span class="st">"wsf"</span>, <span class="st">"wsh"</span>, <span class="st">"xap"</span>, <span class="st">"xqt"</span>, <span class="st">"zlq"</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">zip_data</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="../reference/check_for_malicious_files.html">check_for_malicious_files</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="va">zip_data</span>, list <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">Name</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>            <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Data or rules files cannot be of any of these types:"</span>,</span>
-<span>                       <span class="st">"_exe"</span>, <span class="st">"a6p"</span>, <span class="st">"ac"</span>, <span class="st">"acr"</span>, <span class="st">"action"</span>, <span class="st">"air"</span>, <span class="st">"apk"</span>, <span class="st">"app"</span>,</span>
-<span>                       <span class="st">"applescript"</span>, <span class="st">"awk"</span>, <span class="st">"bas"</span>, <span class="st">"bat"</span>, <span class="st">"bin"</span>, <span class="st">"cgi"</span>, <span class="st">"chm"</span>,</span>
-<span>                       <span class="st">"cmd"</span>, <span class="st">"com"</span>, <span class="st">"cpl"</span>, <span class="st">"crt"</span>, <span class="st">"csh"</span>, <span class="st">"dek"</span>, <span class="st">"dld"</span>, <span class="st">"dll"</span>,</span>
-<span>                       <span class="st">"dmg"</span>, <span class="st">"drv"</span>, <span class="st">"ds"</span>, <span class="st">"ebm"</span>, <span class="st">"elf"</span>, <span class="st">"emf"</span>, <span class="st">"esh"</span>, <span class="st">"exe"</span>,</span>
-<span>                       <span class="st">"ezs"</span>, <span class="st">"fky"</span>, <span class="st">"frs"</span>, <span class="st">"fxp"</span>, <span class="st">"gadget"</span>, <span class="st">"gpe"</span>, <span class="st">"gpu"</span>, <span class="st">"hlp"</span>,</span>
-<span>                       <span class="st">"hms"</span>, <span class="st">"hta"</span>, <span class="st">"icd"</span>, <span class="st">"iim"</span>, <span class="st">"inf"</span>, <span class="st">"ins"</span>, <span class="st">"inx"</span>, <span class="st">"ipa"</span>,</span>
-<span>                       <span class="st">"ipf"</span>, <span class="st">"isp"</span>, <span class="st">"isu"</span>, <span class="st">"jar"</span>, <span class="st">"js"</span>, <span class="st">"jse"</span>, <span class="st">"jsp"</span>, <span class="st">"jsx"</span>,</span>
-<span>                       <span class="st">"kix"</span>, <span class="st">"ksh"</span>, <span class="st">"lib"</span>, <span class="st">"lnk"</span>, <span class="st">"mcr"</span>, <span class="st">"mel"</span>, <span class="st">"mem"</span>, <span class="st">"mpkg"</span>,</span>
-<span>                       <span class="st">"mpx"</span>, <span class="st">"mrc"</span>, <span class="st">"ms"</span>, <span class="st">"msc"</span>, <span class="st">"msi"</span>, <span class="st">"msp"</span>, <span class="st">"mst"</span>, <span class="st">"mxe"</span>,</span>
-<span>                       <span class="st">"obs"</span>, <span class="st">"ocx"</span>, <span class="st">"pas"</span>, <span class="st">"pcd"</span>, <span class="st">"pex"</span>, <span class="st">"pif"</span>, <span class="st">"pkg"</span>, <span class="st">"pl"</span>,</span>
-<span>                       <span class="st">"plsc"</span>, <span class="st">"pm"</span>, <span class="st">"prc"</span>, <span class="st">"prg"</span>, <span class="st">"pvd"</span>, <span class="st">"pwc"</span>, <span class="st">"py"</span>, <span class="st">"pyc"</span>,</span>
-<span>                       <span class="st">"pyo"</span>, <span class="st">"qpx"</span>, <span class="st">"rbx"</span>, <span class="st">"reg"</span>, <span class="st">"rgs"</span>, <span class="st">"rox"</span>, <span class="st">"rpj"</span>, <span class="st">"scar"</span>,</span>
-<span>                       <span class="st">"scpt"</span>, <span class="st">"scr"</span>, <span class="st">"script"</span>, <span class="st">"sct"</span>, <span class="st">"seed"</span>, <span class="st">"sh"</span>, <span class="st">"shb"</span>,</span>
-<span>                       <span class="st">"shs"</span>, <span class="st">"spr"</span>, <span class="st">"sys"</span>, <span class="st">"thm"</span>, <span class="st">"tlb"</span>, <span class="st">"tms"</span>, <span class="st">"u3p"</span>, <span class="st">"udf"</span>,</span>
-<span>                       <span class="st">"url"</span>, <span class="st">"vb"</span>, <span class="st">"vbe"</span>, <span class="st">"vbs"</span>, <span class="st">"vbscript"</span>, <span class="st">"vdo"</span>, <span class="st">"vxd"</span>,</span>
-<span>                       <span class="st">"wcm"</span>, <span class="st">"widget"</span>, <span class="st">"wmf"</span>, <span class="st">"workflow"</span>, <span class="st">"wpk"</span>, <span class="st">"ws"</span>, <span class="st">"wsc"</span>,</span>
-<span>                       <span class="st">"wsf"</span>, <span class="st">"wsh"</span>, <span class="st">"xap"</span>, <span class="st">"xqt"</span>, <span class="st">"zlq"</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="op">}</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="va">rules</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_rules.html">read_rules</a></span><span class="op">(</span><span class="va">file_rules</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="va">data_formatted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_data.html">read_data</a></span><span class="op">(</span>files_data <span class="op">=</span> <span class="va">files_data</span>, data_names <span class="op">=</span> <span class="va">data_names</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"dataset"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">rules</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_formatted</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"If there is more than one dataset then a dataset column must be specified in the rules file to describe which rule applies to which dataset."</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="st">"dataset"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">rules</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">rules</span><span class="op">$</span><span class="va">dataset</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_formatted</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>            <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"If there is a dataset column in the rules file it needs to pertain to the names of the datasets being tested. The rules file lists datasets "</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">rules</span><span class="op">$</span><span class="va">dataset</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_formatted</span><span class="op">)</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span>,  <span class="st">" that do not match the datasets shared."</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="op">}</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="va">rules</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/reformat_rules.html">reformat_rules</a></span><span class="op">(</span>rules <span class="op">=</span> <span class="va">rules</span>, data_formatted <span class="op">=</span> <span class="va">data_formatted</span>, zip_data <span class="op">=</span> <span class="va">zip_data</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="va">rules_formatted</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/validator.html" class="external-link">validator</a></span><span class="op">(</span>.data<span class="op">=</span><span class="va">rules</span><span class="op">)</span>,</span>
-<span>                                warning <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">w</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                                    <span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span></span>
-<span>                                    <span class="cn">NULL</span></span>
-<span>                                <span class="op">}</span>,</span>
-<span>                                error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                                    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
-<span>                                <span class="op">}</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">rules_formatted</span><span class="op">)</span> <span class="op">||</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">rules_formatted</span><span class="op">)</span><span class="op">)</span> <span class="op">!=</span> <span class="fl">1</span> <span class="op">||</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">rules_formatted</span>, <span class="st">"validator"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"There was an error with reading the rules file."</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="va">all_variables</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/variables.html" class="external-link">variables</a></span><span class="op">(</span><span class="va">rules_formatted</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">data_formatted</span>, <span class="va">names</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">all_variables</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/variables.html" class="external-link">variables</a></span><span class="op">(</span><span class="va">rules_formatted</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">all_variables</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">data_formatted</span>, <span class="va">names</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"All variables in the rules csv should be in the data csv and vice versa for the validation to work correctly. Download the Data Template for an example of correctly formatted upload. Ignoring these unmatched variables "</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">all_variables</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">all_variables</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/variables.html" class="external-link">variables</a></span><span class="op">(</span><span class="va">rules_formatted</span><span class="op">)</span><span class="op">)</span> <span class="op">|</span> <span class="op">!</span><span class="op">(</span><span class="va">all_variables</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">data_formatted</span>, <span class="va">names</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="va">report</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_formatted</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/confront.html" class="external-link">confront</a></span><span class="op">(</span><span class="va">data_formatted</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span>, <span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/validator.html" class="external-link">validator</a></span><span class="op">(</span>.data<span class="op">=</span><span class="va">rules</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">dataset</span> <span class="op">==</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">}</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">report</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/validate-summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>            <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">rules</span>, by <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>            <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">fails</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">.data</span><span class="op">$</span><span class="va">severity</span> <span class="op">==</span> <span class="st">"error"</span><span class="op">)</span> <span class="op">|</span> <span class="va">.data</span><span class="op">$</span><span class="va">error</span> <span class="op">|</span> <span class="va">.data</span><span class="op">$</span><span class="va">warning</span> , <span class="st">"error"</span>, <span class="st">"success"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>            <span class="fu">mutate</span><span class="op">(</span>status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">fails</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">.data</span><span class="op">$</span><span class="va">severity</span> <span class="op">==</span> <span class="st">"warning"</span>, <span class="st">"warning"</span>, <span class="va">.data</span><span class="op">$</span><span class="va">status</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">}</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="va">any_issues</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">results</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">status</span> <span class="op">==</span> <span class="st">"error"</span><span class="op">)</span></span>
-<span>    <span class="op">}</span>, FUN.VALUE <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="va">rules_list_formatted</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_formatted</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="fu">validator</span><span class="op">(</span>.data<span class="op">=</span><span class="va">rules</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">dataset</span> <span class="op">==</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">}</span><span class="op">)</span>,</span>
-<span>    warning <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">w</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span></span>
-<span>        <span class="cn">NULL</span></span>
-<span>    <span class="op">}</span>,</span>
-<span>    error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span></span>
-<span>    <span class="op">}</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>data_formatted <span class="op">=</span> <span class="va">data_formatted</span>,</span>
-<span>         data_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_formatted</span><span class="op">)</span>,</span>
-<span>         zip_data <span class="op">=</span> <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/exists.html" class="external-link">exists</a></span><span class="op">(</span><span class="st">"zip_data"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="va">zip_data</span><span class="op">}</span> <span class="kw">else</span><span class="op">{</span><span class="cn">NULL</span><span class="op">}</span>,</span>
-<span>         report <span class="op">=</span> <span class="va">report</span>,</span>
-<span>         results <span class="op">=</span> <span class="va">results</span>,</span>
-<span>         rules <span class="op">=</span> <span class="va">rules_list_formatted</span>,</span>
-<span>         issues <span class="op">=</span> <span class="va">any_issues</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="validate-data-reading-and-formatting-data">Validate Data: Reading and Formatting Data<a class="anchor" aria-label="anchor" href="#validate-data-reading-and-formatting-data"></a>
 </h2>
-<p>The function below is the main function that validates data using the
-One4All package. Replace the four parameters defined below with your
-actual values or file paths. The <code>'data_names'</code> should be
-replaced with the tables from the rules sheet.</p>
+<p>The function below validates data using the One4All package. Replace
+the four parameters defined below with your actual values or file paths.
+The <code>'data_names'</code> should be replaced with the tables from
+the rules sheet.</p>
 <p><strong><code>'files_data'</code></strong>: A list of file paths for
-the datasets to be validated (either csv or xlsx).</p>
+the datasets to be validated (either CSV or XLSX files).</p>
 <p><strong><code>'data_names'</code></strong>: (Optional) A character
 vector of names for the datasets. If not provided, names will be
-extracted from the file paths</p>
+extracted from the file paths.
+<code>'(ex. methodology, samples, particles)'</code></p>
 <p><strong><code>'file_rules'</code></strong>: A file path for the rules
-file, either in .csv or .xlsx format.</p>
+file, either in CSV or XLSX format.</p>
 <p><strong><code>'zip_data'</code></strong>: A file path to a zip folder
 for validating unstructured data.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -276,12 +152,12 @@ for validating unstructured data.</p>
 <div class="section level4">
 <h4 id="check-for-malicious-files">Check for malicious files<a class="anchor" aria-label="anchor" href="#check-for-malicious-files"></a>
 </h4>
-<p>The function below checks for malicious files using the function. If
-any of the provided files appear to have a malicious extension, the
-function will stop and raise an error. The argument,
-<code>'files'</code>, is a character vector of file paths. These can be
-paths to zip or individual files. If any malicious file is found, the
-code will return ‘TRUE’, otherwise it will say ‘FALSE’.</p>
+<p>The function below checks for malicious files. If any of the provided
+files appear to have a malicious extension, the function will stop and
+raise an error. The argument, <code>'files'</code>, is a character
+vector of file paths, which can be paths to zip or individual files. If
+any malicious file is found, the code will return ‘TRUE’, otherwise it
+will say ‘FALSE’.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/check_for_malicious_files.html">check_for_malicious_files</a></span><span class="op">(</span><span class="va">files</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -289,14 +165,14 @@ code will return ‘TRUE’, otherwise it will say ‘FALSE’.</p>
 <h4 id="read-rules">Read rules<a class="anchor" aria-label="anchor" href="#read-rules"></a>
 </h4>
 <p>The function below reads rules from a file or a data frame.
-Acceptable file formats are csv or xlsx.</p>
+Acceptable file formats are CSV or XLSX files.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/read_rules.html">read_rules</a></span><span class="op">(</span><span class="va">file_rules</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="read-data">Read data<a class="anchor" aria-label="anchor" href="#read-data"></a>
 </h4>
-<p>The function reads and formats data from csv or xlsx files. The
+<p>The function reads and formats data from CSV or XLSX files. The
 argument, <code>'files_data'</code>, is the list of files to be read,
 and <code>'data_names'</code>, is the optional vector of names for the
 data frames.</p>
@@ -305,38 +181,12 @@ data frames.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="validate-data-validation-reporting">Validate Data: Validation Reporting<a class="anchor" aria-label="anchor" href="#validate-data-validation-reporting"></a>
-</h2>
-<p>The function below uses the <code>'validate::confront'</code>
-function to generate a validation report for each dataset. It applies
-the rules to each dataset using the <code>'validate::validator'</code>
-function.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">report</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_formatted</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
-<span>    <span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/confront.html" class="external-link">confront</a></span><span class="op">(</span><span class="va">data_formatted</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span>, <span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/validator.html" class="external-link">validator</a></span><span class="op">(</span>.data<span class="op">=</span><span class="va">rules</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">dataset</span> <span class="op">==</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="validate-data-results-summary">Validate Data: Results summary<a class="anchor" aria-label="anchor" href="#validate-data-results-summary"></a>
-</h2>
-<p>The function below creates a summary of validation results by linking
-the results with the rules and determining the status (success, warning,
-or error).</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">report</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">validate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/validate/man/validate-summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">rules</span>, by <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">fails</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">.data</span><span class="op">$</span><span class="va">severity</span> <span class="op">==</span> <span class="st">"error"</span><span class="op">)</span> <span class="op">|</span> <span class="va">.data</span><span class="op">$</span><span class="va">error</span> <span class="op">|</span> <span class="va">.data</span><span class="op">$</span><span class="va">warning</span> , <span class="st">"error"</span>, <span class="st">"success"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">mutate</span><span class="op">(</span>status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">fails</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">.data</span><span class="op">$</span><span class="va">severity</span> <span class="op">==</span> <span class="st">"warning"</span>, <span class="st">"warning"</span>, <span class="va">.data</span><span class="op">$</span><span class="va">status</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
 <h2 id="where-is-this-data-shared">Where is this data shared?<a class="anchor" aria-label="anchor" href="#where-is-this-data-shared"></a>
 </h2>
-<p>The validator app allows users to not only validate their data, but
-to share their data as well, promoting open-source resources. The
-purpose of this section is to provide background information on how and
-where the data is sent.</p>
+<p>One4All allows users to not only validate their data, but to share
+their data as well, promoting open-source resources. The purpose of this
+section is to provide background information on how and where the data
+is sent.</p>
 <p>In the One4All package, the remote share function shares the
 validated data to three remote repositories, including MongoDB, CKAN,
 and/or AmazonS3. The purpose of having three options is for user
@@ -348,99 +198,28 @@ allowing for managing and sharing datasets.</p>
 <p><strong>Amazon S3</strong> is a cloud-based object storage service,
 providing scalable and durable storage for a wide variety of data
 types.</p>
-<p>A key will be provided to the user ahead of time for where they want
-to share their data.</p>
 <p>The <code>'remote_share'</code> function is shown below.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">remote_share</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">validation</span>, <span class="va">data_formatted</span>, <span class="va">files</span>, <span class="va">verified</span>, <span class="va">valid_rules</span>, <span class="va">valid_key</span>, <span class="va">ckan_url</span>, <span class="va">ckan_key</span>, <span class="va">ckan_package</span>, <span class="va">url_to_send</span>, <span class="va">rules</span>, <span class="va">results</span>, <span class="va">s3_key_id</span>, <span class="va">s3_secret_key</span>, <span class="va">s3_region</span>, <span class="va">s3_bucket</span>, <span class="va">mongo_key</span>, <span class="va">mongo_collection</span>, <span class="va">old_cert</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">{</span></span>
-<span>    </span>
-<span>    <span class="va">use_ckan</span> <span class="op">&lt;-</span> <span class="fu">isTruthy</span><span class="op">(</span><span class="va">ckan_url</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu">isTruthy</span><span class="op">(</span><span class="va">ckan_key</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu">isTruthy</span><span class="op">(</span><span class="va">ckan_package</span><span class="op">)</span></span>
-<span>    <span class="va">use_s3</span> <span class="op">&lt;-</span> <span class="fu">isTruthy</span><span class="op">(</span><span class="va">s3_bucket</span><span class="op">)</span></span>
-<span>    <span class="va">use_mongodb</span> <span class="op">&lt;-</span> <span class="fu">isTruthy</span><span class="op">(</span><span class="va">mongo_key</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu">isTruthy</span><span class="op">(</span><span class="va">mongo_collection</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">use_ckan</span><span class="op">|</span> <span class="va">use_s3</span><span class="op">|</span> <span class="va">use_mongodb</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Upload will not work because no upload methods are specified."</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">validation</span><span class="op">$</span><span class="va">issues</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"There are errors in the dataset that persist. Until all errors are remedied, the data cannot be uploaded to the remote repository."</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu">digest</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">rules</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">valid_rules</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"If you are using a key to upload data to a remote repo then there must be a valid pair with the rules you are using in our internal database."</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">verified</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">valid_key</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"You must have a valid key provided by the portal maintainer to use this feature."</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="va">hashed_data</span> <span class="op">&lt;-</span> <span class="fu">digest</span><span class="op">(</span><span class="va">data_formatted</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="va">structured_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"\\"</span>, <span class="va">hashed_data</span>, <span class="st">".rds"</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">data_formatted</span>, file <span class="op">=</span> <span class="va">structured_files</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="va">submission_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXlt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"GMT"</span><span class="op">)</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_ckan</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="fu">ckanr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/ckanr/reference/ckanr_setup.html" class="external-link">ckanr_setup</a></span><span class="op">(</span>url <span class="op">=</span> <span class="va">ckan_url</span>, key <span class="op">=</span> <span class="va">ckan_key</span><span class="op">)</span></span>
-<span>    <span class="op">}</span>    </span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_s3</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span></span>
-<span>            <span class="st">"AWS_ACCESS_KEY_ID"</span> <span class="op">=</span> <span class="va">s3_key_id</span>,</span>
-<span>            <span class="st">"AWS_SECRET_ACCESS_KEY"</span> <span class="op">=</span> <span class="va">s3_secret_key</span>,</span>
-<span>            <span class="st">"AWS_DEFAULT_REGION"</span> <span class="op">=</span> <span class="va">s3_region</span></span>
-<span>        <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    </span>
-<span>    <span class="co">#Add certificate</span></span>
-<span>    <span class="va">certificate_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"\\"</span>, <span class="st">"certificate.csv"</span><span class="op">)</span></span>
-<span>    <span class="va">certificate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/certificate_df.html">certificate_df</a></span><span class="op">(</span><span class="va">validation</span>, time <span class="op">=</span> <span class="va">submission_time</span><span class="op">)</span></span>
-<span>    <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="va">certificate</span>, <span class="va">certificate_file</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="va">data_formatted2</span> <span class="op">&lt;-</span> <span class="va">data_formatted</span></span>
-<span>    <span class="va">data_formatted2</span><span class="op">$</span><span class="va">certificate</span> <span class="op">&lt;-</span> <span class="va">certificate</span></span>
-<span>    <span class="va">data_formatted2</span> <span class="op">&lt;-</span> <span class="fu">toJSON</span><span class="op">(</span><span class="va">data_formatted2</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_mongodb</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">mongo_conn</span> <span class="op">&lt;-</span> <span class="fu">mongo</span><span class="op">(</span>collection <span class="op">=</span> <span class="va">mongo_collection</span>, url <span class="op">=</span> <span class="va">mongo_key</span><span class="op">)</span></span>
-<span>        <span class="va">mongo_conn</span><span class="op">$</span><span class="fu">insert</span><span class="op">(</span><span class="va">data_formatted2</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="va">files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">files</span>, <span class="va">structured_files</span>, <span class="va">certificate_file</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="co">#Add old certificate</span></span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="fu">isTruthy</span><span class="op">(</span><span class="va">old_cert</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="va">files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">files</span>, <span class="va">old_cert</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="va">temp_zip</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"\\"</span>, <span class="st">"temp.zip"</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/utils/zip.html" class="external-link">zip</a></span><span class="op">(</span>zipfile <span class="op">=</span> <span class="va">temp_zip</span>, files <span class="op">=</span> <span class="va">files</span>, extras <span class="op">=</span> <span class="st">'-j'</span><span class="op">)</span> <span class="co"># Zip the test file</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_s3</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="fu">put_object</span><span class="op">(</span></span>
-<span>            file <span class="op">=</span> <span class="va">temp_zip</span>,</span>
-<span>            object <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">hashed_data</span>, <span class="st">".zip"</span><span class="op">)</span>,</span>
-<span>            bucket <span class="op">=</span> <span class="va">s3_bucket</span></span>
-<span>        <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_ckan</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="fu">resource_create</span><span class="op">(</span>package_id <span class="op">=</span> <span class="va">ckan_package</span>,</span>
-<span>                        description <span class="op">=</span> <span class="st">"validated raw data upload to microplastic data portal"</span>,</span>
-<span>                        name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">hashed_data</span>, <span class="st">".zip"</span><span class="op">)</span>,</span>
-<span>                        upload <span class="op">=</span> <span class="va">temp_zip</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Data was successfully sent to the data portal at "</span>, <span class="va">url_to_send</span><span class="op">)</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hashed_data <span class="op">=</span> <span class="va">hashed_data</span>,</span>
-<span>                submission_time <span class="op">=</span> <span class="va">submission_time</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">shared_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remote_share.html">remote_share</a></span><span class="op">(</span>validation <span class="op">=</span> <span class="va">result_valid</span>,</span>
+<span>                            data_formatted <span class="op">=</span> <span class="va">result_valid</span><span class="op">$</span><span class="va">data_formatted</span>,</span>
+<span>                            files <span class="op">=</span> <span class="va">test_file</span>,</span>
+<span>                            verified <span class="op">=</span> <span class="st">"your_verified_key"</span>,</span>
+<span>                            valid_key <span class="op">=</span> <span class="st">"your_valid_key"</span>,</span>
+<span>                            valid_rules <span class="op">=</span> <span class="fu">digest</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/digest/man/digest.html" class="external-link">digest</a></span><span class="op">(</span><span class="va">test_rules</span><span class="op">)</span>,</span>
+<span>                            ckan_url <span class="op">=</span> <span class="st">"https://example.com"</span>,</span>
+<span>                            ckan_key <span class="op">=</span> <span class="st">"your_ckan_key"</span>,</span>
+<span>                            ckan_package <span class="op">=</span> <span class="st">"your_ckan_package"</span>,</span>
+<span>                            url_to_send <span class="op">=</span> <span class="st">"https://your-url-to-send.com"</span>,</span>
+<span>                            rules <span class="op">=</span> <span class="va">test_rules</span>,</span>
+<span>                            results <span class="op">=</span> <span class="va">valid_example</span><span class="op">$</span><span class="va">results</span>,</span>
+<span>                            s3_key_id <span class="op">=</span> <span class="st">"your_s3_key_id"</span>,</span>
+<span>                            s3_secret_key <span class="op">=</span> <span class="st">"your_s3_secret_key"</span>,</span>
+<span>                            s3_region <span class="op">=</span> <span class="st">"your_s3_region"</span>,</span>
+<span>                            s3_bucket <span class="op">=</span> <span class="st">"your_s3_bucket"</span>,</span>
+<span>                            mongo_key <span class="op">=</span> <span class="st">"your_mongo_key"</span>,</span>
+<span>                            mongo_collection <span class="op">=</span> <span class="st">"your_mongo_collection"</span>,</span>
+<span>                            old_cert <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="how-is-the-data-downloaded">How is the data downloaded?<a class="anchor" aria-label="anchor" href="#how-is-the-data-downloaded"></a>
@@ -451,61 +230,17 @@ AmazonS3. The data is retrieved based on the <code>'hashed_data'</code>
 identifier and assumes the data is stored using the same naming
 conventions provided in the <code>'remote_share'</code> function.</p>
 <p>The <code>'remote_download'</code> function is shown below.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">remote_download</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">hashed_data</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">ckan_url</span>, <span class="va">ckan_key</span>, <span class="va">ckan_package</span>, <span class="va">s3_key_id</span>, <span class="va">s3_secret_key</span>, <span class="va">s3_region</span>, <span class="va">s3_bucket</span>, <span class="va">mongo_key</span>, <span class="va">mongo_collection</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    </span>
-<span>    <span class="va">use_ckan</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isTruthy.html" class="external-link">isTruthy</a></span><span class="op">(</span><span class="va">ckan_url</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isTruthy.html" class="external-link">isTruthy</a></span><span class="op">(</span><span class="va">ckan_key</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isTruthy.html" class="external-link">isTruthy</a></span><span class="op">(</span><span class="va">ckan_package</span><span class="op">)</span></span>
-<span>    <span class="va">use_s3</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isTruthy.html" class="external-link">isTruthy</a></span><span class="op">(</span><span class="va">s3_bucket</span><span class="op">)</span></span>
-<span>    <span class="va">use_mongodb</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isTruthy.html" class="external-link">isTruthy</a></span><span class="op">(</span><span class="va">mongo_key</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isTruthy.html" class="external-link">isTruthy</a></span><span class="op">(</span><span class="va">mongo_collection</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_ckan</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="fu">ckanr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/ckanr/reference/ckanr_setup.html" class="external-link">ckanr_setup</a></span><span class="op">(</span>url <span class="op">=</span> <span class="va">ckan_url</span>, key <span class="op">=</span> <span class="va">ckan_key</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_s3</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span></span>
-<span>            <span class="st">"AWS_ACCESS_KEY_ID"</span> <span class="op">=</span> <span class="va">s3_key_id</span>,</span>
-<span>            <span class="st">"AWS_SECRET_ACCESS_KEY"</span> <span class="op">=</span> <span class="va">s3_secret_key</span>,</span>
-<span>            <span class="st">"AWS_DEFAULT_REGION"</span> <span class="op">=</span> <span class="va">s3_region</span></span>
-<span>        <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_mongodb</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">mongo_conn</span> <span class="op">&lt;-</span> <span class="fu">mongo</span><span class="op">(</span>collection <span class="op">=</span> <span class="va">mongo_collection</span>, url <span class="op">=</span> <span class="va">mongo_key</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="va">data_downloaded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_s3</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="co"># Retrieve a list of objects from S3 bucket</span></span>
-<span>        <span class="va">s3_objects</span> <span class="op">&lt;-</span> <span class="fu">get_bucket</span><span class="op">(</span>bucket <span class="op">=</span> <span class="va">s3_bucket</span>, prefix <span class="op">=</span> <span class="va">hashed_data</span><span class="op">)</span></span>
-<span>        <span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"temp"</span>, fileext <span class="op">=</span> <span class="st">".zip"</span><span class="op">)</span></span>
-<span>        <span class="fu">aws.s3</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/aws.s3/man/get_object.html" class="external-link">save_object</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">s3_objects</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">Key</span>, file <span class="op">=</span> <span class="va">file</span>, bucket <span class="op">=</span> <span class="va">s3_bucket</span><span class="op">)</span></span>
-<span>        <span class="va">zip_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="va">file</span>, list <span class="op">=</span> <span class="cn">TRUE</span>, exdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">Name</span></span>
-<span>        <span class="va">structured_data</span> <span class="op">&lt;-</span> <span class="va">zip_files</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">".rds$"</span>, <span class="va">zip_files</span><span class="op">)</span><span class="op">]</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="va">file</span>, files <span class="op">=</span> <span class="va">structured_data</span>, exdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="va">data_downloaded</span><span class="op">[[</span><span class="st">"s3"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">read_rds</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"/"</span>, <span class="va">structured_data</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_ckan</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="va">resources</span> <span class="op">&lt;-</span> <span class="fu">package_show</span><span class="op">(</span><span class="va">ckan_package</span><span class="op">)</span><span class="op">$</span><span class="va">resources</span></span>
-<span>        <span class="va">resources_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">resources</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="va">x</span><span class="op">$</span><span class="va">name</span><span class="op">}</span>, FUN.VALUE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="va">hashed_data_resources</span> <span class="op">&lt;-</span> <span class="va">resources</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="va">hashed_data</span>, <span class="va">resources_names</span><span class="op">)</span><span class="op">]</span></span>
-<span>        <span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"temp"</span>, fileext <span class="op">=</span> <span class="st">".zip"</span><span class="op">)</span></span>
-<span>        <span class="fu">ckan_fetch</span><span class="op">(</span>x <span class="op">=</span> <span class="va">hashed_data_resources</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">hashed_data_resources</span><span class="op">)</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">url</span>, store <span class="op">=</span> <span class="st">"disk"</span>, path <span class="op">=</span> <span class="va">file</span><span class="op">)</span></span>
-<span>        <span class="va">zip_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="va">file</span>, list <span class="op">=</span> <span class="cn">TRUE</span>, exdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">Name</span></span>
-<span>        <span class="va">structured_data</span> <span class="op">&lt;-</span> <span class="va">zip_files</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">".rds$"</span>, <span class="va">zip_files</span><span class="op">)</span><span class="op">]</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="va">file</span>, files <span class="op">=</span> <span class="va">structured_data</span>, exdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="va">data_downloaded</span><span class="op">[[</span><span class="st">"ckan"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">read_rds</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"/"</span>, <span class="va">structured_data</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="va">use_mongodb</span><span class="op">)</span><span class="op">{</span></span>
-<span>        <span class="va">mongo_query</span> <span class="op">&lt;-</span> <span class="fu">toJSON</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"unique_id"</span> <span class="op">=</span> <span class="va">hashed_data</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="va">mongo_data</span> <span class="op">&lt;-</span> <span class="va">mongo_conn</span><span class="op">$</span><span class="fu">find</span><span class="op">(</span>query <span class="op">=</span> <span class="va">mongo_query</span><span class="op">)</span></span>
-<span>        <span class="va">data_downloaded</span><span class="op">[[</span><span class="st">"mongodb"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">mongo_data</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">data_downloaded</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span> <span class="va">downloaded_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remote_download.html">remote_download</a></span><span class="op">(</span>hashed_data <span class="op">=</span> <span class="st">"example_hash"</span>,</span>
+<span>                                     ckan_url <span class="op">=</span> <span class="st">"https://example.com"</span>,</span>
+<span>                                     ckan_key <span class="op">=</span> <span class="st">"your_ckan_key"</span>,</span>
+<span>                                     ckan_package <span class="op">=</span> <span class="st">"your_ckan_package"</span>,</span>
+<span>                                     s3_key_id <span class="op">=</span> <span class="st">"your_s3_key_id"</span>,</span>
+<span>                                     s3_secret_key <span class="op">=</span> <span class="st">"your_s3_secret_key"</span>,</span>
+<span>                                     s3_region <span class="op">=</span> <span class="st">"your_s3_region"</span>,</span>
+<span>                                     s3_bucket <span class="op">=</span> <span class="st">"your_s3_bucket"</span>,</span>
+<span>                                     mongo_key <span class="op">=</span> <span class="st">"mongo_key"</span>,</span>
+<span>                                     mongo_collection <span class="op">=</span> <span class="st">"mongo_collection"</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -515,7 +250,7 @@ conventions provided in the <code>'remote_share'</code> function.</p>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://mooreplasticresearch.org/staff/" class="external-link">Moore Institute for Plastic Pollution Research</a>.</p>
+<p>Developed by <a href="https://mooreplasticresearch.org/" class="external-link">Moore Institute for Plastic Pollution Research</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
