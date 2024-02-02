@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{rules_broken}
 \alias{rules_broken}
-\title{rules_broken}
+\title{Broken rules}
 \usage{
 rules_broken(results, show_decision)
 }

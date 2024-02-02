@@ -42,7 +42,7 @@ remote_download(
 A named list containing the downloaded datasets.
 }
 \description{
-This function downloads data from remote sources like CKAN, AWS S3.
+This function downloads data from remote sources like CKAN, AWS S3, and MongoDB.
 It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
 }
 \examples{

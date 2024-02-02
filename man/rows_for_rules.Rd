@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{rows_for_rules}
 \alias{rows_for_rules}
-\title{rows_for_rules}
+\title{Rows for rules}
 \usage{
 rows_for_rules(data_formatted, report, broken_rules, rows)
 }
