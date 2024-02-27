@@ -20,6 +20,10 @@ remotes::install_github("Moore-Institute-4-Plastic-Pollution-Res/One4All")
 library(One4All)
 ```
 
+## Additional Instructions
+
+Access the pkgdown and vignettes here: https://moore-institute-4-plastic-pollution-res.github.io/One4All/ 
+
 ## Contributing
 
 Contributions to One4All are welcome! Please see the CONTRIBUTING.md file for details on how to contribute to the project.
