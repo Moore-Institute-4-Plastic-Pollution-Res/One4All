@@ -714,19 +714,19 @@ test_that("check_for_malicious_files works correctly", {
     setwd(old_dir)
 })
 
-# Query MongoDB database
-test_that("query_mongodb_api retrieves data from MongoDB", {
+# Query MongoDB Document by ObjectID
+test_that("query_document_by_object_id returns the correct document", {
     
     testthat::skip_on_cran()
     
     # Load the required configuration
     config <- config::get(file = "config_pl_for_tests.yml")
     
-    result <- query_mongodb_api(
+    result <- query_document_by_object_id(
+        apiKey = config$apiKey,
         collection = config$mongo_collection,
         database = 'test',
         dataSource = 'Cluster0',
-        apiKey_env_var = config$apiKey_env_var,
         objectId = "6527260827276a6fca07bba1"
     )
     

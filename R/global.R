@@ -1130,64 +1130,62 @@ check_for_malicious_files <- function(files) {
     return(FALSE)
 }
 
-#' Query MongoDB database
+#' Query MongoDB Document by ObjectID
 #'
-#' This function queries a mongodb database by specifying the collection, database, data source, API key, and objectID.
+#' This function queries a mongodb database using its API to retrieve a document by its ObjectID. Use the MongoDB Atlas Data API to create an API key.
 #' 
-#' @param collection The name of the MongoDB collection to query.
+#' @param collection The name of the collection in the MongoDB database.
 #' @param database The name of the MongoDB database.
-#' @param dataSource The data source information.
-#' @param apiKey_env_var The API key for authentication
-#' @param objectId The object ID for the findOne operation.
+#' @param dataSource The data source in MongoDB.
+#' @param apiKey The API key for accessing the MongoDB API.
+#' @param objectId The object ID of the document to query.
 #'
-#' @return A result containing the outcome of the findOne operation.
+#' @return The queried document.
 #'
 #' @examples
 #' \dontrun{
-#' Sys.setenv("MONGODB_API_KEY" = 'your_mongodb_api_key')
+#' apiKey <- 'your_mongodb_api_key'
+#' collection <- 'your_mongodb_collection'
+#' database <- 'your_database'
+#' dataSource <- 'your_dataSource'
 #' objectId <- 'example_object_id'
-#' result <- query_mongodb_api(
-#'   collection = 'your_mongodb_collection',
-#'   database = 'your_database',
-#'   dataSource = 'your_dataSource',
-#'   apiKey_env_var = "MONGODB_API_KEY",
-#'   objectId = objectId
-#' )
-#' print(result)
+#' query_document_by_object_id(apiKey, collection, database, dataSource, objectId)
 #' }
 #' 
 #' @import httr
+#' @import jsonlite
 #' @export
-query_mongodb_api <- function(collection, database, dataSource, apiKey_env_var, objectId) {
-    # Get the API key from the environment variable
-    apiKey <- Sys.getenv(apiKey_env_var, "")
+query_document_by_object_id <- function(apiKey, collection, database, dataSource, objectId) {
+    # Construct the URL for the find endpoint
+    url <- "https://us-west-2.aws.data.mongodb-api.com/app/data-crrct/endpoint/data/v1/action/find"
     
-    # Construct the URL
-    url <- 'https://us-west-2.aws.data.mongodb-api.com/app/data-crrct/endpoint/data/v1/action/findOne'
-    
-    # Set up headers
-    headers <- c(
-        'Content-Type' = 'application/json',
-        'Access-Control-Request-Headers' = '*',
-        'api-key' = apiKey
-    )
-    
-    # Create the body of the request
+    # Set up the query payload
     body <- list(
-        collection = collection,
-        database = database,
         dataSource = dataSource,
-        projection = list("_id" = 1)  # Adjust projection as needed
-    )
+        database = database,
+        collection = collection,
+        filter = list(
+            "_id" = list(
+                "$oid" = objectId
+                )
+            )
+        )
     
     # Make the POST request
-    response <- httr::POST(url, add_headers(.headers = headers), body = body, encode = "json")
+    response <- httr::POST(
+        url,
+        body = toJSON(body, auto_unbox = TRUE),
+        add_headers(`Content-Type` = "application/json", `api-key` = apiKey),
+        encode = "json"
+    )
     
-    # Check the response
-    result <- httr::content(response, "parsed")
-    
-    return(result)
-}
+    # Check and return the response
+    if (response$status_code == 200) {
+        return(httr::content(response, "parsed"))
+    } else {
+        stop("Failed to query MongoDB Atlas Data API: ", response$status_code)
+    }
+    }
 
 #' @title Run Validator app
 #'
