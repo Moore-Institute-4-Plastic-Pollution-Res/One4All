@@ -87,7 +87,7 @@ reference:
   - '`name_data`'
   - '`read_data`'
   - '`validate_data`'
-  - '`query_mongodb_api`'
+  - '`query_document_by_object_id`'
 footer:
   structure:
     left: developed
