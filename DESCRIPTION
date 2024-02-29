@@ -1,8 +1,8 @@
 Package: One4All
 Type: Package
 Title: Validate, Share, and Download Data
-Version: 0.3
-Date: 2024-02-02
+Version: 0.4
+Date: 2024-02-29
 Authors@R: c(person("Hannah", "Sherrod", role = c("cre", "aut"),
       email = "hannah@mooreplasticresearch.org",
       comment = c(ORCID = "0009-0001-0497-8693")),

@@ -1132,7 +1132,7 @@ check_for_malicious_files <- function(files) {
 
 #' Query MongoDB Document by ObjectID
 #'
-#' This function queries a mongodb database using its API to retrieve a document by its ObjectID.
+#' This function queries a mongodb database using its API to retrieve a document by its ObjectID. Use the MongoDB Atlas Data API to create an API key.
 #' 
 #' @param collection The name of the collection in the MongoDB database.
 #' @param database The name of the MongoDB database.
