@@ -541,6 +541,8 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 #' @param s3_secret_key A character string representing the AWS S3 secret access key.
 #' @param s3_region A character string representing the AWS S3 region.
 #' @param s3_bucket A character string representing the AWS S3 bucket name.
+#' @param mongo_key A character string representing the mongo key.
+#' @param mongo_collection A character string representing the mongo collection.
 #'
 #' @importFrom shiny isTruthy
 #' @importFrom dplyr mutate_if
@@ -920,6 +922,8 @@ test_profanity <- function(x){
 #'
 #' This function creates an Excel file with conditional formatting and data validation
 #' based on the given validation rules in a CSV or Excel file.
+#' This function is currently compatible with Windows and Linux operating systems. When using a macOS system,
+#' the excel file is able to download, but has some bugs with formatting the LOOKUP sheet.
 #' @param file_rules A CSV or Excel file containing validation rules.
 #' @param negStyle Style to apply for negative conditions (default is red text on a pink background).
 #' @param posStyle Style to apply for positive conditions (default is green text on a light green background).
@@ -927,7 +931,7 @@ test_profanity <- function(x){
 #' @return A workbook object containing the formatted Excel file.
 #' @importFrom readr read_csv
 #' @importFrom readxl read_excel
-#' @importFrom dplyr filter mutate bind_rows
+#' @importFrom dplyr filter mutate bind_rows %>%
 #' @importFrom data.table rbindlist
 #' @importFrom validate validator variables violating
 #' @importFrom openxlsx createWorkbook addWorksheet writeData freezePane dataValidation conditionalFormatting saveWorkbook createStyle protectWorksheet
