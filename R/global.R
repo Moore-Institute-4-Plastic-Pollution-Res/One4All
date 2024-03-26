@@ -10,6 +10,13 @@
 #' @importFrom digest digest
 #' @importFrom shiny isTruthy
 #' @importFrom utils packageVersion sessionInfo
+#' @examples
+#' \donttest{
+#' certificate_df(x = list(data_formatted = data.frame(a = 1:3, b = 4:6),
+#'                         rules = validate::validator(a > 0, b > 0)),
+#'                time = Sys.time())
+#'                }
+#' 
 #' @export
 certificate_df <- function(x, time = Sys.time()){
     formatted_time <- format(as.POSIXlt(time, origin = "1970-01-01", tz = "GMT"), "%Y-%m-%d %H:%M:%S")
@@ -26,7 +33,7 @@ certificate_df <- function(x, time = Sys.time()){
 #'
 #' This function reads rules from a file or a data frame.
 #' The file can be in csv or xlsx format.
-#' The data should have the column names "name", "description", "severity", "rule".
+#' The data should have the column names "name", "description", "dataset", "valid example", "severity", "rule".
 #' The function also checks that the rules do not contain sensitive words and that
 #' all the rules fields are character type.
 #'
@@ -85,8 +92,8 @@ read_rules <- function(file_rules){
 #' @param data_names Optional vector of names for the data frames
 #' @importFrom readxl excel_sheets
 #' @examples
-#' ## You can add examples of function usage here.
-#'
+#' read_data(files_data = valid_example, data_names = c("methodology", "particles", "samples"))
+#' 
 #' @return A list of data frames
 #' @export
 read_data <- function(files_data, data_names = NULL){
@@ -428,10 +435,29 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
 #' @importFrom utils write.csv read.csv zip
 #' @import mongolite
 #' @import jsonlite
-#'
 #' @examples
-#' #Need to add.
-#'
+#' \dontrun{
+#' shared_data <- remote_share(validation = result_valid,
+#'                             data_formatted = result_valid$data_formatted,
+#'                             files = test_file,
+#'                             verified = "your_verified_key",
+#'                             valid_key = "your_valid_key",
+#'                             valid_rules = digest::digest(test_rules),
+#'                             ckan_url = "https://example.com",
+#'                             ckan_key = "your_ckan_key",
+#'                             ckan_package = "your_ckan_package",
+#'                             url_to_send = "https://your-url-to-send.com",
+#'                             rules = test_rules,
+#'                             results = valid_example$results,
+#'                             s3_key_id = "your_s3_key_id",
+#'                             s3_secret_key = "your_s3_secret_key",
+#'                             s3_region = "your_s3_region",
+#'                             s3_bucket = "your_s3_bucket",
+#'                             mongo_key = "your_mongo_key",
+#'                             mongo_collection = "your_mongo_collection",
+#'                             old_cert = NULL
+#' )
+#' }
 #' @export
 
 remote_share <- function(validation, data_formatted, files, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, mongo_collection, old_cert = NULL){
@@ -530,7 +556,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 
 #' Download Structured Data from Remote Sources
 #'
-#' This function downloads data from remote sources like CKAN, AWS S3.
+#' This function downloads data from remote sources like CKAN, AWS S3, and MongoDB.
 #' It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
 #'
 #' @param hashed_data A character string representing the hashed identifier of the data to be downloaded.
@@ -541,6 +567,8 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
 #' @param s3_secret_key A character string representing the AWS S3 secret access key.
 #' @param s3_region A character string representing the AWS S3 region.
 #' @param s3_bucket A character string representing the AWS S3 bucket name.
+#' @param mongo_key A character string representing the mongo key.
+#' @param mongo_collection A character string representing the mongo collection.
 #'
 #' @importFrom shiny isTruthy
 #' @importFrom dplyr mutate_if
@@ -709,7 +737,7 @@ remote_raw_download <- function(hashed_data = NULL, file_path = NULL, ckan_url =
 #' @export
 is.POSIXct <- function(x) inherits(x, "POSIXct")
 
-#' rules_broken ----
+#' Broken rules
 #'
 #' Filter the results of validation to show only broken rules, optionally including successful decisions.
 #'
@@ -920,6 +948,8 @@ test_profanity <- function(x){
 #'
 #' This function creates an Excel file with conditional formatting and data validation
 #' based on the given validation rules in a CSV or Excel file.
+#' This function is currently compatible with Windows and Linux operating systems. When using a macOS system,
+#' the excel file is able to download, but has some bugs with formatting the LOOKUP sheet.
 #' @param file_rules A CSV or Excel file containing validation rules.
 #' @param negStyle Style to apply for negative conditions (default is red text on a pink background).
 #' @param posStyle Style to apply for positive conditions (default is green text on a light green background).
@@ -927,7 +957,7 @@ test_profanity <- function(x){
 #' @return A workbook object containing the formatted Excel file.
 #' @importFrom readr read_csv
 #' @importFrom readxl read_excel
-#' @importFrom dplyr filter mutate bind_rows
+#' @importFrom dplyr filter mutate bind_rows %>%
 #' @importFrom data.table rbindlist
 #' @importFrom validate validator variables violating
 #' @importFrom openxlsx createWorkbook addWorksheet writeData freezePane dataValidation conditionalFormatting saveWorkbook createStyle protectWorksheet
@@ -935,9 +965,10 @@ test_profanity <- function(x){
 #' @importFrom utils read.csv
 #' @importFrom rlang .data
 #' @examples
-#'
+#' \donttest{
 #' data("test_rules")
 #' create_valid_excel(file_rules = test_rules)
+#' }
 #' @export
 create_valid_excel <- function(file_rules,
                                negStyle  = createStyle(fontColour = "#9C0006", bgFill = "#FFC7CE"),

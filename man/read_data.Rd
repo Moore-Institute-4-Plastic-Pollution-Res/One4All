@@ -19,5 +19,5 @@ Read and format data from csv or xlsx files
 }
 \examples{
 read_data(files_data = valid_example, data_names = c("methodology", "particles", "samples"))
-}
 
+}

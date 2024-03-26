@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{validate_data}
 \alias{validate_data}
-\title{Validate data based on specified rules}
+\title{Validate_data: Validate data based on specified rules.}
 \usage{
 validate_data(
   files_data,
@@ -43,7 +43,7 @@ data("test_rules")
 result_valid <- validate_data(files_data = valid_example,
                         data_names = c("methodology", "particles", "samples"),
                         file_rules = test_rules)
-                        
+                       
 result_invalid <- validate_data(files_data = invalid_example,
                         data_names = c("methodology", "particles", "samples"),
                         file_rules = test_rules)

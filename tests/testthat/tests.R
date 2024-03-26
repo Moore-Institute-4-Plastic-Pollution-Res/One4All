@@ -479,6 +479,15 @@ test_that("create_valid_excel creates a valid Excel file", {
     
     # Perform additional checks on the worksheets as needed
     
+    suppressWarnings({
+        create_valid_excel(
+            file_rules = test_rules,
+            negStyle = createStyle(fontColour = "#9C0006", bgFill = "#FFC7CE"),
+            posStyle = createStyle(fontColour = "#006100", bgFill = "#C6EFCE"),
+            row_num = 1000
+        )
+    })
+    
     # Clean up: delete the output file
     file.remove(output_file)
     

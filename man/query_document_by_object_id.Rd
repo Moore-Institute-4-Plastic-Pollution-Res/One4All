@@ -21,16 +21,16 @@ query_document_by_object_id(apiKey, collection, database, dataSource, objectId)
 The queried document.
 }
 \description{
-This function queries a mongodb database using its API to retrieve a document by its ObjectID.
+This function queries a mongodb database using its API to retrieve a document by its ObjectID. Use the MongoDB Atlas Data API to create an API key.
 }
 \examples{
 \dontrun{
-result <- query_document_by_object_id(
-        apiKey = 'your_mongodb_api_key',
-        collection = 'your_mongodb_collection',
-        database = 'your_database',
-        dataSource = 'your_dataSource',
-        objectId = 'example_object_id'
-    )
+apiKey <- 'your_mongodb_api_key'
+collection <- 'your_mongodb_collection'
+database <- 'your_database'
+dataSource <- 'your_dataSource'
+objectId <- 'example_object_id'
+query_document_by_object_id(apiKey, collection, database, dataSource, objectId)
 }
+
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{rows_for_rules}
 \alias{rows_for_rules}
-\title{Rows for rules}
+\title{rows_for_rules}
 \usage{
 rows_for_rules(data_formatted, report, broken_rules, rows)
 }
@@ -33,7 +33,7 @@ result_invalid <- validate_data(files_data = invalid_example,
 broken_rules <- rules_broken(results = result_invalid$results[[1]], show_decision = TRUE)
 
 # Get rows for the specified rules
-violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[1]], 
+violating_rows <- rows_for_rules(data_formatted = result_invalid$data_formatted[[1]],
                                  report = result_invalid$report[[1]],
                                  broken_rules = broken_rules,
                                  rows = 1)
