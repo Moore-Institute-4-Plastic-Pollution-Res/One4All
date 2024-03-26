@@ -70,7 +70,7 @@ A list containing the status and message of the operation.
 }
 \description{
 This function uploads validated data to specified remote repositories,
-such as CKAN, Amazon S3, and/or MongoDB.
+such as CKAN, Amazon S3, and/or MongoDB
 }
 \examples{
 \dontrun{

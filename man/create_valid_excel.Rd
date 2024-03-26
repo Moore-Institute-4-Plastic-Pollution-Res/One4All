@@ -26,9 +26,12 @@ A workbook object containing the formatted Excel file.
 \description{
 This function creates an Excel file with conditional formatting and data validation
 based on the given validation rules in a CSV or Excel file.
+This function is currently compatible with Windows and Linux operating systems. When using a macOS system,
+the excel file is able to download, but has some bugs with formatting the LOOKUP sheet.
 }
 \examples{
 \donttest{
 data("test_rules")
 create_valid_excel(file_rules = test_rules)
-}}
+}
+}
