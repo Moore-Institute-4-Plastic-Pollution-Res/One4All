@@ -70,7 +70,7 @@ Several key aspects are required to ensure widespread adoption of a unified data
 
 # Demo
 
-A full tutorial video is available on [YouTube](https://www.youtube.com/embed/LMpf5-K_tYQ). For additional instructions, access the pkgdown and vignettes here: https://moore-institute-4-plastic-pollution-res.github.io/One4All/.
+A full tutorial video is available on [YouTube](https://www.youtube.com/embed/LMpf5-K_tYQ). For additional instructions, access the pkgdown and vignettes here: (https://moore-institute-4-plastic-pollution-res.github.io/One4All/).
 
 # Method
 
@@ -82,11 +82,11 @@ Consisting of an R package and an R shiny application, this portal was designed 
 
 Start by structuring the configuration file using the template from the [Microplastic Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data (Figure 2).
 
-![Structure the example configuration file using this template from the Microplastic Data Portal. Replace the hashed placeholders with your information. If a ‘valid_key’ is added, then a user will need to provide an input key to share their validated data.\label{fig:example2}](manuscriptimages/One4AllConfigF2.png)
+![Structure the example configuration file using this template from the [Microplastic Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information. If a ‘valid_key’ is added, then a user will need to provide an input key to share their validated data.\label{fig:example2}](manuscriptimages/One4AllConfigF2.png)
 
 Users have the option to work in the validator app or the One4All package. The functionality in the validator app is based on the One4All package (Figure 3). 
 
-![Workflow of the One4All portal. Navigate through the One4All package and the validator app, based on user preference: https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e.\label{fig:example3}](manuscriptimages/One4AllFlowChartF3.png)
+![Workflow of the One4All portal. Navigate through the One4All package and the validator app, based on user preference: (https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e).\label{fig:example3}](manuscriptimages/One4AllFlowChartF3.png)
 
 ## How to use the app:
 
@@ -138,7 +138,7 @@ The main limitation is finding a balance to incorporate a wide variety of data. 
 
 # Availability and Documentation:
 
-One4All is published on CRAN and was created in R(4.2.1) [@R:2022] using the following libraries: shiny [@Shiny:2023], dplyr [@Dplyr:2023], validate [@Validate:2021], digest [@Digest:2023], data.table [@Datatable:2023], ckanr [@Ckanr:2023], openxlsx [@Openxlsx:2023], lexicon [@Lexicon:2018], readr [@Readr:2023], readxl [@Readxl:2023], tibble [@Tibble:2023], aws.s3 [@Awss3:2020], rlang [@Rlang:2023], jsonlite [@Jsonlite:2014], mongolite [@Jsonlite:2014], and httr [@Httr:2023]. The validator app is hosted on the web at [openanalysis.org/one4all](openanalysis.org/one4all). The source code is [available on GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal) with an [MIT license](https://mit-license.org/). The source code can be run offline on any machine that can install the One4All package. This package is maintained by the Moore Institute for Plastic Pollution Research on GitHub and is updated with each release.
+One4All is published on CRAN and was created in R(4.2.1) [@R:2022] using the following libraries: shiny [@Shiny:2023], dplyr [@Dplyr:2023], validate [@Validate:2021], digest [@Digest:2023], data.table [@Datatable:2023], ckanr [@Ckanr:2023], openxlsx [@Openxlsx:2023], lexicon [@Lexicon:2018], readr [@Readr:2023], readxl [@Readxl:2023], tibble [@Tibble:2023], aws.s3 [@Awss3:2020], rlang [@Rlang:2023], jsonlite [@Jsonlite:2014], mongolite [@Jsonlite:2014], and httr [@Httr:2023]. The validator app is hosted on the web at [openanalysis.org/one4all](openanalysis.org/one4all). The source code is [available on GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) with an [MIT license](https://mit-license.org/). The source code can be run offline on any machine that can install the One4All package. This package is maintained by the Moore Institute for Plastic Pollution Research on GitHub and is updated with each release.
 
 # Future Goals
 
