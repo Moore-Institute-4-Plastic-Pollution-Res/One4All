@@ -43,13 +43,13 @@ affiliations:
    index: 1
  - name: University of California, Riverside, Department of Environmental Sciences, USA
    index: 2
- - name: 
+ - name: National Renewable Energy Laboratory, USA
    index: 3
  - name: Office of Environmental Health Hazard Assessment, USA
    index: 4
  - name: Southern California Coastal Water Research Project Authority, USA
    index: 5
- - name:
+ - name: San Francisco Estuary Institute, USA
    index: 6
  - name: California State Water Resources Control Board, USA
    index: 7
@@ -142,7 +142,7 @@ One4All is published on CRAN and was created in R(4.2.1) [@R:2022] using the fol
 
 # Future Goals
 
-The One4All portal is intended to be useful for users to validate and share their data. Our goal is to promote open-source resources for the public and update the software with other resources that have yet to be implemented. We aim to integrate Open Specy, developed by @Cowger:2021, for users to validate their spectra submissions before submitting to the Open Specy reference library. We also aim to expand our current set of rules, by incorporating AI strategies such as ChatGPT, to generate a rule template for macroplastics or other pollutants. This will provide users the option to create rule templates using AI strategies as well. We also aim to integrate the validator into both the data visualization tool and the microplastic image explorer, both sourced from the Microplastic Data Portal, to increase discoverability and adhere to FAIR data principles. Regarding the data visualization tool, our objective is to utilize an API key generated from the cloud services within the validator tool to integrate the shared data. This will then enable the data visualization tool to visually represent the shared data through maps, plots, and tables. As for the microplastic image explorer, our objective is to validate a dataset containing microplastic images before integrating the images into the tool’s database.
+The One4All portal is intended to be useful for users to validate and share their data. Our goal is to promote open-source resources for the public and update the software with other resources that have yet to be implemented. We aim to integrate Open Specy, developed by @Cowger:2021, for users to validate their spectra submissions before submitting to the Open Specy reference library. We also aim to expand our current set of rules, by incorporating AI strategies such as ChatGPT, to generate a rule template for macroplastics or other pollutants. This will provide users the option to create rule templates using AI strategies as well. We also aim to integrate the data visualization tool and the microplastic image explorer, both sourced from the Microplastic Data Portal, to increase discoverability and adhere to FAIR data principles. Our objective with the data visualization tool is to utilize an API key generated from the cloud services within the One4All to integrate the shared data. This will then enable the data visualization tool to visually represent the shared data through maps, plots, and tables. Our objective with the microplastic image explorer is to validate a dataset containing microplastic images before integrating the images into the tool’s database.
 
 
 # Acknowledgments
