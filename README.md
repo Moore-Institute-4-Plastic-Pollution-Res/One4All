@@ -1,5 +1,7 @@
 # **One4All**
 
+[![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All) [![Website](https://img.shields.io/badge/web-openanalysis.org-white)](https://openanalysis.org/one4all)
+
 R package for data validation and visualization with a focus on microplastic data.
 
 ## Overview
