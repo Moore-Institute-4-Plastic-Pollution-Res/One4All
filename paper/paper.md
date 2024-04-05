@@ -60,7 +60,7 @@ bibliography: paper.bib
 
 # Summary
 
-Microplastics are a diverse suite of contaminants [@Rochman:2019] resulting in a variety of data [@Jenkins:2022; @California:2022]. Data sharing is critical to advance science and policy [@Coffin:2023]. The One4All portal was created to standardize and share structured and unstructured microplastic data (and beyond) through validation. Validated data can be automatically uploaded to the following cloud services: Amazon S3, CKAN, and/or MongoDB. The One4All is both a portal and an R package and can be used for applications outside of microplastics. This manuscript provides information about the usage, workflow, and configuration of the One4All.
+Microplastics are a diverse suite of contaminants [@Rochman:2019] resulting in a variety of data [@Jenkins:2022; @California:2022]. Data sharing is critical to advance science and policy [@Coffin:2023]. The One4All portal was created to standardize and share structured and unstructured microplastic data (and beyond) through validation. Validated data can be automatically uploaded to the following cloud services: Amazon S3, CKAN, and/or MongoDB. One4All is both a graphic user interface and an R package and can be used for applications outside of microplastics. This manuscript provides information about the usage, workflow, and configuration of the One4All.
 
 # Statement of need
 
