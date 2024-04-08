@@ -30,7 +30,7 @@ remotes::install_github("Moore-Institute-4-Plastic-Pollution-Res/One4All")
 ```
 
 ### Access the validator tool below:
-- Click here for the [validator tool](openanalysis.org/one4all).
+- Click here for the web app: [openanalysis.org/one4all/](openanalysis.org/one4all/).
 
 - The code for the app is in [code/validator](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/code/validator)
 
