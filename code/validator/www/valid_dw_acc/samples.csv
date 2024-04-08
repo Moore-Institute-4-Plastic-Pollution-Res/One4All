@@ -1,0 +1,2 @@
+﻿SampleID,OwnerOrganization,AnalysisOrganization,ReportingOrganization,Latitude,Longitude,CollectionStartDateTime,CollectionEndDateTime,SampleVolume,SampleType,Matrix,SiteName,SpatialFile
+23jreh334,Moore Institute for Plastic Pollution Research,Moore Institute for Plastic Pollution Research,Moore Institute for Plastic Pollution Research,33.746974,-118.115372,1/30/2023,1/30/2023,100,Environmental,Drinking Water,Win River,test.kml
