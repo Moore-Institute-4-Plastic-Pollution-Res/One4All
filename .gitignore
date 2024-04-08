@@ -3,3 +3,4 @@ config*
 .Rhistory
 inst/shiny/rsconnect*
 docs
+.DS_Store
