@@ -90,7 +90,7 @@ Users have the option to upload their validated data to the previously mentioned
 
 Once successfully shared, a confirmation screen will be generated and the data will be uploaded to the appropriate cloud services. Users can then download a certificate at the top right corner to view the credentials of their submission (Figure 4).
 
-![A screenshot displaying an example of a downloaded certificate, including the downloaded time, the data ID necessary to download this dataset (see Figure 5), the rules ID identifying the set of rules used for this dataset, the package version, and the web hash.\label{fig:example4}](manuscriptimages/One4AllCertificate.png)
+![A screenshot displaying an example of a downloaded certificate, including the downloaded time, the data ID necessary to download this dataset (see Figure 5), the rules ID identifying the set of rules used for this dataset, the package version, and the web hash. The data ID and rules ID are also represented as hashes.\label{fig:example4}](manuscriptimages/One4AllCertificate.png)
 
 Users also have the option to download any previously uploaded data from the cloud services. Users can download one dataset at a time, providing the dataset ID from a downloaded certificate (Figure 5). 
 
