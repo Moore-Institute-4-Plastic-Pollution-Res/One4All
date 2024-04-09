@@ -100,14 +100,14 @@ Users also have the option to download any previously uploaded data from the clo
 
 To use the One4All package, users will first load the One4All library. The features in the validator app are based on the One4All package functions.
 
+Load the One4All library, then optionally run the app using the ‘run_app()’ function.
+
 ```r
 library(One4All)
 run_app()
 ```
 
-Load the One4All library, then optionally run the app using the ‘run_app()’ function.
-
-Users can validate their data using the ‘validate_data’ function, replacing the parameters with their own information. 
+Validate data using the ‘validate_data’ function. Replace ‘files_data’, ‘data_names’, and ‘file_rules’ with your values.
 
 ```r
 result_valid <- validate_data(files_data = valid_example,
@@ -115,17 +115,13 @@ result_valid <- validate_data(files_data = valid_example,
                 file_rules = test_rules)
 ```
 
-Validate data using the ‘validate_data’ function. Replace ‘files_data’, ‘data_names’, and ‘file_rules’ with your values.
-
-To identify errors and warnings, users can use the ‘rules_broken’ function. This function filters the validation results to show only the broken rules, optionally including successful decisions as well.
+Identify errors and warnings using the ‘rules_broken’ function. Replace the ‘results’ and ‘show_decision’ parameters with your values. This function filters the validation results to show only the broken rules, optionally including successful decisions as well.
 
 ```r
 broken_rules <- rules_broken(results, show_decision)
 ```
 
-Identify errors and warnings using the ‘rules_broken’ function. Replace the ‘results’ and ‘show_decision’ parameters with your values.
-
-Once the data are validated, users can share their data to the cloud services using the ‘remote_share’ function, replacing the placeholders with their information. 
+Share your validated data to the cloud services using the ‘remote_share’ function. Ensure that your data are validated before sharing your data. Replace the pertaining placeholders with your information.
 
 ```r
 shared_data <- remote_share(validation = result_valid,
@@ -149,9 +145,7 @@ shared_data <- remote_share(validation = result_valid,
                 old_cert = NULL)
 ```
 
-Share your validated data to the cloud services using the ‘remote_share’ function. Ensure that your data are validated before sharing your data. Replace the pertaining placeholders with your information.
-
-To download data from the cloud services, users can use the ‘remote_download’ function, replacing the placeholders with their information. 
+Download data from the cloud services using the ‘remote_download’ function. Replace the pertaining placeholders with your information.
 
 ```r
 downloaded_data <- remote_download(hashed_data = "example_hash",
@@ -166,15 +160,13 @@ downloaded_data <- remote_download(hashed_data = "example_hash",
                     mongo_collection = "mongo_collection")
 ```
 
-Download data from the cloud services using the ‘remote_download’ function. Replace the pertaining placeholders with your information.
-
 ## Workflow Overview
 
 Consisting of an R package and an R shiny application, this portal was designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a ‘CSV’ or ‘Excel’ file to validate a dataset. The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/www/microplastic_images/One4AllValidator_rules.csv), which is a csv file that contains the following fields: name, description, dataset, valid example, severity, and rule. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 11). 
 
 ![A screenshot showing a subset of the rules sheet applied in the One4All portal, which comprises a total of 165 rules. The validator app includes sample rules, a valid data example, and an invalid data example, all available for users to download and view.\label{fig:example11}](manuscriptimages/One4AllRulesSheet.png)
 
-Start by structuring the configuration file using the template from the [Microplastic Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data (Figure 12).
+Start by structuring the configuration file using the template from the [Microplastic Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data.
 
 ```yaml
 default:
@@ -208,8 +200,6 @@ default:
     tutorial: "https://www.youtube.com/embed/LMpf5-K_tYQ"
     overview: "https://www.youtube.com/embed/GKsoNega7CY"
 ```
-
-Structure the example configuration file using this template from the [Microplastic Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information. If a ‘valid_key’ is added, then a user will need to provide an input key to share their validated data.
 
 Users have the option to work in the validator app or the One4All package. The functionality in the validator app is based on the One4All package (Figure 13). 
 
