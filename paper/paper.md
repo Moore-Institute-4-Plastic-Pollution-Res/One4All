@@ -105,7 +105,7 @@ library(One4All)
 run_app()
 ```
 
-Load the One4All library, then optionally run the app using the ‘run_app()’ function.\label{fig:example6}
+Figure 6: Load the One4All library, then optionally run the app using the ‘run_app()’ function.
 
 Users can validate their data using the ‘validate_data’ function, replacing the parameters with their own information (Figure 7). 
 
@@ -115,7 +115,7 @@ result_valid <- validate_data(files_data = valid_example,
                 file_rules = test_rules)
 ```
 
-![Validate data using the ‘validate_data’ function. Replace ‘files_data’, ‘data_names’, and ‘file_rules’ with your values.\label{fig:example7}](manuscriptimages/One4AllValidateFunction.png)
+Figure 7: Validate data using the ‘validate_data’ function. Replace ‘files_data’, ‘data_names’, and ‘file_rules’ with your values.
 
 To identify errors and warnings, users can use the ‘rules_broken’ function. This function filters the validation results to show only the broken rules, optionally including successful decisions as well (Figure 8).
 
@@ -123,7 +123,7 @@ To identify errors and warnings, users can use the ‘rules_broken’ function. 
 broken_rules <- rules_broken(results, show_decision)
 ```
 
-![Identify errors and warnings using the ‘rules_broken’ function. Replace the ‘results’ and ‘show_decision’ parameters with your values.\label{fig:example8}](manuscriptimages/One4AllBrokenRules.png)
+Figure 8: Identify errors and warnings using the ‘rules_broken’ function. Replace the ‘results’ and ‘show_decision’ parameters with your values.
 
 Once the data are validated, users can share their data to the cloud services using the ‘remote_share’ function, replacing the placeholders with their information (Figure 9). 
 
@@ -149,7 +149,7 @@ shared_data <- remote_share(validation = result_valid,
                 old_cert = NULL)
 ```
 
-![Share your validated data to the cloud services using the ‘remote_share’ function. Ensure that your data are validated before sharing your data. Replace the pertaining placeholders with your information.\label{fig:example9}](manuscriptimages/One4AllRemoteShare.png)
+Figure 9: Share your validated data to the cloud services using the ‘remote_share’ function. Ensure that your data are validated before sharing your data. Replace the pertaining placeholders with your information.
 
 To download data from the cloud services, users can use the ‘remote_download’ function, replacing the placeholders with their information (Figure 10). 
 
@@ -166,7 +166,7 @@ downloaded_data <- remote_download(hashed_data = "example_hash",
                     mongo_collection = "mongo_collection")
 ```
 
-![Download data from the cloud services using the ‘remote_download’ function. Replace the pertaining placeholders with your information.\label{fig:example10}](manuscriptimages/One4AllRemoteDownload.png)
+Figure 10: Download data from the cloud services using the ‘remote_download’ function. Replace the pertaining placeholders with your information.
 
 ## Workflow Overview
 
