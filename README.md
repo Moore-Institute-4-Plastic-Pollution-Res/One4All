@@ -45,7 +45,10 @@ Access the pkgdown and vignettes here: https://moore-institute-4-plastic-polluti
 
 ## Contributing
 
-Contributions to One4All are welcome! Please see the CONTRIBUTING.md file for details on how to contribute to the project.
+Contributions to One4All are welcome!
+
+- Some ideas on [How to Contribute](https://opensource.guide/how-to-contribute/).
+- Please adhere to this project's [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
 
 ## License
 
