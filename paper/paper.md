@@ -98,25 +98,67 @@ Users also have the option to download any previously uploaded data from the clo
 
 ## How to use the package:
 
-To use the One4All package, users will first load the One4All library (Figure 6). The features in the validator app are based on the One4All package functions.
+To use the One4All package, users will first load the One4All library. The features in the validator app are based on the One4All package functions.
 
-![Load the One4All library, then optionally run the app using the ‘run_app()’ function.\label{fig:example6}](manuscriptimages/One4AllRunApp.png)
+Load the One4All library, then optionally run the app using the ‘run_app()’ function.
 
-Users can validate their data using the ‘validate_data’ function, replacing the parameters with their own information (Figure 7). 
+```r
+library(One4All)
+run_app()
+```
 
-![Validate data using the ‘validate_data’ function. Replace ‘files_data’, ‘data_names’, and ‘file_rules’ with your values.\label{fig:example7}](manuscriptimages/One4AllValidateFunction.png)
+Validate data using the ‘validate_data’ function. Replace ‘files_data’, ‘data_names’, and ‘file_rules’ with your values.
 
-To identify errors and warnings, users can use the ‘rules_broken’ function. This function filters the validation results to show only the broken rules, optionally including successful decisions as well (Figure 8).
+```r
+result_valid <- validate_data(files_data = valid_example,
+                data_names = c("methodology", "particles", "samples"),
+                file_rules = test_rules)
+```
 
-![Identify errors and warnings using the ‘rules_broken’ function. Replace the ‘results’ and ‘show_decision’ parameters with your values.\label{fig:example8}](manuscriptimages/One4AllBrokenRules.png)
+Identify errors and warnings using the ‘rules_broken’ function. Replace the ‘results’ and ‘show_decision’ parameters with your values. This function filters the validation results to show only the broken rules, optionally including successful decisions as well.
 
-Once the data are validated, users can share their data to the cloud services using the ‘remote_share’ function, replacing the placeholders with their information (Figure 9). 
+```r
+broken_rules <- rules_broken(results, show_decision)
+```
 
-![Share your validated data to the cloud services using the ‘remote_share’ function. Ensure that your data are validated before sharing your data. Replace the pertaining placeholders with your information.\label{fig:example9}](manuscriptimages/One4AllRemoteShare.png)
+Share your validated data to the cloud services using the ‘remote_share’ function. Ensure that your data are validated before sharing your data. Replace the pertaining placeholders with your information.
 
-To download data from the cloud services, users can use the ‘remote_download’ function, replacing the placeholders with their information (Figure 10). 
+```r
+shared_data <- remote_share(validation = result_valid,
+                data_formatted = result_valid$data_formatted,
+                files = test_file,
+                verified = "your_verified_key",
+                valid_key = "your_valid_key",
+                valid_rules = digest::digest(test_rules),
+                ckan_url = "https://example.com",
+                ckan_key = "your_ckan_key",
+                ckan_package = "your_ckan_package",
+                url_to_send = "https://your-url-to-send.com",
+                rules = test_rules,
+                results = valid_example$results,
+                s3_key_id = "your_s3_key_id",
+                s3_secret_key = "your_s3_secret_key",
+                s3_region = "your_s3_region",
+                s3_bucket = "your_s3_bucket",
+                mongo_key = "your_mongo_key",
+                mongo_collection = "your_mongo_collection",
+                old_cert = NULL)
+```
 
-![Download data from the cloud services using the ‘remote_download’ function. Replace the pertaining placeholders with your information.\label{fig:example10}](manuscriptimages/One4AllRemoteDownload.png)
+Download data from the cloud services using the ‘remote_download’ function. Replace the pertaining placeholders with your information.
+
+```r
+downloaded_data <- remote_download(hashed_data = "example_hash",
+                    ckan_url = "https://example.com",
+                    ckan_key = "your_ckan_key",
+                    ckan_package = "your_ckan_package",
+                    s3_key_id = "your_s3_key_id",
+                    s3_secret_key = "your_s3_secret_key",
+                    s3_region = "your_s3_region",
+                    s3_bucket = "your_s3_bucket",
+                    mongo_key = "mongo_key",
+                    mongo_collection = "mongo_collection")
+```
 
 ## Workflow Overview
 
@@ -124,9 +166,40 @@ Consisting of an R package and an R shiny application, this portal was designed 
 
 ![A screenshot showing a subset of the rules sheet applied in the One4All portal, which comprises a total of 165 rules. The validator app includes sample rules, a valid data example, and an invalid data example, all available for users to download and view.\label{fig:example11}](manuscriptimages/One4AllRulesSheet.png)
 
-Start by structuring the configuration file using the template from the [Microplastic Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data (Figure 12).
+Start by structuring the configuration file using the template from the [Microplastic Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data.
 
-![Structure the example configuration file using this template from the [Microplastic Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information. If a ‘valid_key’ is added, then a user will need to provide an input key to share their validated data.\label{fig:example12}](manuscriptimages/One4AllConfig.png)
+```yaml
+default:
+    # valid_key: "your_valid_key"
+    # valid_rules: "your_valid_rules"
+    # ckan_key: "your_ckan_key"
+    # ckan_url: "your_ckan_url"
+    # ckan_package: "your_ckan_package"
+    # ckan_url_to_send: "your_ckan_url_to_send"
+    portal_name: "One4All"
+    portal_funder_name: !expr shiny::tags$a(href = "https://possibilitylab.berkeley.edu/", "pb Possibility Lab")
+    portal_funder_link: "https://pbs.twimg.com/profile_images/1540022027288924160/bn2627cY_400x400.jpg"
+    # s3_username: "your_s3_username"
+    # s3_key_id: "your_s3_key_id"
+    # s3_secret_key: "your_s3_secret_key"
+    # s3_console_link: "your_s3_console_link"
+    # s3_region: "your_s3_region"
+    # s3_bucket: "your_s3_bucket"
+    # mongo_key: "your_mongo_key"
+    # mongo_collection: "your_mongo_collection"
+    # apiKey: "your_mongo_apikey"
+    rules_to_use: "www/microplastic_images/One4AllValidator_rules.csv"
+    rules_example: "www/microplastic_images/One4AllValidator_rules.csv"
+    valid_data_example: "www/microplastic_images/valid_example.xlsx"
+    invalid_data_example: "www/microplastic_images/invalid_example.xlsx"
+    twitter: "https://twitter.com/Win_OpenData"
+    github:  "https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/validator"
+    license: "https://creativecommons.org/licenses/by/4.0/"
+    contact: "win@mooreplasticresearch.org"
+    dev: TRUE
+    tutorial: "https://www.youtube.com/embed/LMpf5-K_tYQ"
+    overview: "https://www.youtube.com/embed/GKsoNega7CY"
+```
 
 Users have the option to work in the validator app or the One4All package. The functionality in the validator app is based on the One4All package (Figure 13). 
 
