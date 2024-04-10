@@ -49,6 +49,7 @@ Contributions to One4All are welcome!
 
 - Some ideas on [How to Contribute](https://opensource.guide/how-to-contribute/).
 - Please adhere to this project's [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
+- Open an [issue](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/issues) or [pull request](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/pulls) here
 
 ## License
 
