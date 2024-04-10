@@ -53,14 +53,14 @@ affiliations:
    index: 6
  - name: California State Water Resources Control Board, USA
    index: 7
-date: 9 April 2024
+date: 10 April 2024
 bibliography: paper.bib
 
 ---
 
 # Summary
 
-Microplastics are a diverse suite of contaminants [@Rochman:2019] resulting in a variety of data [@Jenkins:2022; @California:2022]. Data sharing is critical to advance science and policy [@Coffin:2023]. The One4All portal was created to standardize and share structured and unstructured microplastic data (and beyond) through validation. Validated data can be automatically uploaded to the following cloud services: Amazon S3, CKAN, and/or MongoDB. One4All is both a graphical user interface (GUI) and an R package and can be used for applications outside of microplastics. While One4All is the general framework, the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml) is a specific implementation of it for microplastics data. This manuscript provides information about the usage, workflow, and configuration of the One4All.
+Microplastics are a diverse suite of contaminants [@Rochman:2019] resulting in a variety of data [@Jenkins:2022; @California:2022]. Data sharing is critical to advance science and policy [@Coffin:2023]. The One4All portal was created to standardize and share structured and unstructured microplastic data (and beyond) through validation. Validated data can be automatically uploaded to the following cloud services: Amazon S3, CKAN, and/or MongoDB. One4All is both a graphical user interface (GUI) and an R package and can be used for applications outside of microplastics. While One4All is the general framework, the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal) is a specific implementation of it tailored to microplastics data. This manuscript provides information about the usage, workflow, and configuration of the One4All, emphasizing its adaptability for diverse purposes.
 
 # Statement of need
 
@@ -76,13 +76,13 @@ A full tutorial video is available on [YouTube](https://www.youtube.com/embed/LM
 
 ## Workflow Overview
 
-Consisting of an R package and an R shiny application, this portal was designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a ‘CSV’ or ‘Excel’ file to validate a dataset. Users have the option to work in the validator app or the One4All package. The functionality in the validator app is based on the One4All package (Figure 13). 
+Consisting of an R package and an R shiny application, this portal was designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a ‘CSV’ or ‘Excel’ file to validate a dataset. Users have the option to work in the validator app or the One4All package. The functionality in the validator app is based on the One4All package (Figure 1). 
 
-![Workflow of the One4All portal. Navigate through the One4All package and the validator app, based on user preference: (https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e).\label{fig:example13}](manuscriptimages/One4AllFlowChart.png)
+![Workflow of the One4All portal. Navigate through the One4All package and the validator app, based on user preference: (https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e).\label{fig:example1}](manuscriptimages/One4AllFlowChart.png)
 
-The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/www/microplastic_images/One4AllValidator_rules.csv), which is a 'CSV' file that contains the following fields: name, description, dataset, valid example, severity, and rule. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 11). 
+The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/www/microplastic_images/One4AllValidator_rules.csv), which is a 'CSV' file that contains the following fields: name, description, dataset, valid example, severity, and rule. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 2). 
 
-![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 165 rules. The validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example11}](manuscriptimages/One4AllRulesSheet.png)
+![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 165 rules. The validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example2}](manuscriptimages/One4AllRulesSheet.png)
 
 The rules sheet and configuration files (explained below) power the application and package functions to validate, share, and download data. 
 
@@ -123,25 +123,25 @@ default:
 
 ## How to use the app:
 
-Users will first validate their data by uploading a ‘CSV’ or ‘Excel’ file, and a corresponding zip folder consisting of the unstructured data (Figure 1). 
+Users will first validate their data by uploading a ‘CSV’ or ‘Excel’ file, and a corresponding zip folder consisting of the unstructured data (Figure 3). 
 
-![Upload data by selecting a ‘CSV’ or ‘Excel’ file and a corresponding zip folder.\label{fig:example1}](manuscriptimages/One4AllUpload.png)
+![Upload data by selecting a ‘CSV’ or ‘Excel’ file and a corresponding zip folder.\label{fig:example3}](manuscriptimages/One4AllUpload.png)
 
-If there are any invalid data, errors and warnings will be highlighted on the following screen. The ‘Issues Raised’ box identifies which fields resulted in an error or warning, along with a description of the error or warning. The ‘Issues Selected’ box identifies which cells were invalid. Correct the invalid data entries and reupload the ‘CSV’ or ‘Excel’ file along with the corresponding zip files (Figure 2).
+If there are any invalid data, errors and warnings will be highlighted on the following screen. The ‘Issues Raised’ box identifies which fields resulted in an error or warning, along with a description of the error or warning. The ‘Issues Selected’ box identifies which cells were invalid. Correct the invalid data entries and reupload the ‘CSV’ or ‘Excel’ file along with the corresponding zip files (Figure 4).
 
-![View any errors and warnings identified here. Errors must be corrected to validate the data, but warnings are allowed. Reupload the files after fixing the errors.\label{fig:example2}](manuscriptimages/One4AllValidate.png)
+![View any errors and warnings identified here. Errors must be corrected to validate the data, but warnings are allowed. Reupload the files after fixing the errors.\label{fig:example4}](manuscriptimages/One4AllValidate.png)
 
-Users have the option to upload their validated data to the previously mentioned cloud services, based on the credentials provided in the configuration file. To share data, provide an input key from the configuration file, if required. Additionally, upload a certificate if updating a previous submission (Figure 3).
+Users have the option to upload their validated data to the previously mentioned cloud services, based on the credentials provided in the configuration file. To share data, provide an input key from the configuration file, if required. Additionally, upload a certificate if updating a previous submission (Figure 5).
 
-![To share the validated data, provide an input key, if required, and click ‘OK’. If this is an update to a previous submission, upload a previous certificate (see Figure 4).\label{fig:example3}](manuscriptimages/One4AllShare.png)
+![To share the validated data, provide an input key, if required, and click ‘OK’. If this is an update to a previous submission, upload a previous certificate (see Figure 6).\label{fig:example5}](manuscriptimages/One4AllShare.png)
 
-Once successfully shared, a confirmation screen will be generated and the data will be uploaded to the appropriate cloud services. Users can then download a certificate at the top right corner to view the credentials of their submission (Figure 4).
+Once successfully shared, a confirmation screen will be generated and the data will be uploaded to the appropriate cloud services. Users can then download a certificate at the top right corner to view the credentials of their submission (Figure 6).
 
-![A screenshot displaying an example of a downloaded certificate, including the downloaded time, the data ID necessary to download this dataset (see Figure 5), the rules ID identifying the set of rules used for this dataset, the package version, and the web hash. The data ID and rules ID are also represented as hashes.\label{fig:example4}](manuscriptimages/One4AllCertificate.png)
+![A screenshot displaying an example of a downloaded certificate, including the downloaded time, the data ID necessary to download this dataset (see Figure 7), the rules ID identifying the set of rules used for this dataset, the package version, and the web hash. The data ID and rules ID are also represented as hashes.\label{fig:example6}](manuscriptimages/One4AllCertificate.png)
 
-Users also have the option to download any previously uploaded data from the cloud services. Users can download one dataset at a time, providing the dataset ID from a downloaded certificate (Figure 5). 
+Users also have the option to download any previously uploaded data from the cloud services. Users can download one dataset at a time, providing the dataset ID from a downloaded certificate (Figure 7). 
 
-![To download the data, provide a dataset ID from the downloaded certificate.\label{fig:example5}](manuscriptimages/One4AllDownload.png)
+![To download the data, provide a dataset ID from the downloaded certificate.\label{fig:example7}](manuscriptimages/One4AllDownload.png)
 
 ## How to use the package:
 
@@ -217,7 +217,7 @@ One4All is published on CRAN and was created in R(4.2.1) [@R:2022] using the fol
 
 # Future Goals
 
-The One4All portal is intended to be useful for users to validate and share their data. Our goal is to promote open-source resources for the public and update the software with other resources that have yet to be implemented. We plan to integrate Open Specy, developed by @Cowger:2021, for users to validate their spectra submissions before submitting to the Open Specy reference library. Additionally, we plan to incorporate the [Data Visualization Tool](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/data_visualization) and the [Microplastic Image Explorer](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/microplastic_image_explorer), both sourced from the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal), to increase discoverability and adhere to FAIR data principles. For the [Data Visualization Tool](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/data_visualization), we intend to utilize an API key generated from the cloud services within the One4All to integrate shared data, enabling the tool to visually represent the shared data through maps, plots, and tables. Our objective for the [Microplastic Image Explorer](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/microplastic_image_explorer) is to validate datasets containing microplastic images before integrating them into the tool’s database. Similarly, we can collect data for Trash AI, a GUI that identifies individual items of trash within images, by validating datasets containing images of trash before uploading them to the GUI [@TrashAI:2023]. Furthermore, we aim to expand our current set of rules by incorporating AI strategies such as ChatGPT [@ChatGPT:2024] to generate rule templates for macroplastics or other pollutants. This will provide users the option to create rule templates using AI strategies as well.
+The One4All portal is intended to be useful for users to validate and share their data. Our goal is to promote open-source resources for the public and update the software with other resources that have yet to be implemented. We plan to integrate Open Specy, developed by @Cowger:2021, for users to validate their spectra submissions before submitting to the Open Specy reference library. Additionally, we plan to incorporate the [Data Visualization Tool](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/data_visualization) and the [Microplastic Image Explorer](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/microplastic_image_explorer), both sourced from the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal), to increase discoverability and adhere to FAIR data principles. For the [Data Visualization Tool](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/data_visualization), we intend to utilize an API key generated from the cloud services within the One4All to integrate shared data, enabling the tool to visually represent the shared data through maps, plots, and tables. Our objective for the [Microplastic Image Explorer](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/microplastic_image_explorer) is to validate datasets containing microplastic images before integrating them into the tool’s database. Similarly, we can collect data for Trash AI, a GUI that identifies individual items of trash within images, by validating datasets containing images of trash before uploading them [@TrashAI:2023]. Furthermore, we aim to expand our current set of rules by incorporating AI strategies such as ChatGPT [@ChatGPT:2024] to generate rule templates for macroplastics or other pollutants. This will provide users the option to create rule templates using AI strategies as well.
 
 # Acknowledgments
 
