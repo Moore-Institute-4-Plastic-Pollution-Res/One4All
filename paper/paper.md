@@ -60,7 +60,7 @@ bibliography: paper.bib
 
 # Summary
 
-Microplastics are a diverse suite of contaminants [@Rochman:2019] resulting in a variety of data [@Jenkins:2022; @California:2022]. Data sharing is critical to advance science and policy [@Coffin:2023]. The One4All portal was created to standardize and share structured and unstructured microplastic data (and beyond) through validation. Validated data can be automatically uploaded to the following cloud services: Amazon S3, CKAN, and/or MongoDB. One4All is both a graphical user interface (GUI) and an R package and can be used for applications outside of microplastics. This manuscript provides information about the usage, workflow, and configuration of the One4All.
+Microplastics are a diverse suite of contaminants [@Rochman:2019] resulting in a variety of data [@Jenkins:2022; @California:2022]. Data sharing is critical to advance science and policy [@Coffin:2023]. The One4All portal was created to standardize and share structured and unstructured microplastic data (and beyond) through validation. Validated data can be automatically uploaded to the following cloud services: Amazon S3, CKAN, and/or MongoDB. One4All is both a graphical user interface (GUI) and an R package and can be used for applications outside of microplastics. While One4All is the general framework, the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml) is a specific implementation of it for microplastics data. This manuscript provides information about the usage, workflow, and configuration of the One4All.
 
 # Statement of need
 
@@ -73,6 +73,53 @@ Several key aspects are required to ensure widespread adoption of a unified data
 A full tutorial video is available on [YouTube](https://www.youtube.com/embed/LMpf5-K_tYQ). For additional instructions, access the pkgdown and vignettes here: (https://moore-institute-4-plastic-pollution-res.github.io/One4All/).
 
 # Method
+
+## Workflow Overview
+
+Consisting of an R package and an R shiny application, this portal was designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a ‘CSV’ or ‘Excel’ file to validate a dataset. Users have the option to work in the validator app or the One4All package. The functionality in the validator app is based on the One4All package (Figure 13). 
+
+![Workflow of the One4All portal. Navigate through the One4All package and the validator app, based on user preference: (https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e).\label{fig:example13}](manuscriptimages/One4AllFlowChart.png)
+
+The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/www/microplastic_images/One4AllValidator_rules.csv), which is a 'CSV' file that contains the following fields: name, description, dataset, valid example, severity, and rule. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 11). 
+
+![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 165 rules. The validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example11}](manuscriptimages/One4AllRulesSheet.png)
+
+The rules sheet and configuration files (explained below) power the application and package functions to validate, share, and download data. 
+
+Structure a configuration file using the template from the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data. 
+
+```yaml
+default:
+    # valid_key: "your_valid_key"
+    # valid_rules: "your_valid_rules"
+    # ckan_key: "your_ckan_key"
+    # ckan_url: "your_ckan_url"
+    # ckan_package: "your_ckan_package"
+    # ckan_url_to_send: "your_ckan_url_to_send"
+    portal_name: "One4All"
+    portal_funder_name: !expr shiny::tags$a(href = "https://possibilitylab.berkeley.edu/", "pb Possibility Lab")
+    portal_funder_link: "https://pbs.twimg.com/profile_images/1540022027288924160/bn2627cY_400x400.jpg"
+    # s3_username: "your_s3_username"
+    # s3_key_id: "your_s3_key_id"
+    # s3_secret_key: "your_s3_secret_key"
+    # s3_console_link: "your_s3_console_link"
+    # s3_region: "your_s3_region"
+    # s3_bucket: "your_s3_bucket"
+    # mongo_key: "your_mongo_key"
+    # mongo_collection: "your_mongo_collection"
+    # apiKey: "your_mongo_apikey"
+    rules_to_use: "www/microplastic_images/One4AllValidator_rules.csv"
+    rules_example: "www/microplastic_images/One4AllValidator_rules.csv"
+    valid_data_example: "www/microplastic_images/valid_example.xlsx"
+    invalid_data_example: "www/microplastic_images/invalid_example.xlsx"
+    twitter: "https://twitter.com/Win_OpenData"
+    github:  "https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/validator"
+    license: "https://creativecommons.org/licenses/by/4.0/"
+    contact: "win@mooreplasticresearch.org"
+    dev: TRUE
+    tutorial: "https://www.youtube.com/embed/LMpf5-K_tYQ"
+    overview: "https://www.youtube.com/embed/GKsoNega7CY"
+```
 
 ## How to use the app:
 
@@ -98,9 +145,9 @@ Users also have the option to download any previously uploaded data from the clo
 
 ## How to use the package:
 
-To use the One4All package, users will first load the One4All library. The features in the validator app are based on the One4All package functions.
+The features in the validator app are based on the One4All package functions. The overarching goal of providing the package functions is to allow users the option of working in the application and/or the package and to allow the functions to be reused in contexts beyond the scope of One4All for the user's purposes.
 
-Load the One4All library, then optionally run the app using the ‘run_app()’ function.
+First, load the One4All library, then optionally run the app using the ‘run_app()’ function.
 
 ```r
 library(One4All)
@@ -159,51 +206,6 @@ downloaded_data <- remote_download(hashed_data = "example_hash",
                     mongo_key = "mongo_key",
                     mongo_collection = "mongo_collection")
 ```
-
-## Workflow Overview
-
-Consisting of an R package and an R shiny application, this portal was designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a ‘CSV’ or ‘Excel’ file to validate a dataset. The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/www/microplastic_images/One4AllValidator_rules.csv), which is a csv file that contains the following fields: name, description, dataset, valid example, severity, and rule. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 11). 
-
-![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 165 rules. The validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example11}](manuscriptimages/One4AllRulesSheet.png)
-
-Start by structuring the configuration file using the template from the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data.
-
-```yaml
-default:
-    # valid_key: "your_valid_key"
-    # valid_rules: "your_valid_rules"
-    # ckan_key: "your_ckan_key"
-    # ckan_url: "your_ckan_url"
-    # ckan_package: "your_ckan_package"
-    # ckan_url_to_send: "your_ckan_url_to_send"
-    portal_name: "One4All"
-    portal_funder_name: !expr shiny::tags$a(href = "https://possibilitylab.berkeley.edu/", "pb Possibility Lab")
-    portal_funder_link: "https://pbs.twimg.com/profile_images/1540022027288924160/bn2627cY_400x400.jpg"
-    # s3_username: "your_s3_username"
-    # s3_key_id: "your_s3_key_id"
-    # s3_secret_key: "your_s3_secret_key"
-    # s3_console_link: "your_s3_console_link"
-    # s3_region: "your_s3_region"
-    # s3_bucket: "your_s3_bucket"
-    # mongo_key: "your_mongo_key"
-    # mongo_collection: "your_mongo_collection"
-    # apiKey: "your_mongo_apikey"
-    rules_to_use: "www/microplastic_images/One4AllValidator_rules.csv"
-    rules_example: "www/microplastic_images/One4AllValidator_rules.csv"
-    valid_data_example: "www/microplastic_images/valid_example.xlsx"
-    invalid_data_example: "www/microplastic_images/invalid_example.xlsx"
-    twitter: "https://twitter.com/Win_OpenData"
-    github:  "https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/validator"
-    license: "https://creativecommons.org/licenses/by/4.0/"
-    contact: "win@mooreplasticresearch.org"
-    dev: TRUE
-    tutorial: "https://www.youtube.com/embed/LMpf5-K_tYQ"
-    overview: "https://www.youtube.com/embed/GKsoNega7CY"
-```
-
-Users have the option to work in the validator app or the One4All package. The functionality in the validator app is based on the One4All package (Figure 13). 
-
-![Workflow of the One4All portal. Navigate through the One4All package and the validator app, based on user preference: (https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e).\label{fig:example13}](manuscriptimages/One4AllFlowChart.png)
 
 ## Limitations:
 
