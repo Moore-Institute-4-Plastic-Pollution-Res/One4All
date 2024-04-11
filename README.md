@@ -1,4 +1,4 @@
-# **One4All** <a href="https://moore-institute-4-plastic-pollution-res.github.io/One4All/"><img src="man/One4All.png" alt="One4All logo" align="right" style="height: 140px;"/></a>
+# **One4All** <a href="https://moore-institute-4-plastic-pollution-res.github.io/One4All/"><img src="figures/One4All.png" alt="One4All logo" align="right" style="height: 140px;"/></a>
 
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All)
