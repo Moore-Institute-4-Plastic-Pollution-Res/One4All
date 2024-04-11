@@ -1273,5 +1273,5 @@ run_app <- function(path = "system", log = TRUE, ref = "main",
     
     options(shiny.logfile = log)
     if(!test_mode)
-        runGitHub("Microplastic_Data_Portal", "Moore-Institute-4-Plastic-Pollution-Res", subdir = "code/validator")
+        runGitHub("One4All", "Moore-Institute-4-Plastic-Pollution-Res", subdir = "code/validator")
 }
