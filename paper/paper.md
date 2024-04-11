@@ -80,13 +80,13 @@ Consisting of an R package and an R shiny application, this portal was designed 
 
 ![Workflow of the One4All portal. Navigate through the One4All package and the validator app, based on user preference: (https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e).\label{fig:example1}](manuscriptimages/One4AllFlowChart.png)
 
-The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/www/microplastic_images/One4AllValidator_rules.csv), which is a 'CSV' file that contains the following fields: name, description, dataset, valid example, severity, and rule. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 2). 
+The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/www/microplastic_images/One4AllValidator_rules.csv), which is a 'CSV' file that contains the following fields: name, description, dataset, valid example, severity, and rule. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 2). 
 
 ![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 165 rules. The validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example2}](manuscriptimages/One4AllRulesSheet.png)
 
 The rules sheet and configuration files (explained below) power the application and package functions to validate, share, and download data. 
 
-Structure a configuration file using the template from the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data. 
+Structure a configuration file using the template from the [One4All](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data. 
 
 ```yaml
 default:
