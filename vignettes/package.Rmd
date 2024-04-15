@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 ## Document Overview
 
-This document outlines the One4All package and highlights the main functions to validate data without using the validator app. It is the user's choice whether to work in the validator app or to use the One4All package. After reading this document, users will have a better understanding of the One4All package development and the main functions to validate and share data. To access the One4All package, go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) and link it directly to your own device in R.
+This document outlines the One4All package and highlights the main functions to validate data without using the validator app. It is the user's choice whether to work in the validator app or to use the One4All package. After reading this document, users will have a better understanding of the One4All package development and the main functions to validate, share, and download data. To access the One4All package, go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) and link it directly to your own device in R.
 
 The One4All package is the backbone of the validator app. If you are looking for a tutorial on how to use the app see the [Validator App Tutorial](app.html).
 
@@ -30,29 +30,26 @@ After installing the R package, read in the following library:
 library(One4All)
 ```
 
-To run the app, run the command `run_app()`.
+To run the app, run the command `run_app()`:
 ```{r, eval=FALSE}
 run_app()
 ```
 
 ## Validate Data: Reading and Formatting Data
 
-The function below validates data using the One4All package. Replace the four parameters defined below with your actual values or file paths. The `'data_names'` should be replaced with the tables from the rules sheet.
+The function below validates data using the One4All package. Replace the parameters defined below with your actual values or file paths. The `'data_names'` should be replaced with the tables from the rules sheet.
 
-**`'files_data'`**: A list of file paths for the datasets to be validated (either CSV or XLSX files).
+**`'files_data'`**: A list of file paths for the dataset to be validated (either 'CSV' or 'Excel' files).
 
 **`'data_names'`**: (Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths. `'(ex. methodology, samples, particles)'`
 
 **`'file_rules'`**: A file path for the rules file, either in CSV or XLSX format.
 
-**`'zip_data'`**: A file path to a zip folder for validating unstructured data.
-
 ```{r, eval=FALSE}
 validate_data(
   files_data,
   data_names = NULL,
-  file_rules = NULL,
-  zip_data = NULL
+  file_rules = NULL
 )
 ```
 
@@ -66,7 +63,7 @@ check_for_malicious_files(files)
 
 #### Read rules
 
-The function below reads rules from a file or a data frame. Acceptable file formats are CSV or XLSX files.
+The function below reads rules from a file or a data frame. Acceptable file formats are 'CSV' or 'Excel' files.
 
 ```{r, eval=FALSE}
 read_rules(file_rules)
@@ -74,7 +71,7 @@ read_rules(file_rules)
 
 #### Read data
 
-The function reads and formats data from CSV or XLSX files. The argument, `'files_data'`, is the list of files to be read, and `'data_names'`, is the optional vector of names for the data frames.
+The function reads and formats data from 'CSV' or 'Excel' files. The argument, `'files_data'`, is the list of files to be read, and `'data_names'`, is the optional vector of names for the data frames.
 
 ```{r, eval=FALSE}
 read_data(files_data, data_names = NULL)
@@ -82,10 +79,7 @@ read_data(files_data, data_names = NULL)
 
 ## Where is this data shared?
 
-One4All allows users to not only validate their data, but to share their data as well, promoting open-source resources. The purpose of this section is to provide background information on how and where the data is sent. 
-
-
-In the One4All package, the remote share function shares the validated data to three remote repositories, including MongoDB, CKAN, and/or AmazonS3. The purpose of having three options is for user preference on where to share their data: 
+In the One4All package, the `'remote share'` function shares the validated data to MongoDB, CKAN, and/or AmazonS3. The purpose of having three options is for user preference on where to share their data: 
 
 
 **MongoDB** is a NoSQL database that stores data in BSON format, allowing for flexible data structures.
@@ -120,7 +114,7 @@ shared_data <- remote_share(validation = result_valid,
 
 ## How is the data downloaded?
 
-The `'remote_download'` function from the One4All package allows users to download shared data from MongoDB, CKAN, and/or AmazonS3. The data is retrieved based on the `'hashed_data'` identifier and assumes the data is stored using the same naming conventions provided in the `'remote_share'` function.
+The `'remote_download'` function allows users to download data from MongoDB, CKAN, and/or AmazonS3. The data is retrieved based on the `'hashed_data'` identifier (the dataset ID from a downloaded certificate) and assumes the data is stored using the same naming conventions provided in the `'remote_share'` function.
 
 The `'remote_download'` function is shown below.
 ```{r, eval=FALSE}
