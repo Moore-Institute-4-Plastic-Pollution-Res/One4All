@@ -53,14 +53,14 @@ affiliations:
    index: 6
  - name: California State Water Resources Control Board, USA
    index: 7
-date: 10 April 2024
+date: 15 April 2024
 bibliography: paper.bib
 
 ---
 
 # Summary
 
-Microplastics are a diverse suite of contaminants [@Rochman:2019] resulting in a variety of data [@Jenkins:2022; @California:2022]. Data sharing is critical to advance science and policy [@Coffin:2023]. The One4All portal was created to standardize and share structured and unstructured microplastic data (and beyond) through validation. Validated data can be automatically uploaded to the following cloud services: Amazon S3, CKAN, and/or MongoDB. One4All is both a graphical user interface (GUI) and an R package and can be used for applications outside of microplastics. This manuscript provides information about the usage, workflow, and configuration of the One4All, emphasizing its adaptability for diverse purposes.
+Microplastics are a diverse suite of contaminants [@Rochman:2019] resulting in a variety of data [@Jenkins:2022; @California:2022]. Data sharing is critical to advance science and policy [@Coffin:2023]. The One4All portal was created to standardize and share structured and unstructured microplastic data (and beyond) through validation. Validated data can be automatically uploaded to the following cloud services: Amazon S3, CKAN, and/or MongoDB. One4All is both a graphical user interface (GUI) and an R package and can be used for applications outside of microplastics. This manuscript provides information about the usage, workflow, and configuration of One4All, emphasizing its adaptability for diverse purposes.
 
 # Statement of need
 
@@ -86,7 +86,7 @@ The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4
 
 The rules sheet and configuration files (explained below) power the application and package functions to validate, share, and download data. 
 
-Structure a configuration file using the template from the [One4All](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/example_config.yml). Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data. 
+Structure a [configuration file](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/example_config.yml) using the template from the One4All portal. Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data. 
 
 ```yaml
 default:
@@ -141,7 +141,7 @@ Once successfully shared, a confirmation screen will be generated and the data w
 
 Users also have the option to download any previously uploaded data from the cloud services. Users can download one dataset at a time, providing the dataset ID from a downloaded certificate (Figure 7). 
 
-![To download the data, provide a dataset ID from the downloaded certificate.\label{fig:example7}](manuscriptimages/One4AllDownload.png)
+![To download data, provide the dataset ID from a downloaded certificate.\label{fig:example7}](manuscriptimages/One4AllDownload.png)
 
 ## How to use the package:
 
