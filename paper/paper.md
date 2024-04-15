@@ -84,7 +84,7 @@ The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4
 
 ![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 165 rules. The validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example2}](manuscriptimages/One4AllRulesSheet.png)
 
-The rules sheet and configuration files (explained below) power the application and package functions to validate, share, and download data. 
+The rules sheet and configuration file (explained below) power the application and package functions to validate, share, and download data. 
 
 Structure a [configuration file](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/example_config.yml) using the template from the One4All portal. Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data. 
 
@@ -127,7 +127,7 @@ Users will first validate their data by uploading a ‘CSV’ or ‘Excel’ fil
 
 ![Upload data by selecting a ‘CSV’ or ‘Excel’ file and a corresponding zip folder.\label{fig:example3}](manuscriptimages/One4AllUpload.png)
 
-If there are any invalid data, errors and warnings will be highlighted on the following screen. The ‘Issues Raised’ box identifies which fields resulted in an error or warning, along with a description of the error or warning. The ‘Issues Selected’ box identifies which cells were invalid. Correct the invalid data entries and reupload the ‘CSV’ or ‘Excel’ file along with the corresponding zip files (Figure 4).
+If there are any invalid data, errors and warnings will be highlighted on the following screen. The ‘Issues Raised’ box identifies which fields resulted in an error or warning, along with a description of the error or warning. The ‘Issues Selected’ box identifies which cells were invalid. Correct the invalid data entries and reupload the ‘CSV’ or ‘Excel’ file along with the corresponding zip folder (Figure 4).
 
 ![View any errors and warnings identified here. Errors must be corrected to validate the data, but warnings are allowed. Reupload the files after fixing the errors.\label{fig:example4}](manuscriptimages/One4AllValidate.png)
 
@@ -135,7 +135,7 @@ Users have the option to upload their validated data to the previously mentioned
 
 ![To share the validated data, provide an input key, if required, and click ‘OK’. If this is an update to a previous submission, upload a previous certificate (see Figure 6).\label{fig:example5}](manuscriptimages/One4AllShare.png)
 
-Once successfully shared, a confirmation screen will be generated and the data will be uploaded to the appropriate cloud services. Users can then download a certificate at the top right corner to view the credentials of their submission (Figure 6).
+Once successfully shared, a confirmation screen will be generated and the data will be uploaded to the appropriate cloud services. Users can download a certificate at the top right corner to view the credentials of their submission (Figure 6).
 
 ![A screenshot displaying an example of a downloaded certificate, including the downloaded time, the data ID necessary to download this dataset (see Figure 7), the rules ID identifying the set of rules used for this dataset, the package version, and the web hash. The data ID and rules ID are also represented as hashes.\label{fig:example6}](manuscriptimages/One4AllCertificate.png)
 
