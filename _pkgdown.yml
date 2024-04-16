@@ -72,7 +72,7 @@ reference:
   - '`remote_raw_download`'
   - '`remote_share`'
 - title: <b>Rules</b>
-  desc: All functions for rules
+  desc: All functions for rules.
   contents:
   - '`rows_for_rules`'
   - '`rules_broken`'
@@ -80,7 +80,7 @@ reference:
   - '`reformat_rules`'
   - '`read_rules`'
 - title: <b>Data</b>
-  desc: All functions for data
+  desc: All functions for data.
   contents:
   - '`certificate_df`'
   - '`create_valid_excel`'

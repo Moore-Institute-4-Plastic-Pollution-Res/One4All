@@ -23,7 +23,7 @@ This document outlines a workflow to utilize the validator app from the Micropla
 
 ## Background: Rules
 
-There is an existing set of rules created in 'Excel' that is applied to the app and package prior to user usage. The rules are used to validate the data once uploaded. The current rules sheet consists of six columns, including name, description, dataset, valid example, severity, and the rule itself (see below for more details). However, users can structure their own rules sheet to meet their own purposes. Download the sample rules under the '_Help' tab in the validator app to view the current example rules.
+There is an existing set of rules created in 'Excel' that is applied to the app and package prior to user usage. The rules are used to validate the data once uploaded. The current rules sheet consists of six columns, including name, description, dataset, valid example, severity, and the rule itself (see below for more details). However, users can structure their own rules sheet to meet their own purposes. Download the sample rules under the `'_Help'` tab in the validator app to view the current example rules.
 
 **Name:** The name of the row. `'(ex. Amount)'`
 
