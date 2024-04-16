@@ -43,7 +43,7 @@ The function below validates data using the One4All package. Replace the paramet
 
 **`'data_names'`**: (Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths. `'(ex. methodology, samples, particles)'`
 
-**`'file_rules'`**: A file path for the rules file, either in CSV or XLSX format.
+**`'file_rules'`**: A file path for the rules file, either in 'CSV' or 'Excel' format.
 
 ```{r, eval=FALSE}
 validate_data(
