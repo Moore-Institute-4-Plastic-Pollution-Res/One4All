@@ -26,11 +26,11 @@ function(request) {
                 tabName = "about",
                 icon = icon("sliders-h")
             ),
-            menuItem(
-              "Submission Guidelines",
-              tabName = "item4",
-              icon = icon("chalkboard")
-            ),
+            #menuItem(
+            #  "Submission Guidelines",
+            #  tabName = "item4",
+            #  icon = icon("chalkboard")
+            #),
             menuItem(
                 "Help",
                 tabName = "help",
@@ -102,9 +102,9 @@ function(request) {
                     uiOutput("error_query"),
                     uiOutput("dev_options")
             ),
-            tabItem(tabName = "item4",
-                    includeMarkdown("www/datainstructions.md")
-            ),
+            #tabItem(tabName = "item4",
+            #        includeMarkdown("www/datainstructions.md")
+            #),
             tabItem(
                 tabName = "downloader",
                 popover(textInput(inputId = "download_id", label = "A Dataset ID"),
@@ -140,21 +140,22 @@ function(request) {
                             title = "Download invalid example data",
                             content = "This is an example file that can be used in tandem with the example rules file to test out the tool for its performance with a dataset that isn't 100% validated."
                         ),
+                        p(),
                         tags$li("Uploaded the data and rules file on the validator tab. NOTE: If using the examples you will need to first unzip them."),
                         tags$image(src = "upload.png", width = "50%"),
-                        br(),
+                        p(),
                         tags$li("If your data is validated a popup will appear to input your credentials and then click ok. If this is a resubmission, upload a previous certificate to override the previous submission."),
                         tags$image(src = "popup.png", width = "50%"),
-                        br(),
+                        p(),
                         tags$li("If your data is validated you may download a certificate. The certificate is proof of your submission and will allow you to update the submission. This should always be saved for any submitted data."),
                         tags$image(src = "download.png", width = "50%"),
-                        br(),
+                        p(),
                         tags$li("In the event of invalidated data, the box for the file with issues to be resolved will be red, there will be an indication of the number of rules that were successful, had warnings, or had errors. Only errors need to be resolved for the validation to be successful."),
                         tags$image(src = "error.png", width = "50%"),
-                        br(),
+                        p(),
                         tags$li("You can click on any of the descriptions in the 'Issues Raised' panel to display the rows where the issue was found in the 'Issues Selected' panel."),
                         tags$image(src = "issueselection.png", width = "50%"),
-                        br(),
+                        p(),
                         tags$li("The 'Issues Raised' and 'Issue Selected' data sheets may be copied, or downloaded as CSV, Excel, or PDF."),
                         tags$image(src = "issuedownload.png", width = "50%")
                     ),
