@@ -122,41 +122,43 @@ function(request) {
                 ),
                 box(
                     title = "Instructions and Examples",
-                    p("Both the data and rules files must be in .csv or .xlsx format. Examples for how to structure and query the data and rules can be found below:"),
-                    popover(
-                        downloadButton("download_rules", "Download Sample Rules", style = "background-color: #2a9fd6;"),
-                        title = "Download rules file",
-                        content = "This is an example file that can be used in tandem with the valid or invalid data files to test out the tool."
-                    ),
-                    popover(
-                        downloadButton("download_good_sample", "Download Valid Sample Data", style = "background-color: #28a745;"),
-                        title = "Download valid example data",
-                        content = "This is an example file that can be used in tandem with the example rules file to test out the tool for its performance with a dataset that is 100% validated."
-                    ),
-                    popover(
-                        downloadButton("download_sample", "Download Invalid Sample Data", style = "background-color: #e4606d;"), 
-                        title = "Download invalid example data",
-                        content = "This is an example file that can be used in tandem with the example rules file to test out the tool for its performance with a dataset that isn't 100% validated."
-                    ),
                     br(),
                     tags$ol(
-                        tags$li("Uploaded the data and rules file on the validator tab."),
+                        tags$li("Both the data and rules files must be in .csv or .xlsx format. Examples for how to structure and query the data and rules can be found below:"),
+                        popover(
+                            downloadButton("download_rules", "Download Sample Rules", style = "background-color: #2a9fd6;"),
+                            title = "Download rules file",
+                            content = "This is an example file that can be used in tandem with the valid or invalid data files to test out the tool."
+                        ),
+                        popover(
+                            downloadButton("download_good_sample", "Download Valid Sample Data", style = "background-color: #28a745;"),
+                            title = "Download valid example data",
+                            content = "This is an example file that can be used in tandem with the example rules file to test out the tool for its performance with a dataset that is 100% validated."
+                        ),
+                        popover(
+                            downloadButton("download_sample", "Download Invalid Sample Data", style = "background-color: #e4606d;"), 
+                            title = "Download invalid example data",
+                            content = "This is an example file that can be used in tandem with the example rules file to test out the tool for its performance with a dataset that isn't 100% validated."
+                        ),
+                        tags$li("Uploaded the data and rules file on the validator tab. NOTE: If using the examples you will need to first unzip them."),
                         tags$image(src = "upload.png", width = "50%"),
-                        tags$li("If your data is valid a popup will appear that allows you to upload to a remote repository if you have a key."),
+                        tags$li("If your data is validated a popup will appear to input your credentials and then click ok. If this is a resubmission, upload a previous certificate to override the previous submission."),
                         tags$image(src = "popup.png", width = "50%"),
-                        tags$li("If your data is valid you may download a certificate, this is saved on our end too to prove the event occured."),
+                        tags$li("If your data is validated you may download a certificate. The certificate is proof of your submission and will allow you to update the submission. This should always be saved for any submitted data."),
                         tags$image(src = "download.png", width = "50%"),
-                        tags$li("In the event of invalid data, the description of the issue(s) to be resolved and severity will be displayed in the 'Issues Raised' panel."),
+                        tags$li("In the event of invalidated data, the description of the issue(s) to be resolved and severity will be displayed in the 'Issues Raised' panel."),
                         tags$image(src = "error.png", width = "50%"),
-                        tags$li("You can click on any of the descriptions to display the rows where the issue was found in the 'Issues Selected' panel."),
-                        tags$li("The 'Issues Raised' and 'Issue Selected' data sheets may be copied, or downloaded as CSV, Excel, or PDF.")
+                        tags$li("You can click on any of the descriptions in the 'Issues Raised' panel to display the rows where the issue was found in the 'Issues Selected' panel."),
+                        tags$image(src = "issueselection.png", width = "50%"),
+                        tags$li("The 'Issues Raised' and 'Issue Selected' data sheets may be copied, or downloaded as CSV, Excel, or PDF."),
+                        tags$image(src = "issuedownload.png", width = "50%")
                     ),
                     width = 12
                 ),
                 box(
                     title = "FAQs",
                     strong("Where is my data going?"),
-                    p("Links shared in this tool for upload will be added to an S3 bucket to test that they are able to be downloaded. Data will not be shared externally unless you specify the data can be shared by inputting the security key."),
+                    p("Data will not be shared externally unless you specify the data can be shared by inputting the security key. If a key is input, the data will go to one or more of MongoDB, CKAN, and/or S3."),
                     strong("Is this open source web tool secure?"),
                     p("The validator app is https encrypted and the source code is available on GitHub for security review."),
                     width = 12
@@ -166,7 +168,7 @@ function(request) {
                     p("Have any additional questions or concerns? Email us using the link below:"),
                     HTML(paste0('<a class="btn btn-info" href = "mailto:', config$contact, '" role = "button" >Contact Us</a>')),
                     p("Please include in your email:"),
-                    p ("(1) What should the app be doing?"),
+                    p ("(1) What do you think the app should be doing?"),
                     p ("(2) What is the app doing instead?"),
                     width = 12
                 )
