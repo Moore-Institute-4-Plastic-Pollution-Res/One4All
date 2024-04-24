@@ -3,7 +3,8 @@
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All)
 [![R-CMD-check](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/actions/workflows/R-CMD-check.yaml)
-[![License: MIT](https://img.shields.io/badge/license-CC%20BY%204.0-lightblue)](https://opensource.org/license/mit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-lightblue
+)](https://opensource.org/license/mit)
 [![Website](https://img.shields.io/badge/web-openanalysis.org-white)](https://openanalysis.org/one4all)
 <!-- badges: end -->
 
