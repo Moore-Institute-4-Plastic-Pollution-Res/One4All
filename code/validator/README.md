@@ -1,6 +1,6 @@
 # Validator Tool <a href="https://openanalysis.org/one4all"><img src="man/Validatorhex.png" alt="Validator Tool logo" align="right" style="height: 140px;"/></a>
 
-[![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All) [![Website](https://img.shields.io/badge/web-openanalysis.org-white)](https://openanalysis.org/one4all)
+[![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All) [![Website](https://img.shields.io/badge/web-openanalysis.org-white)](https://openanalysis.org/microplastic_data_portal/)
 
 # Description
 
@@ -17,7 +17,7 @@ Funded by the National Renewable Energy Laboratory and Possibility Lab, maintain
   library(One4All)
 ```
 
--   or use the web app: [openanalysis.org/one4all/](https://openanalysis.org/one4all/)
+-   or use the web app: [openanalysis.org/one4all/](https://openanalysis.org/microplastic_data_portal/)
 
 -   The code for the app is in [ui.R](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/ui.R), [server.R](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/server.R), and [global.R](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/global.R)
 
