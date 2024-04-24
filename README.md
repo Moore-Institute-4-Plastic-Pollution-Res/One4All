@@ -5,7 +5,7 @@
 [![R-CMD-check](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/actions/workflows/R-CMD-check.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-lightblue
 )](https://opensource.org/license/mit)
-[![Website](https://img.shields.io/badge/web-openanalysis.org-white)](https://openanalysis.org/one4all)
+[![Website](https://img.shields.io/badge/web-openanalysis.org-white)](https://openanalysis.org/microplastic_data_portal/)
 <!-- badges: end -->
 
 ## Overview
