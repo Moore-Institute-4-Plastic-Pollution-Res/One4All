@@ -54,4 +54,4 @@ Contributions to One4All are welcome!
 
 ## License
 
-One4All is released under the CC by 4.0. Please see the license file for more information. 
+One4All is released under the MIT License. Please see the license file for more information. 
