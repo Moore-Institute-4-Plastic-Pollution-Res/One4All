@@ -26,6 +26,11 @@ SpikedRecovery,SpikedRecovery should describe the percentage of particles recove
 SpikedRecovery_cv,SpikedRecoveryCV should describe the coefficient of variation for the SpikedRecovery estimate between 0 and 100,methodology,80,error,"in_range(SpikedRecoveryCV, min = 0, max = 100)"
 Blank_contamination,BlankContamination should describe the MDL for the method,methodology,10,error,BlankContamination >= 3
 MethodologyComments,Any comments about the methodology,methodology,Captured 'left' and 'right' images for each sample on the FTIR for a larger range,error,!is.na(MethodologyComments) | is.na(MethodologyComments)
+DigestionSolutionComposition,Composition of digestion solution used,methodology,KOH,error,!is.na(DigestionSolutionComposition)
+DigestionConcentration,Concentration of digestion solution used (%),methodology,20,error,is.numeric(DigestionConcentration)
+DigestionTemperature,Provide the average temperature during digestion (indicate C or F),methodology,75 F,error,!is.na(DigestionTemperature)
+DensitySeparationDensity,Density during separation density,methodology,1,error,!is.na(DensitySeparationDensity)
+DensitySeparationComposition,Composition of density separation,methodology,NaCl,error,!is.na(DensitySeparationComposition)
 ParticleID_blank,Unique ID for each particle cannot be blank,particles,1_23jreh334,error,!is.na(ParticleID)
 ParticleID,Unique ID for each particle must be unique to each sample id,particles,1_23jreh334,error,"is_unique(ParticleID, SampleID, PhotoID)"
 particle_methodologyID_fk,Online identifier for methodology needs to be a foreign key,particles,https://www.waterboards.ca.gov/drinking_water/certlic/drinkingwater/documents/microplastics/mcrplsts_plcy_drft.pdf,error,is_foreign_key(MethodologyID)
@@ -72,4 +77,5 @@ Matrix,Matrix must be one of the allowed values,samples,Drinking Water,error,"Ma
 SiteName,SiteName should describe the site with a name relevant to the project and should not be NA,samples,Riverside County Water Municipality,error,!is.na(SiteName)
 Sample_spatial,Spatial file for where the samples were collected should be a geojson file.,samples,points.kml,warning,check_exists_in_zip(SpatialFile)
 method_file_samples,Methodology file is valid and exists in the zip. ,samples,mcrplsts_plcy_drft.pdf,error,check_exists_in_zip(MethodologyIDFile)
+SampleApparatus,"Sample apparatus must be one of Sieving, Grabbing, or In-Line Filtration",samples,Sieving,error,"SampleApparatus %in% c(""Sieving"", ""Grabbing"", ""In-Line Filtration"")"
 SampleComments,Any comments about the sample analysis,samples,N/A,error,!is.na(SampleComments) | is.na(SampleComments)
