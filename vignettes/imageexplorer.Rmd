@@ -1,10 +1,10 @@
 ---
-title: "Microplastic Image Explorer"
+title: "Microplastic Image Explorer Tutorial"
 author: "Hannah Sherrod, Win Cowger"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Image Explorer Tutorial}
+  %\VignetteIndexEntry{Microplastic Image Explorer Tutorial}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
