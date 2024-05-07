@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">One4All</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown--articles">
     <a class="dropdown-item" href="articles/app.html">Validator App Tutorial</a>
     <a class="dropdown-item" href="articles/package.html">One4All Package Tutorial</a>
+    <a class="dropdown-item" href="articles/imageexplorer.html">Microplastic Image Explorer Tutorial</a>
+    <a class="dropdown-item" href="articles/datavisualization.html">Data Visualization Tutorial</a>
   </div>
 </li>
       </ul>
@@ -86,31 +88,49 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="one4all">
-<strong>One4All</strong><a class="anchor" aria-label="anchor" href="#one4all"></a>
+<div class="page-header"><h1 id="one4all-">
+<strong>One4All</strong> <a href="https://moore-institute-4-plastic-pollution-res.github.io/One4All/"><img src="reference/figures/One4All.png" alt="One4All logo" align="right" style="height: 140px;"></a>
+<a class="anchor" aria-label="anchor" href="#one4all-"></a>
 </h1></div>
-<p>R package for data validation and visualization with a focus on microplastic data.</p>
+<!-- badges: start -->
+
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The One4All package is an R package designed to streamline data validation and formatting tasks. Its primary function is to read a set of rules from a CSV or Excel file and apply them to datasets.</p>
-<p>The package also helps in creating valid Excel files with conditional formatting based on specified rules, making it easier to identify and manage inconsistencies in data. Overall, the One4All package aims to enhance data validation and management processes for a more efficient and accurate workflow.</p>
+<p>The One4All portal was designed to streamline data validation and formatting tasks. Its primary function is to read a set of rules from a ‘CSV’ or ‘Excel’ file to validate a dataset.</p>
+<p>The package functions and shiny application also helps in creating valid ‘Excel’ files with conditional formatting based on specified rules, making it easier to identify and manage inconsistencies in data. Overall, the One4All portal aims to enhance data validation and management processes for a more efficient and accurate workflow.</p>
+<p>Users have the option to work in the R shiny application or the R package. The functionality in the validator app is based on the One4All package.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<div class="section level4">
-<h4 id="if-you-dont-have-the-remotes-package-installed-first-run">If you don’t have the remotes package installed, first run:<a class="anchor" aria-label="anchor" href="#if-you-dont-have-the-remotes-package-installed-first-run"></a>
-</h4>
+<p><strong>One4All</strong> is available from CRAN and GitHub.</p>
+<div class="section level3">
+<h3 id="get-the-released-version-from-cran">Get the released version from CRAN:<a class="anchor" aria-label="anchor" href="#get-the-released-version-from-cran"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"One4All"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="or-the-development-version-from-github">Or the development version from GitHub:<a class="anchor" aria-label="anchor" href="#or-the-development-version-from-github"></a>
+</h3>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Moore-Institute-4-Plastic-Pollution-Res/One4All"</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level3">
+<h3 id="access-the-validator-tool-below">Access the validator tool below:<a class="anchor" aria-label="anchor" href="#access-the-validator-tool-below"></a>
+</h3>
+<ul>
+<li><p>Click here for the web app: <a href="https://openanalysis.org/microplastic_data_portal/" class="external-link">openanalysis.org/microplastic_data_portal/</a>.</p></li>
+<li><p>The code for the app is in <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/code/validator" class="external-link">code/validator</a></p></li>
+</ul>
+</div>
 </div>
 <div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">One4All</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -121,12 +141,17 @@
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
-<p>Contributions to One4All are welcome! Please see the CONTRIBUTING.md file for details on how to contribute to the project.</p>
+<p>Contributions to One4All are welcome!</p>
+<ul>
+<li>Some ideas on <a href="https://opensource.guide/how-to-contribute/" class="external-link">How to Contribute</a>.</li>
+<li>Please adhere to this project’s <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/" class="external-link">Code of Conduct</a>.</li>
+<li>Open an <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/issues" class="external-link">issue</a> or <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/pulls" class="external-link">pull request</a> here.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
 </h2>
-<p>One4All is released under the CC by 4.0. Please see the license file for more information.</p>
+<p>One4All is released under the MIT License. Please see the license file for more information.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="github">
@@ -148,8 +173,8 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://creativecommons.org/licenses/by/4.0" class="external-link">CC BY 4.0</a></small></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> License</li>
 </ul>
 </div>
 
@@ -174,7 +199,15 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://CRAN.R-project.org/package=One4All" class="external-link"><img src="https://www.r-pkg.org/badges/version/One4All" alt="CRAN version"></a></li>
+<li><a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://opensource.org/license/mit" class="external-link"><img src="https://img.shields.io/badge/License-MIT-lightblue" alt="License: MIT"></a></li>
+<li><a href="https://openanalysis.org/microplastic_data_portal/" class="external-link"><img src="https://img.shields.io/badge/web-openanalysis.org-white" alt="Website"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
