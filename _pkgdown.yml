@@ -25,6 +25,10 @@ navbar:
       href: articles/app.html
     - text: One4All Package Tutorial
       href: articles/package.html
+    - text: Microplastic Image Explorer Tutorial
+      href: articles/imageexplorer.html
+    - text: Data Visualization Tutorial
+      href: articles/datavisualization.html
   right:
   - icon: fa-github fa-lg
     href: https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All.git

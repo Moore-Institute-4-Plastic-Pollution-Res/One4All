@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">One4All</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown--articles">
     <a class="dropdown-item" href="../articles/app.html">Validator App Tutorial</a>
     <a class="dropdown-item" href="../articles/package.html">One4All Package Tutorial</a>
+    <a class="dropdown-item" href="../articles/imageexplorer.html">Microplastic Image Explorer Tutorial</a>
+    <a class="dropdown-item" href="../articles/datavisualization.html">Data Visualization Tutorial</a>
   </div>
 </li>
       </ul>
@@ -94,7 +96,7 @@
                         <h4 data-toc-skip class="author">Hannah Sherrod,
 Win Cowger</h4>
             
-            <h4 data-toc-skip class="date">2024-02-29</h4>
+            <h4 data-toc-skip class="date">2024-05-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/HEAD/vignettes/package.Rmd" class="external-link"><code>vignettes/package.Rmd</code></a></small>
       <div class="d-none name"><code>package.Rmd</code></div>
@@ -110,7 +112,8 @@ functions to validate data without using the validator app. It is the
 user’s choice whether to work in the validator app or to use the One4All
 package. After reading this document, users will have a better
 understanding of the One4All package development and the main functions
-to validate and share data. To access the One4All package, go to our <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">GitHub</a>
+to validate, share, and download data. To access the One4All package, go
+to our <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">GitHub</a>
 and link it directly to your own device in R.</p>
 <p>The One4All package is the backbone of the validator app. If you are
 looking for a tutorial on how to use the app see the <a href="app.html">Validator App Tutorial</a>.</p>
@@ -121,7 +124,7 @@ looking for a tutorial on how to use the app see the <a href="app.html">Validato
 <p>After installing the R package, read in the following library:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">One4All</a></span><span class="op">)</span></span></code></pre></div>
-<p>To run the app, run the command <code><a href="../reference/run_app.html">run_app()</a></code>.</p>
+<p>To run the app, run the command <code><a href="../reference/run_app.html">run_app()</a></code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -129,25 +132,22 @@ looking for a tutorial on how to use the app see the <a href="app.html">Validato
 <h2 id="validate-data-reading-and-formatting-data">Validate Data: Reading and Formatting Data<a class="anchor" aria-label="anchor" href="#validate-data-reading-and-formatting-data"></a>
 </h2>
 <p>The function below validates data using the One4All package. Replace
-the four parameters defined below with your actual values or file paths.
-The <code>'data_names'</code> should be replaced with the tables from
-the rules sheet.</p>
+the parameters defined below with your actual values or file paths. The
+<code>'data_names'</code> should be replaced with the tables from the
+rules sheet.</p>
 <p><strong><code>'files_data'</code></strong>: A list of file paths for
-the datasets to be validated (either CSV or XLSX files).</p>
+the dataset to be validated (either ‘CSV’ or ‘Excel’ files).</p>
 <p><strong><code>'data_names'</code></strong>: (Optional) A character
 vector of names for the datasets. If not provided, names will be
 extracted from the file paths.
 <code>'(ex. methodology, samples, particles)'</code></p>
 <p><strong><code>'file_rules'</code></strong>: A file path for the rules
-file, either in CSV or XLSX format.</p>
-<p><strong><code>'zip_data'</code></strong>: A file path to a zip folder
-for validating unstructured data.</p>
+file, either in ‘CSV’ or ‘Excel’ format.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/validate_data.html">validate_data</a></span><span class="op">(</span></span>
 <span>  <span class="va">files_data</span>,</span>
 <span>  data_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  file_rules <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  zip_data <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  file_rules <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="check-for-malicious-files">Check for malicious files<a class="anchor" aria-label="anchor" href="#check-for-malicious-files"></a>
@@ -165,14 +165,14 @@ will say ‘FALSE’.</p>
 <h4 id="read-rules">Read rules<a class="anchor" aria-label="anchor" href="#read-rules"></a>
 </h4>
 <p>The function below reads rules from a file or a data frame.
-Acceptable file formats are CSV or XLSX files.</p>
+Acceptable file formats are ‘CSV’ or ‘Excel’ files.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/read_rules.html">read_rules</a></span><span class="op">(</span><span class="va">file_rules</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="read-data">Read data<a class="anchor" aria-label="anchor" href="#read-data"></a>
 </h4>
-<p>The function reads and formats data from CSV or XLSX files. The
+<p>The function reads and formats data from ‘CSV’ or ‘Excel’ files. The
 argument, <code>'files_data'</code>, is the list of files to be read,
 and <code>'data_names'</code>, is the optional vector of names for the
 data frames.</p>
@@ -183,14 +183,10 @@ data frames.</p>
 <div class="section level2">
 <h2 id="where-is-this-data-shared">Where is this data shared?<a class="anchor" aria-label="anchor" href="#where-is-this-data-shared"></a>
 </h2>
-<p>One4All allows users to not only validate their data, but to share
-their data as well, promoting open-source resources. The purpose of this
-section is to provide background information on how and where the data
-is sent.</p>
-<p>In the One4All package, the remote share function shares the
-validated data to three remote repositories, including MongoDB, CKAN,
-and/or AmazonS3. The purpose of having three options is for user
-preference on where to share their data:</p>
+<p>In the One4All package, the <code>'remote share'</code> function
+shares the validated data to MongoDB, CKAN, and/or AmazonS3. The purpose
+of having three options is for user preference on where to share their
+data:</p>
 <p><strong>MongoDB</strong> is a NoSQL database that stores data in BSON
 format, allowing for flexible data structures.</p>
 <p><strong>CKAN</strong> is an open-source data portal platform,
@@ -224,11 +220,12 @@ types.</p>
 <div class="section level2">
 <h2 id="how-is-the-data-downloaded">How is the data downloaded?<a class="anchor" aria-label="anchor" href="#how-is-the-data-downloaded"></a>
 </h2>
-<p>The <code>'remote_download'</code> function from the One4All package
-allows users to download shared data from MongoDB, CKAN, and/or
-AmazonS3. The data is retrieved based on the <code>'hashed_data'</code>
-identifier and assumes the data is stored using the same naming
-conventions provided in the <code>'remote_share'</code> function.</p>
+<p>The <code>'remote_download'</code> function allows users to download
+data from MongoDB, CKAN, and/or AmazonS3. The data is retrieved based on
+the <code>'hashed_data'</code> identifier (the dataset ID from a
+downloaded certificate) and assumes the data is stored using the same
+naming conventions provided in the <code>'remote_share'</code>
+function.</p>
 <p>The <code>'remote_download'</code> function is shown below.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">downloaded_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remote_download.html">remote_download</a></span><span class="op">(</span>hashed_data <span class="op">=</span> <span class="st">"example_hash"</span>,</span>
