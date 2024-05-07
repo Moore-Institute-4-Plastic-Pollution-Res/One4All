@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 ## Document Overview
 
-This document outlines a workflow to utilize the validator app from the Microplastics Data Portal. After reading this document, users will have a better understanding of the processes involved in creating this app and how to navigate through it. The purpose of this tool is to not only validate, but to share and download data as well to the following cloud services: Amazon S3, CKAN, and/or MongoDB. For more documentation about the One4All R package, please see the [One4All Package Tutorial](package.html).
+This document outlines a workflow to utilize the validator app from the One4All portal. After reading this document, users will have a better understanding of the processes involved in creating this app and how to navigate through it. The purpose of this tool is to not only validate, but to share and download data as well to the following cloud services: Amazon S3, CKAN, and/or MongoDB. For more documentation about the One4All R package, please see the [One4All Package Tutorial](package.html).
 
 ## Background: Rules
 
@@ -39,7 +39,7 @@ There is an existing set of rules created in 'Excel' that is applied to the app 
 
 ## Running the App
 
-To access the validator app, go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) and link it directly to your own device in R. After setting up the github to your device, go to the validator folder, select the global.R, ui.R, or server.R, and run the app.
+To access the validator app, go to this link [openanalysis.org/microplastic_data_portal/](https://openanalysis.org/microplastic_data_portal/) or go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) and link it directly to your own device in R. After setting up the github to your device, go to the validator folder, select the global.R, ui.R, or server.R, and run the app.
 
 If using the R package, read in the library and run the following command, `run_app()`.
 ```{r setup}
