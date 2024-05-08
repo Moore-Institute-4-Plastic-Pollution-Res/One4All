@@ -2,9 +2,16 @@
 % Please edit documentation in R/global.R
 \name{run_app}
 \alias{run_app}
-\title{Run Validator app}
+\title{Run the apps}
 \usage{
-run_app(path = "system", log = TRUE, ref = "main", test_mode = FALSE, ...)
+run_app(
+  path = "system",
+  log = TRUE,
+  ref = "main",
+  test_mode = FALSE,
+  app = "validator",
+  ...
+)
 }
 \arguments{
 \item{path}{to store the downloaded app files; defaults to \code{"system"}
@@ -17,6 +24,8 @@ pointing to \code{system.file(package = "One4All")}.}
 
 \item{test_mode}{logical; for internal testing only.}
 
+\item{app}{your app choice}
+
 \item{\dots}{arguments passed to \code{\link[shiny]{runApp}()}.}
 }
 \value{
@@ -24,15 +33,15 @@ This function normally does not return any value, see
 \code{\link[shiny]{runGitHub}()}.
 }
 \description{
-This wrapper function starts the user interface of the validator app.
+This wrapper function starts the user interface of your app choice.
 }
 \details{
-After running this function the validator GUI should open in a separate
+After running this function the Validator, Microplastic Image Explorer, or Data Visualization GUI should open in a separate
 window or in your computer browser.
 }
 \examples{
 \dontrun{
-run_app()
+run_app(app = "validator")
 }
 
 }

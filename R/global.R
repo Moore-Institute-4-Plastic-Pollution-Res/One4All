@@ -1218,13 +1218,13 @@ query_document_by_object_id <- function(apiKey, collection, database, dataSource
     }
     }
 
-#' @title Run Validator app
+#' @title Run the apps
 #'
 #' @description
-#' This wrapper function starts the user interface of the validator app.
+#' This wrapper function starts the user interface of your app choice.
 #'
 #' @details
-#' After running this function the validator GUI should open in a separate
+#' After running this function the Validator, Microplastic Image Explorer, or Data Visualization GUI should open in a separate
 #' window or in your computer browser.
 #'
 #' @param path to store the downloaded app files; defaults to \code{"system"}
@@ -1233,6 +1233,7 @@ query_document_by_object_id <- function(apiKey, collection, database, dataSource
 #' @param ref git reference; could be a commit, tag, or branch name. Defaults to
 #' "main". Only change this in case of errors.
 #' @param test_mode logical; for internal testing only.
+#' @param app your app choice
 #' @param \dots arguments passed to \code{\link[shiny]{runApp}()}.
 #'
 #' @return
@@ -1241,7 +1242,7 @@ query_document_by_object_id <- function(apiKey, collection, database, dataSource
 #'
 #' @examples
 #' \dontrun{
-#' run_app()
+#' run_app(app = "validator")
 #' }
 #'
 #' @author
@@ -1253,17 +1254,25 @@ query_document_by_object_id <- function(apiKey, collection, database, dataSource
 #' @importFrom shiny runGitHub shinyOptions
 #' @importFrom utils installed.packages
 #' @export
-run_app <- function(path = "system", log = TRUE, ref = "main",
-                    test_mode = FALSE, ...) {
+run_app <- function(path = "system", log = TRUE, ref = "main", test_mode = FALSE, app = "validator", ...) {
     pkg <- c("shiny", "dplyr", "DT", "shinythemes", "shinyWidgets", "validate", "digest", "data.table",
              "bs4Dash", "ckanr", "purrr", "shinyjs", "sentimentr", "listviewer", "RCurl", "readxl", "stringr",
-             "openxlsx", "config", "aws.s3", "One4All", "mongolite")
+             "openxlsx", "config", "aws.s3", "One4All", "mongolite", "leaflet", "plotly", "readr", "tidyverse", "tidygeocoder", "sf",
+             "mapview", "mapdata", "data.table", "ggdist", "ggthemes", "ggplot2", "rlang", "PupillometryR", "gridExtra", "networkD3", "tidyr",
+             "janitor", "jsonlite", "httr", "googlesheets4", "curl")
     
     miss <- pkg[!(pkg %in% installed.packages()[ , "Package"])]
     
     if(length(miss)) stop("run_app() requires the following packages: ",
                           paste(paste0("'", miss, "'"), collapse = ", "),
-                          call. = F)
+                          call. = FALSE)
+    
+    app_dirs <- c("validator" = "code/validator",
+                  "data_visualization" = "code/data_visualization",
+                  "microplastic_image_explorer" = "code/microplastic_image_explorer")
+    
+    app_dir <- app_dirs[[app]]
+    if(is.null(app_dir)) stop("Invalid app specified. Available apps: validator, data_visualization, microplastic_image_explorer")
     
     dd <- ifelse(path == "system",
                  system.file(package = "One4All"),
@@ -1273,5 +1282,5 @@ run_app <- function(path = "system", log = TRUE, ref = "main",
     
     options(shiny.logfile = log)
     if(!test_mode)
-        runGitHub("One4All", "Moore-Institute-4-Plastic-Pollution-Res", subdir = "code/validator")
+        runGitHub("Microplastic_Data_Portal", "Moore-Institute-4-Plastic-Pollution-Res", subdir = app_dir)
 }
