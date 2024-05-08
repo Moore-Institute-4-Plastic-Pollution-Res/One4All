@@ -107,11 +107,16 @@ function(request) {
             #),
             tabItem(
                 tabName = "downloader",
-                popover(textInput(inputId = "download_id", label = "A Dataset ID"),
-                        title = "Download raw data by ID",
-                        content = "Input your raw data id from the certificate you download in the uploader."),
-                downloadButton(outputId = "remote_downloader")
-            ),
+                box(
+                    title = "Download Specific Data",
+                    popover(textInput(inputId = "download_id", label = "A Dataset ID"),
+                            title = "Download raw data by ID",
+                            content = "Input your raw data id from the certificate you download in the uploader."),
+                    downloadButton(outputId = "remote_downloader", label = "Download Data")),
+                box(
+                    title = "Download All Data",
+                    actionButton("downloadButton", "Download All Data")
+            )),
             tabItem(
                 tabName = "help",
                 box(

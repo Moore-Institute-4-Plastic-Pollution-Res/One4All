@@ -335,6 +335,92 @@ function(input, output, session) {
         }
     })
     
+    # Download All
+    observeEvent(input$downloadButton, {
+        if (is.null(config$valid_key)) {
+            showModal(DownloadNoKeyModal())
+        } else {
+            showModal(DownloadYesKeyModal())
+        }
+        
+        observeEvent(input$ok_no_key_download, {
+            # Call the download_all function without the need for a key
+            # Display a message indicating that the download process has started
+            showModal(modalDialog(
+                title = "Download Started",
+                "Downloading all data. Please wait...",
+                easyClose = TRUE
+            ))
+            
+            # Call the download_all function with the appropriate arguments
+            download_all(
+                file_path = "~/Downloads/",
+                s3_key_id = config$s3_key_id,
+                s3_secret_key = config$s3_secret_key,
+                s3_region = config$s3_region,
+                s3_bucket = config$s3_bucket,
+                callback = function(success) {
+                    if (success) {
+                        # Display a success message if the download was successful
+                        showModal(modalDialog(
+                            title = "Success",
+                            "Data downloaded successfully.",
+                            easyClose = TRUE
+                        ))
+                    } else {
+                        # Display an error message if the download failed
+                        showModal(modalDialog(
+                            title = "Error",
+                            "An error occurred while downloading data. Please try again.",
+                            easyClose = TRUE
+                        ))
+                    }
+                }
+            )
+        })
+        
+        observeEvent(input$ok_yes_keydownload, {
+            # Check if the entered key matches the valid key from the configuration file
+            if (!is.null(input$secret) && input$secret == config$valid_key) {
+                # Display a message indicating that the download process has started
+                showModal(modalDialog(
+                    title = "Download Started",
+                    "Downloading all data. Please wait...",
+                    easyClose = TRUE
+                ))
+                
+                # Call the download_all function with the appropriate arguments
+                download_all(
+                    file_path = "~/Downloads/",
+                    s3_key_id = config$s3_key_id,
+                    s3_secret_key = config$s3_secret_key,
+                    s3_region = config$s3_region,
+                    s3_bucket = config$s3_bucket,
+                    callback = function(success) {
+                        if (success) {
+                            # Display a success message if the download was successful
+                            showModal(modalDialog(
+                                title = "Success",
+                                "Data downloaded successfully.",
+                                easyClose = TRUE
+                            ))
+                        } else {
+                            # Display an error message if the download failed
+                            showModal(modalDialog(
+                                title = "Error",
+                                "An error occurred while downloading data. Please try again.",
+                                easyClose = TRUE
+                            ))
+                        }
+                    }
+                )
+            } else {
+                # Display a failure message if the entered key is invalid
+                showModal(DownloadYesKeyModal(failed = TRUE))
+            }
+        })
+    })
+    
     #Downloads ----
     output$download_certificate <- downloadHandler(
         filename = function() {"certificate.csv"},
@@ -348,11 +434,11 @@ function(input, output, session) {
         filename = function() {paste0(input$download_id, ".zip")},
         content = function(file) {
             remote_raw_download(hashed_data = input$download_id,
-                                                   file_path = file,
-                                                   s3_key_id = config$s3_key_id, 
-                                                   s3_secret_key = config$s3_secret_key, 
-                                                   s3_region = config$s3_region, 
-                                                   s3_bucket = config$s3_bucket)}
+                                file_path = file,
+                                s3_key_id = config$s3_key_id, 
+                                s3_secret_key = config$s3_secret_key, 
+                                s3_region = config$s3_region, 
+                                s3_bucket = config$s3_bucket)}
     )
     
     output$download_rules_excel <- downloadHandler(
@@ -467,7 +553,33 @@ NoKeyModal <- function() {
       }
     })
 
-   
-    
+   # Download Modal for download_all----
+    DownloadYesKeyModal <- function(failed = FALSE) {
+        modalDialog(
+            title = "Download Data",
+            span('Enter the input key provided by', config$contact, 'to download data:'),
+            p(),
+            if (failed)
+                div(tags$b("Invalid key-rules pair please try again or contact", config$contact, "for help.", style = "color: red;")),
+            p(),
+            textInput("secret", "Input Key"),
+            p(),
+            footer = tagList(
+                modalButton("Cancel"),
+                actionButton("ok_yes_keydownload", "Download")
+            )
+        )
+    }
+  
+    DownloadNoKeyModal <- function() {
+        modalDialog(
+            span('Are you sure you want to download all data? Proceed with "Yes" to download all data.'),
+            p(),
+            footer = tagList(
+                modalButton("Cancel"),
+                actionButton("ok_no_key_download", "Yes")
+            )
+        )
+    }  
 }
 
