@@ -720,6 +720,59 @@ remote_raw_download <- function(hashed_data = NULL, file_path = NULL, ckan_url =
     }
 }
 
+#' @title Download All Data Alternative
+#' 
+#' @description
+#' This function allows users to download all data rather than one data set at a time.
+#' 
+#' @param file_path location and name of the zip file to create.
+#' @param ckan_url A character string representing the CKAN base URL.
+#' @param ckan_key A character string representing the CKAN API key.
+#' @param ckan_package A character string representing the CKAN package identifier.
+#' @param s3_key_id A character string representing the AWS S3 access key ID.
+#' @param s3_secret_key A character string representing the AWS S3 secret access key.
+#' @param s3_region A character string representing the AWS S3 region.
+#' @param s3_bucket A character string representing the AWS S3 bucket name.
+#' @param mongo_collection A mongo collection.
+#' @param mongo_key A mongo key.
+#' 
+#' @importFrom shiny isTruthy
+#' @importFrom aws.s3 get_bucket get_object save_object
+#' @importFrom ckanr ckanr_setup package_show ckan_fetch
+#'
+#' @return Any return objects from the downloads.
+#' 
+#' @examples
+#' # example code
+#' 
+#' @export
+download_all <- function(file_path = NULL, s3_key_id = NULL, s3_secret_key = NULL, s3_region = NULL, s3_bucket = NULL, callback = NULL) {
+    use_s3 <- shiny::isTruthy(s3_bucket)
+    
+    if (use_s3) {
+        Sys.setenv(
+            "AWS_ACCESS_KEY_ID" = s3_key_id,
+            "AWS_SECRET_ACCESS_KEY" = s3_secret_key,
+            "AWS_DEFAULT_REGION" = s3_region
+        )
+        # Retrieve a list of objects from S3 bucket
+        s3_objects <- get_bucket(bucket = s3_bucket)
+        for (object in s3_objects) {
+            success <- tryCatch({
+                aws.s3::save_object(object = object$Key, file = file.path(file_path, basename(object$Key)), bucket = s3_bucket)
+                TRUE  # Return TRUE if download is successful
+            }, error = function(e) {
+                FALSE  # Return FALSE if an error occurs during download
+            })
+        }
+        
+        # Call the callback function with the success status
+        if (!is.null(callback)) {
+            callback(success)
+        }
+    }
+}
+
 #' Check if an object is of class POSIXct
 #'
 #' This function checks if the given object is of class POSIXct.

@@ -658,14 +658,14 @@ test_that("remote_download retrieves zip data from all ckan and s3", {
     
     # Download the data using remote_download
     expect_error(remote_raw_download(hashed_data = test_remote$hashed_data, 
-                        file_path = test_file_zip,
-                        ckan_url = config$ckan_url, 
-                        ckan_key = config$ckan_key, 
-                        ckan_package = config$ckan_package,
-                        s3_key_id = config$s3_key_id,
-                        s3_secret_key = config$s3_secret_key,
-                        s3_region = config$s3_region,
-                        s3_bucket = config$s3_bucket))
+                                     file_path = test_file_zip,
+                                     ckan_url = config$ckan_url, 
+                                     ckan_key = config$ckan_key, 
+                                     ckan_package = config$ckan_package,
+                                     s3_key_id = config$s3_key_id,
+                                     s3_secret_key = config$s3_secret_key,
+                                     s3_region = config$s3_region,
+                                     s3_bucket = config$s3_bucket))
     
     remote_raw_download(hashed_data = test_remote$hashed_data, 
                         file_path = test_file_zip,
@@ -685,6 +685,23 @@ test_that("remote_download retrieves zip data from all ckan and s3", {
                         s3_bucket = config$s3_bucket)
     
     expect_true(file.exists(test_file_zip2))
+    
+    # Test download_all
+    test_that("download_all downloads files from S3 bucket", {
+        # Create temporary directory to store downloaded files
+        temp_dir <- tempdir()
+        
+        # Download files using download_all
+        download_all_result <- download_all(file_path = temp_dir,
+                                            s3_key_id = config$s3_key_id,
+                                            s3_secret_key = config$s3_secret_key,
+                                            s3_region = config$s3_region,
+                                            s3_bucket = config$s3_bucket,
+                                            callback = NULL)
+        
+        # Check if files are downloaded to the specified directory
+        expect_true(length(list.files(temp_dir)) > 0, "Files should be downloaded to the specified directory")
+    })
 })
 
 test_that("check_for_malicious_files works correctly", {
