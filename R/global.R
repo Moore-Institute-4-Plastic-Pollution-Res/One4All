@@ -1267,9 +1267,9 @@ run_app <- function(path = "system", log = TRUE, ref = "main", test_mode = FALSE
                           paste(paste0("'", miss, "'"), collapse = ", "),
                           call. = FALSE)
     
-    app_dirs <- c("validator" = "code/validator",
-                  "data_visualization" = "code/data_visualization",
-                  "microplastic_image_explorer" = "code/microplastic_image_explorer")
+    app_dirs <- c("validator" = "inst/apps/code/validator",
+                  "data_visualization" = "inst/apps/code/data_visualization",
+                  "microplastic_image_explorer" = "inst/apps/code/microplastic_image_explorer")
     
     app_dir <- app_dirs[[app]]
     if(is.null(app_dir)) stop("Invalid app specified. Available apps: validator, data_visualization, microplastic_image_explorer")
@@ -1282,5 +1282,5 @@ run_app <- function(path = "system", log = TRUE, ref = "main", test_mode = FALSE
     
     options(shiny.logfile = log)
     if(!test_mode)
-        runGitHub("Microplastic_Data_Portal", "Moore-Institute-4-Plastic-Pollution-Res", subdir = app_dir)
+        runGitHub("One4All", "Moore-Institute-4-Plastic-Pollution-Res", ref = ref, subdir = app_dir)
 }
