@@ -1,0 +1,13 @@
+pandoc: 3.1.1
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  app: app.html
+  datavisualization: datavisualization.html
+  imageexplorer: imageexplorer.html
+  package: package.html
+last_built: 2024-05-09T22:04Z
+urls:
+  reference: https://moore-institute-4-plastic-pollution-res.github.io/One4All/reference
+  article: https://moore-institute-4-plastic-pollution-res.github.io/One4All/articles
+

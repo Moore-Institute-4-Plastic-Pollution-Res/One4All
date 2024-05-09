@@ -75,6 +75,7 @@ reference:
   - '`remote_download`'
   - '`remote_raw_download`'
   - '`remote_share`'
+  - '`download_all`'
 - title: <b>Rules</b>
   desc: All functions for rules.
   contents:
