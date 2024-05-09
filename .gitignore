@@ -2,5 +2,4 @@ config*
 .Rproj.user
 .Rhistory
 inst/shiny/rsconnect*
-docs
 .DS_Store
