@@ -335,7 +335,7 @@ function(input, output, session) {
         }
     })
     
-    # Download All
+    # Download All Data
     observeEvent(input$downloadButton, {
         if (is.null(config$valid_key)) {
             showModal(DownloadNoKeyModal())
@@ -352,9 +352,12 @@ function(input, output, session) {
                 easyClose = TRUE
             ))
             
+            # Define the folder where all data will be downloaded
+            download_folder <- "~/Downloads/data/"
+            
             # Call the download_all function with the appropriate arguments
             download_all(
-                file_path = "~/Downloads/",
+                file_path = download_folder,
                 s3_key_id = config$s3_key_id,
                 s3_secret_key = config$s3_secret_key,
                 s3_region = config$s3_region,
@@ -389,9 +392,12 @@ function(input, output, session) {
                     easyClose = TRUE
                 ))
                 
+                # Define the folder where all data will be downloaded
+                download_folder <- "~/Downloads/data/"
+                
                 # Call the download_all function with the appropriate arguments
                 download_all(
-                    file_path = "~/Downloads/",
+                    file_path = download_folder,
                     s3_key_id = config$s3_key_id,
                     s3_secret_key = config$s3_secret_key,
                     s3_region = config$s3_region,
@@ -401,7 +407,7 @@ function(input, output, session) {
                             # Display a success message if the download was successful
                             showModal(modalDialog(
                                 title = "Success",
-                                "Data downloaded successfully.",
+                                "Data downloaded successfully. Check your downloads for a folder named 'data'.",
                                 easyClose = TRUE
                             ))
                         } else {
@@ -470,57 +476,55 @@ function(input, output, session) {
     vals <- reactiveValues(key = NULL)
     
     #Secret Key Input ----
-NoKeyModal <- function() {
-  modalDialog(
-    span('Would you like to share your uploaded data? Proceed with OK or click Cancel to simply test your data.'),
-    p(),
-    span('If this is a previous submission, enter it below:'),
-    p(),
-    box(
-      title = "Is this an update to a previous submission?", 
-      id = "update_submission",
-      width = 12,
-      collapsed = T,
-      fileInput(inputId = "old_certificate", label = "Upload previous certificate.")
-    ),
-    footer = tagList(
-      modalButton("Cancel"),
-      actionButton("ok_no_key", "OK")
-    )
-  )
-}
-
-
+    NoKeyModal <- function() {
+        modalDialog(
+            span('Would you like to share your uploaded data? Proceed with OK or click Cancel to simply test your data.'),
+            p(),
+            span('If this is a previous submission, enter it below:'),
+            p(),
+            box(
+                title = "Is this an update to a previous submission?", 
+                id = "update_submission",
+                width = 12,
+                collapsed = T,
+                fileInput(inputId = "old_certificate", label = "Upload previous certificate.")
+                ),
+            footer = tagList(
+                modalButton("Cancel"),
+                actionButton("ok_no_key", "OK")
+                )
+        )
+        }
     
     YesKeyModal <- function(failed = FALSE) {
-      modalDialog(
-        span('Would you like to share your uploaded data? Enter your input key provided by', config$contact, 'or click Cancel to simply test your data.'),
-        p(),
-        textInput("secret", "Input Key"),
-        if (failed)
-          div(tags$b("Invalid key-rules pair please try again or contact", config$contact, "for help.", style = "color: red;")),
-        p(),
-        box(
-          title = "Is this an update to a previous submission?", 
-          id = "update_submission",
-          width = 12,
-          collapsed = T,
-          fileInput(inputId = "old_certificate", label = "Upload previous certificate.")
-        ),
-        footer = tagList(
-          modalButton("Cancel"),
-          actionButton("ok_with_key", "OK")
+        modalDialog(
+            span('Would you like to share your uploaded data? Enter your input key provided by', config$contact, 'or click Cancel to simply test your data.'),
+            p(),
+            textInput("secret", "Input Key"),
+            if (failed)
+                div(tags$b("Invalid key-rules pair please try again or contact", config$contact, "for help.", style = "color: red;")),
+            p(),
+            box(
+                title = "Is this an update to a previous submission?", 
+                id = "update_submission",
+                width = 12,
+                collapsed = T,
+                fileInput(inputId = "old_certificate", label = "Upload previous certificate.")
+                ),
+            footer = tagList(
+                modalButton("Cancel"),
+                actionButton("ok_with_key", "OK")
+                )
         )
-      )
-    }
+        }
     
     observeEvent(req(isTRUE(!any(validation()$issues)), validation()$data_formatted), {
-      if (is.null(config$valid_key)) {
-        showModal(NoKeyModal())
-      } else {
-        showModal(YesKeyModal())
-      }
-    })
+        if (is.null(config$valid_key)) {
+            showModal(NoKeyModal())
+            } else {
+                showModal(YesKeyModal())
+                }
+        })
     
     # When OK button is pressed, attempt to load the data set. If successful,
     # remove the modal. If not show another modal, but this time with a failure
