@@ -123,21 +123,17 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Validate data with specified rules</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"valid_example"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>data set ‘valid_example’ not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"invalid_example"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>data set ‘invalid_example’ not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"test_rules"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>data set ‘test_rules’ not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">result_valid</span> <span class="op">&lt;-</span> <span class="fu">validate_data</span><span class="op">(</span>files_data <span class="op">=</span> <span class="va">valid_example</span>,</span></span>
 <span class="r-in"><span>                        data_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"methodology"</span>, <span class="st">"particles"</span>, <span class="st">"samples"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                        file_rules <span class="op">=</span> <span class="va">test_rules</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'valid_example' not found</span>
 <span class="r-in"><span>                       </span></span>
 <span class="r-in"><span><span class="va">result_invalid</span> <span class="op">&lt;-</span> <span class="fu">validate_data</span><span class="op">(</span>files_data <span class="op">=</span> <span class="va">invalid_example</span>,</span></span>
 <span class="r-in"><span>                        data_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"methodology"</span>, <span class="st">"particles"</span>, <span class="st">"samples"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                        file_rules <span class="op">=</span> <span class="va">test_rules</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'invalid_example' not found</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>All variables in the rules csv should be in the data csv and vice versa for the validation to work correctly. Download the Data Template for an example of correctly formatted upload. Ignoring these unmatched variables FilterDiameter, FilterPoreSize, ImageFile, ImageType, SampleID, SampleSize, Project, Affiliation</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

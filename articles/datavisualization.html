@@ -96,7 +96,7 @@
                         <h4 data-toc-skip class="author">Hannah Sherrod,
 Nicholas Leong, Win Cowger</h4>
             
-            <h4 data-toc-skip class="date">2024-05-08</h4>
+            <h4 data-toc-skip class="date">2024-05-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/HEAD/vignettes/datavisualization.Rmd" class="external-link"><code>vignettes/datavisualization.Rmd</code></a></small>
       <div class="d-none name"><code>datavisualization.Rmd</code></div>
@@ -112,7 +112,7 @@ Tool from the One4All portal. After reading this document, users will
 have a better understanding of the processes involved in creating this
 app and how to navigate through it. The purpose of this tool is to
 analyze and interpret microplastics data using plots, tables, and maps.
-The <code>'Map by Raw Data'</code>, <code>'Map By Countries'</code>, and
+The <code>'Map By Raw Data'</code>, <code>'Map By Countries'</code>, and
 <code>'Other Visuals'</code> tabs use data from the California Open Data
 Portal. The <code>'CA Microplastic Synthetic Data'</code> uses synthetic
 data, which we aim to replace with data from the Validator tool.</p>
@@ -123,33 +123,35 @@ data, which we aim to replace with data from the Validator tool.</p>
 <p>To access the Data Visualization Tool, go to this link <a href="https://openanalysis.org/microplastic_analysis/" class="external-link">openanalysis.org/microplastic_analysis/</a>
 or go to our <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal" class="external-link">Github</a>
 and link it directly to your own device in R. After setting up the
-github to your device, go to the <code>'data_visualization'</code>
+Github to your device, go to the <code>'data_visualization'</code>
 folder and select the app.R file to run the app.</p>
 <p><img src="appimages/DataVis1.png" style="display: block; margin: auto;"></p>
-<p>The first two tabs allow users to look at the concentration of
-microplastics by cities or countries. Users will first select one or
-more locations, generating the following:</p>
+<p>The <code>'Map By Raw Data'</code> and
+<code>'Map By Countries'</code> tabs allow users to look at the
+concentration of microplastics by cities or countries. Users can select
+one or more locations, generating the following:</p>
 <p><strong>Map:</strong> The map displays the location(s) selected. Each
 marker represents a dataset at that location and includes the
 ‘Latitude’, ‘Longitude’, ‘Source’, and ‘Concentration’.</p>
 <p><img src="appimages/DataVisMap.png" style="display: block; margin: auto;"></p>
-<p><strong>Plot:</strong> The plot is a raincloud plot and displays the
-plastics by source (bottled or tap) and concentration (particles/L),
-based on the location(s) selected.</p>
+<p><strong>Plot:</strong> The app generates a raincloud plot and
+displays the plastics by source (bottled or tap) and concentration
+(particles/L), based on the location(s) selected.</p>
 <p><img src="appimages/DataVisPlot.png" style="display: block; margin: auto;"></p>
-<p><strong>Table:</strong> The table displays the data directly from the
-California Open Data Portal.</p>
+<p><strong>Table:</strong> For the selected location(s), data from the
+California Open Data Portal is displayed.</p>
 <p><img src="appimages/DataVisTable.png" style="display: block; margin: auto;"></p>
-<p>The third tab allows users to compare the following microplastic
-characteristics from the data implemented in the tool: morphology,
-color, and material. Users will select the sankey plot they wish to view
-and the plot will generate the relationship between two of the
-characteristics.</p>
+<p>The <code>'Other Visuals'</code> tab allows users to compare the
+following microplastic characteristics from the data implemented in the
+tool: morphology, color, and material. Users will select the sankey plot
+they wish to view and the plot will generate the relationship between
+two of the characteristics.</p>
 <p><img src="appimages/DataVisSankey.png" style="display: block; margin: auto;"></p>
-<p>The last tab uses data that is entirely simulated for illustrative
-purposes to demonstrate the functionality of the tool by displaying the
-yearly average concentrations, treatment levels, and polymer and width
-distributions.</p>
+<p>The <code>'CA Microplastic Synthetic Data'</code> tab utilizes data
+that is entirely simulated for illustrative purposes to demonstrate the
+functionality of the tool. Users can select various counties and cities
+within the state of California, displaying spatial, temporal, and
+attribute statistics as well as treatment levels.</p>
 <p><img src="appimages/DataVisSynthetic1.png" style="display: block; margin: auto;"></p>
 <p><img src="appimages/DataVisSynthetic2.png" style="display: block; margin: auto;"></p>
 <p><img src="appimages/DataVisSynthetic3.png" style="display: block; margin: auto;"></p>
