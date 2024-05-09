@@ -29,6 +29,8 @@ To access the Data Visualization Tool, go to this link [openanalysis.org/micropl
 knitr::include_graphics("appimages/DataVis1.png")
 ```
 
+### Map By Raw Data, Map By Countries
+
 The `'Map By Raw Data'` and `'Map By Countries'` tabs allow users to look at the concentration of microplastics by cities or countries. Users can select one or more locations, generating the following:
 
 **Map:** The map displays the location(s) selected. Each marker represents a dataset at that location and includes the 'Latitude', 'Longitude', 'Source', and 'Concentration'.
@@ -49,11 +51,15 @@ knitr::include_graphics("appimages/DataVisPlot.png")
 knitr::include_graphics("appimages/DataVisTable.png")
 ```
 
+### Other Visuals
+
 The `'Other Visuals'` tab allows users to compare the following microplastic characteristics from the data implemented in the tool: morphology, color, and material. Users will select the sankey plot they wish to view and the plot will generate the relationship between two of the characteristics.
 
 ```{r, fig.align="center", echo=FALSE}
 knitr::include_graphics("appimages/DataVisSankey.png")
 ```
+
+### CA Microplastic Synthetic Data
 
 The `'CA Microplastic Synthetic Data'` tab utilizes data that is entirely simulated for illustrative purposes to demonstrate the functionality of the tool. Users can select various counties and cities within the state of California, displaying spatial, temporal, and attribute statistics as well as treatment levels.
 
