@@ -13,3 +13,5 @@ droptoken.rds
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^inst$
+^paper$

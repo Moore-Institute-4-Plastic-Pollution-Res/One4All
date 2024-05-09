@@ -23,7 +23,7 @@ This document outlines a workflow to utilize the Microplastic Image Explorer fro
 
 ## Running the App
 
-To access the Image Explorer, go to this link [openanalysis.org/microplastic_image_explorer/](https://openanalysis.org/microplastic_image_explorer/) or go to our [Github](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal) and link it directly to your own device in R. After setting up the github to your device, go to the `'microplastic_image_explorer'` folder and select the app.R file to run the app.
+To access the Image Explorer, go to this link [openanalysis.org/microplastic_image_explorer/](https://openanalysis.org/microplastic_image_explorer/) or go to our [Github](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal) and link it directly to your own device in R. After setting up the Github to your device, go to the `'microplastic_image_explorer'` folder and select the app.R file to run the app.
 
 ```{r, fig.align="center", echo=FALSE}
 knitr::include_graphics("appimages/ImageExplorerapp.png")
