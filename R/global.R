@@ -726,15 +726,11 @@ remote_raw_download <- function(hashed_data = NULL, file_path = NULL, ckan_url =
 #' This function allows users to download all data rather than one data set at a time.
 #' 
 #' @param file_path location and name of the zip file to create.
-#' @param ckan_url A character string representing the CKAN base URL.
-#' @param ckan_key A character string representing the CKAN API key.
-#' @param ckan_package A character string representing the CKAN package identifier.
 #' @param s3_key_id A character string representing the AWS S3 access key ID.
 #' @param s3_secret_key A character string representing the AWS S3 secret access key.
 #' @param s3_region A character string representing the AWS S3 region.
 #' @param s3_bucket A character string representing the AWS S3 bucket name.
-#' @param mongo_collection A mongo collection.
-#' @param mongo_key A mongo key.
+#' @param callback Prints if the download was a success.
 #' 
 #' @importFrom shiny isTruthy
 #' @importFrom aws.s3 get_bucket get_object save_object

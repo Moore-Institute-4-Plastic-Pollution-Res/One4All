@@ -24,15 +24,7 @@ download_all(
 
 \item{s3_bucket}{A character string representing the AWS S3 bucket name.}
 
-\item{ckan_url}{A character string representing the CKAN base URL.}
-
-\item{ckan_key}{A character string representing the CKAN API key.}
-
-\item{ckan_package}{A character string representing the CKAN package identifier.}
-
-\item{mongo_collection}{A mongo collection.}
-
-\item{mongo_key}{A mongo key.}
+\item{callback}{Prints if the download was a success.}
 }
 \value{
 Any return objects from the downloads.
