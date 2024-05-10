@@ -55,7 +55,7 @@ run_app()
 Download the valid data example under the `'_Help'` tab within the app and adapt it for your own purposes. It is important that the columns of the data are the same as the rules sheet because each column in the data corresponds to a rule within the rules sheet. 
 
 ```{r, fig.align="center", echo=FALSE}
-knitr::include_graphics("appimages/RulesExampleValidator.png")
+knitr::include_graphics("appimages/RulesExampleValidator.jpg")
 ```
 
 ## Validating Data
@@ -65,11 +65,11 @@ Once the app is loaded, upload your data by selecting the 'Upload Data' icon. Yo
 To view the details, click on a table which will then display two boxes, `'Issues Raised'` and `'Issues Selected'`. The `'Issues Raised'` box will highlight the warnings and errors. Click on an `'Issues Raised'` column and the invalid entries will then appear to the right in the `'Issues Selected'` box. To view all statuses, including successes, switch the tool toggle labeled `'Errors only?'` off. 
 
 ```{r, fig.align="center", echo=FALSE}
-knitr::include_graphics("appimages/TablesImageValidator.png")
+knitr::include_graphics("appimages/TablesImageValidator.jpg")
 ```
 
 ```{r, fig.align="center", echo=FALSE}
-knitr::include_graphics("appimages/ErrorImageValidator.png")
+knitr::include_graphics("appimages/ErrorImageValidator.jpg")
 ```
 
 ## Sharing Data
@@ -79,7 +79,7 @@ Reupload the files after correcting any errors; errors must be corrected to vali
 If this is an update to a previous submission, upload the previous certificate from your local device. If this is a new submission, then follow the rest of the prompt on the screen. 
 
 ```{r, fig.align="center", echo=FALSE}
-knitr::include_graphics("appimages/UploadDataValidator.png")
+knitr::include_graphics("appimages/UploadDataValidator.jpg")
 ```
 
 An input key is optional and should only be provided if required. If it is required, it will have been provided to you ahead of time by the maintainer.
@@ -87,7 +87,7 @@ An input key is optional and should only be provided if required. If it is requi
 Once your data is successfully uploaded, a new screen, `'Successful Remote Data Sharing'`, will be displayed. Download the certificate in the top right corner to view the credentials of this dataset.
 
 ```{r, fig.align="center", echo=FALSE}
-knitr::include_graphics("appimages/SuccessValidator.png")
+knitr::include_graphics("appimages/SuccessValidator.jpg")
 ```
 
 ## Downloading Data
@@ -95,5 +95,5 @@ knitr::include_graphics("appimages/SuccessValidator.png")
 Download any previously uploaded data from the cloud services by providing a dataset ID from a downloaded certificate. Each dataset has its own ID, represented as a hash of numbers, so ensure that you provide the correct dataset ID for the data you are attempting to download.
 
 ```{r, fig.align="center", echo=FALSE}
-knitr::include_graphics("appimages/DownloadDataValidator.png")
+knitr::include_graphics("appimages/DownloadDataValidator.jpg")
 ```

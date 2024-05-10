@@ -1,6 +1,6 @@
-MIT License
+# MIT License
 
-Copyright (c) 2024 Moore Institute for Plastic Pollution Research
+Copyright (c) 2024 One4All authors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
