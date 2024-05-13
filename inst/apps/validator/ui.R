@@ -181,6 +181,8 @@ function(request) {
                     p("Please include in your email:"),
                     p ("(1) What do you think the app should be doing?"),
                     p ("(2) What is the app doing instead?"),
+                    p("Alternatively, provide feedback anonymously through our Google Form:"),
+                    HTML(paste0('<a class ="btn btn-info" href = "', config$google_form_link, '" role = "button" >Feedback Form</a>')),
                     width = 12
                 )
             )

@@ -28,6 +28,7 @@ default:
     dev: TRUE
     tutorial: "https://www.youtube.com/embed/LMpf5-K_tYQ"
     overview: "https://www.youtube.com/embed/GKsoNega7CY"
+    google_form_link: "https://forms.gle/kMEjpceuSRREJeYR8"
     contributors:
         p1: !expr bs4Dash::boxProfile(image = "https://i0.wp.com/mooreplasticresearch.org/wp-content/uploads/2022/03/20220321_104726_2.jpg?resize=1200%2C1600&ssl=1", title = "Win Cowger", subtitle = "Moore Institute for Plastic Pollution Research", bordered = FALSE)
         p2: !expr bs4Dash::boxProfile(image = "https://i0.wp.com/mooreplasticresearch.org/wp-content/uploads/2022/03/20220307_110138-1.jpg?resize=1188%2C1536&ssl=1", title = "Shelly Moore", subtitle = "Moore Institute for Plastic Pollution Research", bordered = FALSE)
