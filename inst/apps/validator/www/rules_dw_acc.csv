@@ -72,7 +72,7 @@ CollectionStartDateTime,Sample Collection Start Date Time in Year-Month-Day 24hr
 CollectionEndDateTime,Sample Collection End Date Time in Year-Month-Day 24hr format,samples,1/30/23,error,!is.na(CollectionEndDateTime)
 SampleVolume,"Volume of sample (L), must be greater than 0",samples,100,error,SampleVolume > 0
 SampleVolume_blank,"Volume of sample (L), must be between 1 and 1,000,000 and cannot be blank",samples,100,error,!is.na(SampleVolume)
-SampleType,"SampleType must be one of Blank, Spike, or Environmental",samples,Environmental,error,"SampleType %in% c(""Blank"", ""Spike"", ""Environmental"")"
+SampleType,"SampleType must be one of Spike, Environmental, Field Blank, Air Blank, Lab Procedural Blank, or Trip Blank",samples,Environmental,error,"SampleType %in% c(""Spike"", ""Environmental"", ""Field Blank"", ""Air Blank"", ""Lab Procedural Blank"", ""Trip Blank"")"
 Matrix,Matrix must be one of the allowed values,samples,Drinking Water,error,"Matrix %in% c(""Drinking Water"", ""River Water"", ""Source Water"")"
 SiteName,SiteName should describe the site with a name relevant to the project and should not be NA,samples,Riverside County Water Municipality,error,!is.na(SiteName)
 Sample_spatial,Spatial file for where the samples were collected should be a geojson file.,samples,points.kml,warning,check_exists_in_zip(SpatialFile)
