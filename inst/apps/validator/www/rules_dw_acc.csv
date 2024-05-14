@@ -24,7 +24,7 @@ MatIDSoftware,Material ID software used,methodology,Open Specy,error,!is.na(MatI
 MatIDThreshold,MatIDThreshold should describe the hit quality threshold used to determine whether or not an id is certain.,methodology,0.7,error,MatIDThreshold >= 0
 SpikedRecovery,SpikedRecovery should describe the percentage of particles recovered using spiked recovery experiments from 1-100,methodology,80,error,"in_range(SpikedRecovery, min = 0, max = 100)"
 SpikedRecovery_cv,SpikedRecoveryCV should describe the coefficient of variation for the SpikedRecovery estimate between 0 and 100,methodology,80,error,"in_range(SpikedRecoveryCV, min = 0, max = 100)"
-Blank_contamination,BlankContamination should describe the MDL for the method,methodology,10,error,BlankContamination >= 3
+Blank_contamination,BlankContamination should describe the MRL and MDA of the method using the equation from the State Waterboard SOP,methodology,10,error,BlankContamination >= 3
 MethodologyComments,Any comments about the methodology,methodology,Captured 'left' and 'right' images for each sample on the FTIR for a larger range,error,!is.na(MethodologyComments) | is.na(MethodologyComments)
 DigestionSolutionComposition,Composition of digestion solution used,methodology,KOH,error,"!is.na(DigestionSolutionComposition) | DigestionSolutionComposition %in% c(""none"")"
 DigestionConcentration,Concentration of digestion solution used (%),methodology,20,error,"is.numeric(DigestionConcentration) | DigestionConcentration %in% c(""none"")"
