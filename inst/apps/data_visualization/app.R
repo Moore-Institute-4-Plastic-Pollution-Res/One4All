@@ -501,20 +501,70 @@ server <- function(input, output, session) {
   
   # Location tab
   output$tableLocation <- DT::renderDataTable({
-    data_location <- filtered_data()$samples_location
-    data_location$Concentration <- as.numeric(gsub("[^0-9.]", "", data_location$Concentration))
-    data_location <- data_location[!is.na(data_location$Concentration), ]
-    data_location <- data_location[order(data_location$Concentration), ]
-    DT::datatable(data_location, style = "bootstrap", class = "cell-border stripe")
+      data_location <- filtered_data()$samples_location
+      data_location$Concentration <- as.numeric(gsub("[^0-9.]", "", data_location$Concentration))
+      data_location <- data_location[!is.na(data_location$Concentration), ]
+      data_location <- data_location[order(data_location$Concentration), ]
+      
+      datatable(
+          data_location,
+          style = "bootstrap",
+          class = "cell-border stripe",
+          extensions = c("Buttons"),  # No need for Scroller extension
+          options = list(
+              dom = "Bfrtip",
+              lengthMenu = list(c(1000), c(1000)),  # Display only 1000 rows initially
+              deferRender = TRUE,  # Defer rendering of rows until visible
+              scrollY = 400,  # Set the height of the table body to 400 pixels
+              scrollCollapse = TRUE,  # Collapse the table if the height is less than the specified scrollY
+              buttons = list(
+                  list(
+                      extend = "csv",
+                      filename = "location_data",
+                      title = "Download CSV",
+                      text = '<i class="fa fa-download"></i> CSV',
+                      className = "btn-primary",
+                      exportOptions = list(
+                          modifier = list(selected = TRUE, visible = TRUE)
+                      )
+                  )
+              )
+          )
+      )
   })
   
-  # Countries tab
+  # Countries Tab
   output$tableCountries <- DT::renderDataTable({
-    data_country <- filtered_data()$samples_country
-    data_country$Concentration <- as.numeric(gsub("[^0-9.]", "", data_country$Concentration))
-    data_country <- data_country[!is.na(data_country$Concentration), ]
-    data_country <- data_country[order(data_country$Concentration), ]
-    DT::datatable(data_country, style = "bootstrap", class = "cell-border stripe")
+      data_country <- filtered_data()$samples_country
+      data_country$Concentration <- as.numeric(gsub("[^0-9.]", "", data_country$Concentration))
+      data_country <- data_country[!is.na(data_country$Concentration), ]
+      data_country <- data_country[order(data_country$Concentration), ]
+      
+      datatable(
+          data_country,
+          style = "bootstrap",
+          class = "cell-border stripe",
+          extensions = c("Buttons"),  # No need for Scroller extension
+          options = list(
+              dom = "Bfrtip",
+              lengthMenu = list(c(1000), c(1000)),  # Display only 1000 rows initially
+              deferRender = TRUE,  # Defer rendering of rows until visible
+              scrollY = 400,  # Set the height of the table body to 400 pixels
+              scrollCollapse = TRUE,  # Collapse the table if the height is less than the specified scrollY
+              buttons = list(
+                  list(
+                      extend = "csv",
+                      filename = "drinking_water_plastics_data",
+                      title = "Download CSV",
+                      text = '<i class="fa fa-download"></i> CSV',
+                      className = "btn-primary",
+                      exportOptions = list(
+                          modifier = list(selected = TRUE, visible = TRUE)
+                      )
+                  )
+              )
+          )
+      )
   })
   
   # Location tab
@@ -960,7 +1010,31 @@ server <- function(input, output, session) {
         "Concentration (Particles/m^3) in 2024" = m_ps_m3_2024
       )
 
-    datatable(data_to_display, style = "bootstrap", class = "cell-border stripe")
+    datatable(
+        data_to_display,
+        style = "bootstrap",
+        class = "cell-border stripe",
+        extensions = c("Buttons"),  # No need for Scroller extension
+        options = list(
+            dom = "Bfrtip",
+            lengthMenu = list(c(1000), c(1000)),  # Display only 1000 rows initially
+            deferRender = TRUE,  # Defer rendering of rows until visible
+            scrollY = 400,  # Set the height of the table body to 400 pixels
+            scrollCollapse = TRUE,  # Collapse the table if the height is less than the specified scrollY
+            buttons = list(
+                list(
+                    extend = "csv",
+                    filename = "plastic_location_data",
+                    title = "Download CSV",
+                    text = '<i class="fa fa-download"></i> CSV',
+                    className = "btn-primary",
+                    exportOptions = list(
+                        modifier = list(selected = TRUE, visible = TRUE)
+                    )
+                )
+            )
+        )
+    )
   })
 
   output$mapLocation1 <- renderLeaflet({
