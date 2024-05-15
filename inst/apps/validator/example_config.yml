@@ -23,7 +23,7 @@ default:
     invalid_data_example: "www/microplastic_images/invalid_example.xlsx"
     twitter: "https://twitter.com/Win_OpenData"
     github:  "https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/validator"
-    license: "https://creativecommons.org/licenses/by/4.0/"
+    license: "https://opensource.org/license/mit"
     contact: "win@mooreplasticresearch.org"
     dev: TRUE
     tutorial: "https://www.youtube.com/embed/LMpf5-K_tYQ"
