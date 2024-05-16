@@ -119,30 +119,28 @@ Package Tutorial</a>.</p>
 <div class="section level2">
 <h2 id="background-rules">Background: Rules<a class="anchor" aria-label="anchor" href="#background-rules"></a>
 </h2>
-<p>There is an existing set of rules created in ‘Excel’ that is applied
-to the app and package prior to user usage. The rules are used to
-validate the data once uploaded. The current rules sheet consists of six
-columns, including name, description, dataset, valid example, severity,
-and the rule itself (see below for more details). However, users can
-structure their own rules sheet to meet their own purposes. Download the
-sample rules under the <code>'_Help'</code> tab in the validator app to
-view the current example rules.</p>
-<p><strong>Name:</strong> The name of the row.
+<p>An existing set of rules created in ‘Excel’ is applied to the app and
+package to validate the uploaded data. The current rules sheet consists
+of six columns, including name, description, dataset, valid example,
+severity, and the rule itself (see below for more details).
+Additionally, users can structure their own rules sheet for their own
+purposes. Download the sample rules under the <code>'_Help'</code> tab
+in the validator app to view the current example rules.</p>
+<p><strong>Name:</strong> A placeholder for the rule.
 <code>'(ex. Amount)'</code></p>
-<p><strong>Description:</strong> A description of the rule itself and
-its requirements.
+<p><strong>Description:</strong> A description of the rule and its
+requirements.
 <code>'(ex. If there are two or more identical particles (in every aspect), upload it once and indicate the number of identical particles here as a whole number)'</code></p>
 <p><strong>Dataset:</strong> Optional field when the file is separated
 into multiple sheets or files.
 <code>'(ex. partices; methodology; samples)'</code></p>
 <p><strong>Valid_example:</strong> A valid example of the rule.
 <code>'(ex. 2)'</code></p>
-<p><strong>Severity:</strong> The severity of the rule, labeled a
-‘warning’ or an ‘error’; invalid data will be marked as either a
-‘warning’ or an ‘error’ depending on the severity of the rule. Warnings
-allow the data to still be shared, whereas an error will need to be
-corrected and the files reuploaded before sharing.
-<code>'(ex. warning)'</code></p>
+<p><strong>Severity:</strong> The severity of the rule, labeled
+‘warning’ or ‘error’; invalid data will be marked as either a ‘warning’
+or an ‘error’ depending on the severity of the rule. Data identified as
+a warning can be shared, whereas an error will need to be corrected and
+the files reuploaded before sharing. <code>'(ex. warning)'</code></p>
 <p><strong>Rule:</strong> The rule that validates the data (written in r
 code). <code>'(ex. Amount &gt;= 2 | is.na(Amount))'</code></p>
 </div>
@@ -152,8 +150,8 @@ code). <code>'(ex. Amount &gt;= 2 | is.na(Amount))'</code></p>
 <p>To access the validator app, go to this link <a href="https://openanalysis.org/microplastic_data_portal/" class="external-link">openanalysis.org/microplastic_data_portal/</a>
 or go to our <a href="https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All" class="external-link">GitHub</a>
 and link it directly to your own device in R. After setting up the
-github to your device, go to the validator folder, select the global.R,
-ui.R, or server.R, and run the app.</p>
+github to your device, go to the <code>'validator'</code> folder, select
+the global.R, ui.R, or server.R, and run the app.</p>
 <p>If using the R package, read in the library and run the following
 command, <code><a href="../reference/run_app.html">run_app()</a></code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -173,17 +171,17 @@ column in the data corresponds to a rule within the rules sheet.</p>
 <div class="section level2">
 <h2 id="validating-data">Validating Data<a class="anchor" aria-label="anchor" href="#validating-data"></a>
 </h2>
-<p>Once the app is loaded, upload your data by selecting the ‘Upload
-Data’ icon. Your local folder will display where you can select from
-your ‘CSV’ or ‘Excel’ files along with a corresponding zip folder. Your
-data will then display as successes, warnings, or errors.</p>
+<p>Once the app is running, upload your data by selecting the ‘Upload
+Data’ icon and select from your ‘CSV’ or ‘Excel’ files along with a
+corresponding zip folder. Your data will then display as successes,
+warnings, or errors in the following tables.</p>
 <p>To view the details, click on a table which will then display two
 boxes, <code>'Issues Raised'</code> and <code>'Issues Selected'</code>.
 The <code>'Issues Raised'</code> box will highlight the warnings and
 errors. Click on an <code>'Issues Raised'</code> column and the invalid
 entries will then appear to the right in the
 <code>'Issues Selected'</code> box. To view all statuses, including
-successes, switch the tool toggle labeled <code>'Errors only?'</code>
+successes, switch the tool toggle labeled <code>'Errors only?'</code> to
 off.</p>
 <p><img src="appimages/TablesImageValidator.jpg" style="display: block; margin: auto;"></p>
 <p><img src="appimages/ErrorImageValidator.jpg" style="display: block; margin: auto;"></p>
