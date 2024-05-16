@@ -1,5 +1,6 @@
 default:
-    # valid_key: "your_valid_key"
+    # valid_key_share: "your_valid_key_share"
+    # valid_key_download: "your_valid_key_download"
     # valid_rules: "your_valid_rules"
     # ckan_key: "your_ckan_key"
     # ckan_url: "your_ckan_url"
