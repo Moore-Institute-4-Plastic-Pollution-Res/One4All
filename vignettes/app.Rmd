@@ -23,23 +23,23 @@ This document outlines a workflow to utilize the validator app from the One4All 
 
 ## Background: Rules
 
-There is an existing set of rules created in 'Excel' that is applied to the app and package prior to user usage. The rules are used to validate the data once uploaded. The current rules sheet consists of six columns, including name, description, dataset, valid example, severity, and the rule itself (see below for more details). However, users can structure their own rules sheet to meet their own purposes. Download the sample rules under the `'_Help'` tab in the validator app to view the current example rules.
+An existing set of rules created in 'Excel' is applied to the app and package to validate the uploaded data. The current rules sheet consists of six columns, including name, description, dataset, valid example, severity, and the rule itself (see below for more details). Additionally, users can structure their own rules sheet for their own purposes. Download the sample rules under the `'_Help'` tab in the validator app to view the current example rules.
 
-**Name:** The name of the row. `'(ex. Amount)'`
+**Name:** A placeholder for the rule. `'(ex. Amount)'`
 
-**Description:** A description of the rule itself and its requirements. `'(ex. If there are two or more identical particles (in every aspect), upload it once and indicate the number of identical particles here as a whole number)'`
+**Description:** A description of the rule and its requirements. `'(ex. If there are two or more identical particles (in every aspect), upload it once and indicate the number of identical particles here as a whole number)'`
 
 **Dataset:** Optional field when the file is separated into multiple sheets or files. `'(ex. partices; methodology; samples)'`
 
 **Valid_example:** A valid example of the rule. `'(ex. 2)'`
 
-**Severity:** The severity of the rule, labeled a 'warning' or an 'error'; invalid data will be marked as either a 'warning' or an 'error' depending on the severity of the rule. Warnings allow the data to still be shared, whereas an error will need to be corrected and the files reuploaded before sharing. `'(ex. warning)'`
+**Severity:** The severity of the rule, labeled 'warning' or 'error'; invalid data will be marked as either a 'warning' or an 'error' depending on the severity of the rule. Data identified as a warning can be shared, whereas an error will need to be corrected and the files reuploaded before sharing. `'(ex. warning)'`
 
 **Rule:** The rule that validates the data (written in r code). `'(ex. Amount >= 2 | is.na(Amount))'`
 
 ## Running the App
 
-To access the validator app, go to this link [openanalysis.org/microplastic_data_portal/](https://openanalysis.org/microplastic_data_portal/) or go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) and link it directly to your own device in R. After setting up the github to your device, go to the validator folder, select the global.R, ui.R, or server.R, and run the app.
+To access the validator app, go to this link [openanalysis.org/microplastic_data_portal/](https://openanalysis.org/microplastic_data_portal/) or go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) and link it directly to your own device in R. After setting up the github to your device, go to the `'validator'` folder, select the global.R, ui.R, or server.R, and run the app.
 
 If using the R package, read in the library and run the following command, `run_app()`.
 ```{r setup}
@@ -60,9 +60,9 @@ knitr::include_graphics("appimages/RulesExampleValidator.jpg")
 
 ## Validating Data
 
-Once the app is loaded, upload your data by selecting the 'Upload Data' icon. Your local folder will display where you can select from your 'CSV' or 'Excel' files along with a corresponding zip folder. Your data will then display as successes, warnings, or errors. 
+Once the app is running, upload your data by selecting the 'Upload Data' icon and select from your 'CSV' or 'Excel' files along with a corresponding zip folder. Your data will then display as successes, warnings, or errors in the following tables. 
 
-To view the details, click on a table which will then display two boxes, `'Issues Raised'` and `'Issues Selected'`. The `'Issues Raised'` box will highlight the warnings and errors. Click on an `'Issues Raised'` column and the invalid entries will then appear to the right in the `'Issues Selected'` box. To view all statuses, including successes, switch the tool toggle labeled `'Errors only?'` off. 
+To view the details, click on a table which will then display two boxes, `'Issues Raised'` and `'Issues Selected'`. The `'Issues Raised'` box will highlight the warnings and errors. Click on an `'Issues Raised'` column and the invalid entries will then appear to the right in the `'Issues Selected'` box. To view all statuses, including successes, switch the tool toggle labeled `'Errors only?'` to off. 
 
 ```{r, fig.align="center", echo=FALSE}
 knitr::include_graphics("appimages/TablesImageValidator.jpg")
