@@ -117,7 +117,7 @@ default:
     valid_data_example: "www/microplastic_images/valid_example.xlsx"
     invalid_data_example: "www/microplastic_images/invalid_example.xlsx"
     twitter: "https://twitter.com/Win_OpenData"
-    github:  "https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/validator"
+    github:  "https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/validator"
     license: "https://creativecommons.org/licenses/by/4.0/"
     contact: "win@mooreplasticresearch.org"
     dev: TRUE
