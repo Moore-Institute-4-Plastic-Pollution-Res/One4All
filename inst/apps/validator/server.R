@@ -251,7 +251,7 @@ function(input, output, session) {
                      data_formatted = validation()$data_formatted, 
                      files = gsub("\\\\", "/", input$file$datapath),
                      verified = vals$key, 
-                     valid_key = config$valid_key, 
+                     valid_key_share = config$valid_key_share, 
                      valid_rules = config$valid_rules, 
                      ckan_url = config$ckan_url, 
                      ckan_key = config$ckan_key, 
@@ -337,7 +337,7 @@ function(input, output, session) {
     
     # Download All Data
     observeEvent(input$downloadButton, {
-        if (is.null(config$valid_key)) {
+        if (is.null(config$valid_key_download)) {
             showModal(DownloadNoKeyModal())
         } else {
             showModal(DownloadYesKeyModal())
@@ -384,7 +384,7 @@ function(input, output, session) {
         
         observeEvent(input$ok_yes_keydownload, {
             # Check if the entered key matches the valid key from the configuration file
-            if (!is.null(input$secret) && input$secret == config$valid_key) {
+            if (!is.null(input$secret) && input$secret == config$valid_key_download) {
                 # Display a message indicating that the download process has started
                 showModal(modalDialog(
                     title = "Download Started",
@@ -545,7 +545,7 @@ function(input, output, session) {
         }
     
     observeEvent(req(isTRUE(!any(validation()$issues)), validation()$data_formatted), {
-        if (is.null(config$valid_key)) {
+        if (is.null(config$valid_key_share)) {
             showModal(NoKeyModal())
             } else {
                 showModal(YesKeyModal())
@@ -567,10 +567,10 @@ function(input, output, session) {
     
     observeEvent(input$ok_with_key, {
       # Check that data object exists and is data frame.
-      if (is.null(config$valid_key)) {
+      if (is.null(config$valid_key_share)) {
         vals$key <- NULL
       } else {
-      if (!is.null(input$secret) && input$ok_with_key < 4 && input$secret == config$valid_key){
+      if (!is.null(input$secret) && input$ok_with_key < 4 && input$secret == config$valid_key_share){
         vals$key <- input$secret
         removeModal()
         show_alert(

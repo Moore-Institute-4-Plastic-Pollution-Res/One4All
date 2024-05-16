@@ -411,7 +411,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
 #' @param files A vector of file paths to upload.
 #' @param verified The secret key provided by the portal maintainer.
 #' @param valid_rules A list of valid rules for the dataset.
-#' @param valid_key A list of valid keys.
+#' @param valid_key_share A valid key to share data.
 #' @param ckan_url The URL of the CKAN instance.
 #' @param ckan_key The API key for the CKAN instance.
 #' @param ckan_package The CKAN package to which the data will be uploaded.
@@ -441,7 +441,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
 #'                             data_formatted = result_valid$data_formatted,
 #'                             files = test_file,
 #'                             verified = "your_verified_key",
-#'                             valid_key = "your_valid_key",
+#'                             valid_key_share = "your_valid_key_share",
 #'                             valid_rules = digest::digest(test_rules),
 #'                             ckan_url = "https://example.com",
 #'                             ckan_key = "your_ckan_key",
@@ -460,7 +460,7 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
 #' }
 #' @export
 
-remote_share <- function(validation, data_formatted, files, verified, valid_rules, valid_key, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, mongo_collection, old_cert = NULL){
+remote_share <- function(validation, data_formatted, files, verified, valid_rules, valid_key_share, ckan_url, ckan_key, ckan_package, url_to_send, rules, results, s3_key_id, s3_secret_key, s3_region, s3_bucket, mongo_key, mongo_collection, old_cert = NULL){
     
     use_ckan <- isTruthy(ckan_url) & isTruthy(ckan_key) & isTruthy(ckan_package)
     use_s3 <- isTruthy(s3_bucket)
@@ -478,7 +478,7 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
         stop("If you are using a key to upload data to a remote repo then there must be a valid pair with the rules you are using in our internal database.")
     }
     
-    if(!any(verified %in% valid_key)){
+    if(!any(verified %in% valid_key_share)){
         stop("You must have a valid key provided by the portal maintainer to use this feature.")
     }
     
