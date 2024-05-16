@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{validate_data}
 \alias{validate_data}
-\title{Validate_data: Validate data based on specified rules.}
+\title{Validate data based on specified rules}
 \usage{
 validate_data(
   files_data,
@@ -32,7 +32,7 @@ A list containing the following elements:
   - message: A data.table containing information about any issues encountered.
 }
 \description{
-Validate_data: Validate data based on specified rules.
+Validate data based on specified rules
 }
 \examples{
 # Validate data with specified rules

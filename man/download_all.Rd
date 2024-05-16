@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{download_all}
 \alias{download_all}
-\title{Download All Data Alternative}
+\title{Download all data alternative}
 \usage{
 download_all(
   file_path = NULL,

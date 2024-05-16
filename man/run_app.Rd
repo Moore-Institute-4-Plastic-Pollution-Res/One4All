@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{run_app}
 \alias{run_app}
-\title{Run the apps}
+\title{Run any of the apps}
 \usage{
 run_app(
   path = "system",

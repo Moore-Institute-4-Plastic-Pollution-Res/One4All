@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{check_for_malicious_files}
 \alias{check_for_malicious_files}
-\title{Check for Malicious Files}
+\title{Check for malicious files}
 \usage{
 check_for_malicious_files(files)
 }

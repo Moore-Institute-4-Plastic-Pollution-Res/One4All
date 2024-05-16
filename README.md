@@ -11,7 +11,7 @@
 ## Overview
 The One4All portal was designed to streamline data validation and formatting tasks. Its primary function is to read a set of rules from a 'CSV' or 'Excel' file to validate a dataset.
 
-The package functions and shiny application also helps in creating valid 'Excel' files with conditional formatting based on specified rules, making it easier to identify and manage inconsistencies in data. Overall, the One4All portal aims to enhance data validation and management processes for a more efficient and accurate workflow.
+The package functions and shiny application also aid in creating valid 'Excel' files with conditional formatting based on specified rules, making it easier to identify and manage inconsistencies in data. Overall, the One4All portal aims to enhance data validation and management processes for a more efficient and accurate workflow.
 
 Users have the option to work in the R shiny application or the R package. The functionality in the validator app is based on the One4All package.
 
@@ -33,7 +33,7 @@ remotes::install_github("Moore-Institute-4-Plastic-Pollution-Res/One4All")
 ### Access the validator tool below:
 - Click here for the web app: [openanalysis.org/microplastic_data_portal/](https://openanalysis.org/microplastic_data_portal/).
 
-- The code for the app is in [code/validator](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/code/validator)
+- The code for the app is in [inst/apps/validator](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/validator)
 
 ## Getting Started
 ``` r

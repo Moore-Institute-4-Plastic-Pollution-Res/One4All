@@ -1,4 +1,4 @@
-#' Valid Example Data
+#' Valid example data
 #'
 #' This is a list containing three data frames as an example of valid_example.
 #'

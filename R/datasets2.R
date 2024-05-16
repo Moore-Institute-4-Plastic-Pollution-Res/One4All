@@ -1,4 +1,4 @@
-#' Invalid Example Data
+#' Invalid example data
 #'
 #' This is a list containing three data frames as an example of invalid_example.
 #'
