@@ -39,13 +39,7 @@ This function allows users to download all data rather than one data set at a ti
                                       s3_secret_key = "your_s3_secret_key",
                                       s3_region = "your_s3_region",
                                       s3_bucket = "your_s3_bucket",
-                                      callback = function(success) {
-                                      if (success) {
-                                      message("All files downloaded successfully.")
-                                      } else {
-                                      message("An error occurred during file download.")
-                                      }
-                                      })
+                                      callback = NULL)
 }
 
 }
