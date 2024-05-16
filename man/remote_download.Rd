@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{remote_download}
 \alias{remote_download}
-\title{Download Structured Data from Remote Sources}
+\title{Download structured data from remote sources}
 \usage{
 remote_download(
   hashed_data = NULL,

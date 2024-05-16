@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{remote_share}
 \alias{remote_share}
-\title{Remote Share Function}
+\title{Share your validated data}
 \usage{
 remote_share(
   validation,
@@ -70,7 +70,7 @@ A list containing the status and message of the operation.
 }
 \description{
 This function uploads validated data to specified remote repositories,
-such as CKAN, Amazon S3, and/or MongoDB
+such as CKAN, Amazon S3, and/or MongoDB.
 }
 \examples{
 \dontrun{

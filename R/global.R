@@ -29,8 +29,9 @@ certificate_df <- function(x, time = Sys.time()){
                                        Sys.info())))
 }
 
-#' Read rules from a file
+#' @title Read rules from a file
 #'
+#' @description
 #' This function reads rules from a file or a data frame.
 #' The file can be in csv or xlsx format.
 #' The data should have the column names "name", "description", "dataset", "valid example", "severity", "rule".
@@ -86,7 +87,7 @@ read_rules <- function(file_rules){
     return(rules)
 }
 
-#' Read and format data from csv or xlsx files
+#' @title Read and format data from csv or xlsx files
 #'
 #' @param files_data List of files to be read
 #' @param data_names Optional vector of names for the data frames
@@ -143,9 +144,9 @@ read_data <- function(files_data, data_names = NULL){
     data_formatted
 }
 
-#' Name datasets
+#' @title Name datasets
 #'
-#' This function extracts the names of the datasets provided in the input files.
+#' @description This function extracts the names of the datasets provided in the input files.
 #' If specific data names are provided, they are used, otherwise the function tries
 #' to extract the names from the files themselves.
 #'
@@ -175,9 +176,9 @@ name_data <- function(files_data, data_names = NULL){
 }
 
 
-#' Reformats the rules
+#' @title Reformat the rules
 #'
-#' This function is responsible for handling the rule reformating, dataset handling
+#' @description This function is responsible for handling the rule reformating, dataset handling
 #' and foreign key checks.
 #'
 #' @param rules A data.frame containing rules to be reformatted.
@@ -250,7 +251,7 @@ reformat_rules <- function(rules, data_formatted, zip_data = NULL){
 }
 
 
-#' Validate_data: Validate data based on specified rules.
+#' @title Validate data based on specified rules
 #'
 #' @param files_data A list of file paths for the datasets to be validated.
 #' @param data_names (Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths.
@@ -401,10 +402,10 @@ validate_data <- function(files_data, data_names = NULL, file_rules = NULL, zip_
          issues = any_issues)
 }
 
-#' Remote Share Function
+#' @title Share your validated data
 #'
-#' This function uploads validated data to specified remote repositories,
-#' such as CKAN, Amazon S3, and/or MongoDB
+#' @description This function uploads validated data to specified remote repositories,
+#' such as CKAN, Amazon S3, and/or MongoDB.
 #'
 #' @param validation A list containing validation information.
 #' @param data_formatted A list containing formatted data.
@@ -554,9 +555,9 @@ remote_share <- function(validation, data_formatted, files, verified, valid_rule
                 submission_time = submission_time))
 }
 
-#' Download Structured Data from Remote Sources
+#' @title Download structured data from remote sources
 #'
-#' This function downloads data from remote sources like CKAN, AWS S3, and MongoDB.
+#' @description This function downloads data from remote sources like CKAN, AWS S3, and MongoDB.
 #' It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
 #'
 #' @param hashed_data A character string representing the hashed identifier of the data to be downloaded.
@@ -650,9 +651,9 @@ remote_download <- function(hashed_data = NULL, ckan_url, ckan_key, ckan_package
     return(data_downloaded)
 }
 
-#' Download Raw Data from Remote Sources
+#' @title Download raw data from remote sources
 #'
-#' This function downloads data from remote sources like CKAN and AWS S3.
+#' @description This function downloads data from remote sources like CKAN and AWS S3.
 #' It retrieves the data based on the hashed_data identifier and assumes the data is stored using the same naming conventions provided in the `remote_share` function.
 #'
 #' @param hashed_data A character string representing the hashed identifier of the data to be downloaded.
@@ -720,10 +721,9 @@ remote_raw_download <- function(hashed_data = NULL, file_path = NULL, ckan_url =
     }
 }
 
-#' @title Download All Data Alternative
+#' @title Download all data alternative
 #' 
-#' @description
-#' This function allows users to download all data rather than one data set at a time.
+#' @description This function allows users to download all data rather than one data set at a time.
 #' 
 #' @param file_path location and name of the zip file to create.
 #' @param s3_key_id A character string representing the AWS S3 access key ID.
@@ -739,7 +739,14 @@ remote_raw_download <- function(hashed_data = NULL, file_path = NULL, ckan_url =
 #' @return Any return objects from the downloads.
 #' 
 #' @examples
-#' # example code
+#' \dontrun{
+#'     download_all_data <- download_all(file_path = "your/path/file.zip",
+#'                                       s3_key_id = "your_s3_key_id",
+#'                                       s3_secret_key = "your_s3_secret_key",
+#'                                       s3_region = "your_s3_region",
+#'                                       s3_bucket = "your_s3_bucket",
+#'                                       callback = NULL)
+#' }
 #' 
 #' @export
 download_all <- function(file_path = NULL, s3_key_id = NULL, s3_secret_key = NULL, s3_region = NULL, s3_bucket = NULL, callback = NULL) {
@@ -769,9 +776,9 @@ download_all <- function(file_path = NULL, s3_key_id = NULL, s3_secret_key = NUL
     }
 }
 
-#' Check if an object is of class POSIXct
+#' @title Check if an object is of class POSIXct
 #'
-#' This function checks if the given object is of class POSIXct.
+#' @description This function checks if the given object is of class POSIXct.
 #' It returns TRUE if the object inherits the POSIXct class, otherwise FALSE.
 #'
 #' @param x An object to be tested for POSIXct class inheritance.
@@ -786,7 +793,7 @@ download_all <- function(file_path = NULL, s3_key_id = NULL, s3_secret_key = NUL
 #' @export
 is.POSIXct <- function(x) inherits(x, "POSIXct")
 
-#' Broken rules
+#' Check which rules were broken
 #'
 #' Filter the results of validation to show only broken rules, optionally including successful decisions.
 #'
@@ -816,9 +823,9 @@ rules_broken <- function(results, show_decision){
         select("description", "status", "name", "expression", everything())
 }
 
-#' rows_for_rules
+#' @title Check which rows in the data violated the rules
 #'
-#' Get the rows in the data that violate the specified rules.
+#' @description Get the rows in the data that violate the specified rules.
 #'
 #' @param data_formatted A formatted data frame.
 #' @param report A validation report generated by the 'validate' function.
@@ -875,9 +882,9 @@ rows_for_rules <- function(data_formatted,
 }
 
 #acknowledgement https://github.com/adamjdeacon/checkLuhn/blob/master/R/checkLuhn.R
-#' Check if a number passes the Luhn algorithm
+#' @title Check if a number passes the Luhn algorithm
 #'
-#' This function checks if a given number passes the Luhn algorithm. It is commonly used to validate credit card numbers.
+#' @description This function checks if a given number passes the Luhn algorithm. It is commonly used to validate credit card numbers.
 #' @param number A character string of the number to check against the Luhn algorithm.
 #' @return A logical value indicating whether the number passes the Luhn algorithm (TRUE) or not (FALSE).
 #' @examples
@@ -916,9 +923,10 @@ checkLuhn <- function(number) {
     ((sum(digits) %% 10) == 0)
 }
 
-#' Check if a file exists in a zip file
+#' @title Check if a file exists in a zip file
 #'
-#' This function checks if a file with a given name exists in a specified zip file.
+#' @description This function checks if a file with a given name exists in a specified zip file.
+#' 
 #' @param zip_path A character string representing the path of the zip file.
 #' @param file_name A character string representing the name of the file to check.
 #' @return A logical value indicating whether the file exists in the zip file (TRUE) or not (FALSE).
@@ -937,9 +945,10 @@ check_exists_in_zip <- function(zip_path, file_name) {
     return(file_exists)
 }
 
-#' Check and format image URLs
+#' @title Check and format image URLs
 #'
-#' This function checks if the input string contains an image URL (PNG or JPG) and formats it as an HTML img tag with a specified height.
+#' @description This function checks if the input string contains an image URL (PNG or JPG) and formats it as an HTML img tag with a specified height.
+#' 
 #' @param x A character string to check for image URLs.
 #' @return A character string with the HTML img tag if an image URL is found, otherwise the input string.
 #' @examples
@@ -953,9 +962,10 @@ check_images <- function(x){
            x)
 }
 
-#' Check and format non-image hyperlinks
+#' @title Check and format non-image hyperlinks
 #'
-#' This function checks if the input string contains a non-image hyperlink and formats it as an HTML anchor tag.
+#' @description This function checks if the input string contains a non-image hyperlink and formats it as an HTML anchor tag.
+#' 
 #' @param x A character string to check for non-image hyperlinks.
 #' @return A character string with the HTML anchor tag if a non-image hyperlink is found, otherwise the input string.
 #' @examples
@@ -969,9 +979,10 @@ check_other_hyperlinks <- function(x){
            x)
 }
 
-#' Test for profanity in a string
+#' @title Test for profanity in a string
 #'
-#' This function checks if the input string contains any profane words.
+#' @description This function checks if the input string contains any profane words.
+#' 
 #' @param x A character string to check for profanity.
 #' @return A logical value indicating whether the input string contains no profane words.
 #' @import lexicon
@@ -992,13 +1003,13 @@ test_profanity <- function(x){
         all()
 }
 
-#Rules to excel
-#' Create a formatted Excel file based on validation rules
+#' @title Create a formatted Excel file based on validation rules
 #'
-#' This function creates an Excel file with conditional formatting and data validation
+#' @description This function creates an Excel file with conditional formatting and data validation
 #' based on the given validation rules in a CSV or Excel file.
 #' This function is currently compatible with Windows and Linux operating systems. When using a macOS system,
 #' the excel file is able to download, but has some bugs with formatting the LOOKUP sheet.
+#' 
 #' @param file_rules A CSV or Excel file containing validation rules.
 #' @param negStyle Style to apply for negative conditions (default is red text on a pink background).
 #' @param posStyle Style to apply for positive conditions (default is green text on a light green background).
@@ -1164,9 +1175,9 @@ create_valid_excel <- function(file_rules,
     wb
 }
 
-#' Check for Malicious Files
+#' @title Check for malicious files
 #'
-#' This function checks for the presence of files with extensions known to be associated with malicious activities.
+#' @description This function checks for the presence of files with extensions known to be associated with malicious activities.
 #' The function can be used to screen zip files or individual files for these potentially dangerous file types.
 #'
 #' @param files A character vector of file paths. These can be paths to zip files or individual files.
@@ -1210,9 +1221,9 @@ check_for_malicious_files <- function(files) {
     return(FALSE)
 }
 
-#' Query MongoDB Document by ObjectID
+#' @title Query a MongoDB document by an ObjectID
 #'
-#' This function queries a mongodb database using its API to retrieve a document by its ObjectID. Use the MongoDB Atlas Data API to create an API key.
+#' @description This function queries a mongodb database using its API to retrieve a document by its ObjectID. Use the MongoDB Atlas Data API to create an API key.
 #' 
 #' @param collection The name of the collection in the MongoDB database.
 #' @param database The name of the MongoDB database.
@@ -1267,10 +1278,9 @@ query_document_by_object_id <- function(apiKey, collection, database, dataSource
     }
     }
 
-#' @title Run the apps
+#' @title Run any of the apps
 #'
-#' @description
-#' This wrapper function starts the user interface of your app choice.
+#' @description This wrapper function starts the user interface of your app choice.
 #'
 #' @details
 #' After running this function the Validator, Microplastic Image Explorer, or Data Visualization GUI should open in a separate

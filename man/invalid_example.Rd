@@ -3,7 +3,7 @@
 \docType{data}
 \name{invalid_example}
 \alias{invalid_example}
-\title{Invalid Example Data}
+\title{Invalid example data}
 \format{
 A list with 3 data frames:
 \describe{
