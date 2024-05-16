@@ -437,16 +437,42 @@ function(input, output, session) {
     )
     
     output$remote_downloader <- downloadHandler(
-        filename = function() {paste0(input$download_id, ".zip")},
+        filename = function() { paste0("data_", format(Sys.time(), "%Y%m%d"), ".zip") },
         content = function(file) {
-            remote_raw_download(hashed_data = input$download_id,
-                                file_path = file,
-                                s3_key_id = config$s3_key_id, 
-                                s3_secret_key = config$s3_secret_key, 
-                                s3_region = config$s3_region, 
-                                s3_bucket = config$s3_bucket)}
+            dataset_ids <- unlist(strsplit(input$download_id, ","))
+            if (length(dataset_ids) > 0 && nchar(trimws(input$download_id)) > 0) {
+                temp_dir <- tempdir()
+                zip_dir <- file.path(temp_dir, "zip_temp")
+                dir.create(zip_dir)
+                
+                for (id in dataset_ids) {
+                    temp_file <- file.path(zip_dir, paste0(id, ".zip"))
+                    tryCatch({
+                        remote_raw_download(hashed_data = id,
+                                            file_path = temp_file,
+                                            s3_key_id = config$s3_key_id, 
+                                            s3_secret_key = config$s3_secret_key, 
+                                            s3_region = config$s3_region, 
+                                            s3_bucket = config$s3_bucket)
+                    }, error = function(e) {
+                        cat("Error downloading dataset with ID:", id, "\n")
+                        cat("Error message:", e$message, "\n")
+                    })
+                }
+                
+                # Create the zip file without the full paths
+                old_wd <- getwd()
+                setwd(zip_dir)
+                on.exit(setwd(old_wd), add = TRUE)
+                zip(zipfile = file, files = list.files(zip_dir))
+                
+                unlink(zip_dir, recursive = TRUE)
+            } else {
+                cat("No dataset IDs provided.")
+            }
+        }
     )
-    
+
     output$download_rules_excel <- downloadHandler(
         filename = function() {"data_template.xlsx"},
         content = function(file) {saveWorkbook(create_valid_excel(file_rules = rules()), file, TRUE)}

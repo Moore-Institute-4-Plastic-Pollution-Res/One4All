@@ -45,7 +45,7 @@ function(request) {
                 tabName = "about",
                 box(
                     title = "Overview",
-                    p("Welcome to the Data Validator webpage. This tool allows you to validate data interactively by uploading a dataset and rules file. To get started, go to the validator tab on the left."),
+                    p("Welcome to the Data Validator webpage. This tool allows you to validate data interactively by uploading a dataset and rules file. To get started, go to the uploader tab on the left."),
                     HTML(paste0('<iframe width="560" height="315" src="',config$overview,'" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
                     width = 12
                 ),
@@ -109,19 +109,19 @@ function(request) {
                 tabName = "downloader",
                 box(
                     title = "Download Specific Data",
-                    popover(textInput(inputId = "download_id", label = "A Dataset ID"),
-                            title = "Download raw data by ID",
-                            content = "Input your raw data id from the certificate you download in the uploader."),
-                    downloadButton(outputId = "remote_downloader", label = "Download Data")),
+                    textInput(inputId = "download_id", label = "Dataset IDs (comma-separated, no spaces)"),
+                    downloadButton(outputId = "remote_downloader", label = "Download Data")
+                ),
                 box(
                     title = "Download All Data",
                     actionButton("downloadButton", "Download All Data")
-            )),
+                )
+            ),
             tabItem(
                 tabName = "help",
                 box(
                     title = "Tutorial",
-                    p("Welcome to the Data Validator webpage. This tool allows you to validate data interactively by uploading a dataset and rules file. To get started, go to the validator tab on the left."),
+                    p("Below is a tutorial on how to use the tool. Contact us using the details at the bottom of this tab for any questions or comments."),
                     HTML(paste0('<iframe width="560" height="315" src="',config$tutorial,'" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>')),
                     width = 12
                 ),
