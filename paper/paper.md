@@ -89,11 +89,12 @@ The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4
 
 The rules sheet and configuration file (explained below) power the application and package functions to validate, share, and download data. 
 
-Structure a [configuration file](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/example_config.yml) using the template from the One4All portal. Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a ‘valid_key’ which will require users to provide an input key when sharing their validated data. Users can request an input key from the maintainer listed in the configuration file under 'contact'.
+Structure a [configuration file](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/example_config.yml) using the template from the One4All portal. Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a valid key which will require users to provide an input key when sharing or downloading validated data. Users can request an input key from the maintainer listed in the configuration file under 'contact'.
 
 ```yaml
 default:
-    # valid_key: "your_valid_key"
+    # valid_key_share: "your_valid_key_share"
+    # valid_key_download: "your_valid_key_download"
     # valid_rules: "your_valid_rules"
     # ckan_key: "your_ckan_key"
     # ckan_url: "your_ckan_url"
@@ -178,7 +179,7 @@ shared_data <- remote_share(validation = result_valid,
                 data_formatted = result_valid$data_formatted,
                 files = test_file,
                 verified = "your_verified_key",
-                valid_key = "your_valid_key",
+                valid_key_share = "your_valid_key_share",
                 valid_rules = digest::digest(test_rules),
                 ckan_url = "https://example.com",
                 ckan_key = "your_ckan_key",
