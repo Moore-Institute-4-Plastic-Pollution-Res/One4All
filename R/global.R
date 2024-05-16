@@ -739,7 +739,20 @@ remote_raw_download <- function(hashed_data = NULL, file_path = NULL, ckan_url =
 #' @return Any return objects from the downloads.
 #' 
 #' @examples
-#' # example code
+#' \dontrun{
+#'     download_all_data <- download_all(file_path = "your/path/file.zip",
+#'                                       s3_key_id = "your_s3_key_id",
+#'                                       s3_secret_key = "your_s3_secret_key",
+#'                                       s3_region = "your_s3_region",
+#'                                       s3_bucket = "your_s3_bucket",
+#'                                       callback = function(success) {
+#'                                       if (success) {
+#'                                       message("All files downloaded successfully.")
+#'                                       } else {
+#'                                       message("An error occurred during file download.")
+#'                                       }
+#'                                       })
+#' }
 #' 
 #' @export
 download_all <- function(file_path = NULL, s3_key_id = NULL, s3_secret_key = NULL, s3_region = NULL, s3_bucket = NULL, callback = NULL) {
