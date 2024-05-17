@@ -13,7 +13,7 @@ The One4All portal was designed to streamline data validation and formatting tas
 
 The package functions and validator tool also aid in creating valid 'Excel' files with conditional formatting based on specified rules, making it easier to identify and manage inconsistencies in data. Overall, the One4All portal aims to enhance data validation and management processes for a more efficient and accurate workflow.
 
-Additionally, the One4All package has a variety of functionality and has been integrated into the Data Visualization Tool and the Microplastic Image Explorer, both available for use in this repository (see below). 
+Additionally, the One4All package has a variety of functionality and has been integrated into the Data Visualization Tool and the Microplastic Image Explorer, both available for use in this repository (see below).
 
 ## Installation
 
@@ -30,7 +30,17 @@ install.packages("One4All")
 remotes::install_github("Moore-Institute-4-Plastic-Pollution-Res/One4All")
 ```
 
-### Additional Tools
+### Load the library first to use the package:
+```r
+library(One4All)
+```
+
+### Tools
+
+Users can run each of the tools using this function and replacing the app name:
+```r
+run_app(app = "validator")
+```
 
 #### Data Validator
 Data validation is essential before sharing data widely. The functionality of the validator tool is based on the One4All package [![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All) [![Website](https://img.shields.io/badge/web-openanalysis.org-white)](https://openanalysis.org/one4all).
