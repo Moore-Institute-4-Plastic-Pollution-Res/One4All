@@ -10,4 +10,4 @@ Welcome to the Data Visualization webpage. This tool displays visual characteris
 
 - Use the web app: [openanalysis.org/microplastic_analysis](https://openanalysis.org/microplastic_analysis)
 
-- The code for the app is in [/inst/apps/data_visualization](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/data_visualization) 
+- The code for the app is in [/inst/apps/data_visualization](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/inst/apps/data_visualization/app.R) 
