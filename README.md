@@ -11,9 +11,9 @@
 ## Overview
 The One4All portal was designed to streamline data validation and formatting tasks. Its primary function is to read a set of rules from a 'CSV' or 'Excel' file to validate a dataset.
 
-The package functions and validator tool also aid in creating valid 'Excel' files with conditional formatting based on specified rules, making it easier to identify and manage inconsistencies in data. Overall, the One4All portal aims to enhance data validation and management processes for a more efficient and accurate workflow.
+The package functions and Validator Tool also aid in creating valid 'Excel' files with conditional formatting based on specified rules, making it easier to identify and manage inconsistencies in data. Overall, the One4All portal aims to enhance data validation and management processes for a more efficient and accurate workflow.
 
-Additionally, the One4All package has a variety of functionality and has been integrated into the Data Visualization Tool and the Microplastic Image Explorer, both available for use in this repository (see below).
+Additionally, the One4All package has a variety of functionality and has been integrated in the Data Visualization Tool and the Microplastic Image Explorer, both available for use in this repository (see below).
 
 ## Installation
 
@@ -40,6 +40,12 @@ library(One4All)
 Users can run each of the tools using this function and replacing the app name:
 ```r
 run_app(app = "validator")
+```
+```r
+run_app(app = "data_visualization")
+```
+```r
+run_app(app = "microplastic_image_explorer")
 ```
 
 #### Data Validator
