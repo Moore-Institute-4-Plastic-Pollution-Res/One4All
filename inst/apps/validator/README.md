@@ -19,7 +19,7 @@ Funded by the National Renewable Energy Laboratory and Possibility Lab, maintain
 
 -   or use the web app: [openanalysis.org/microplastic_data_portal/](https://openanalysis.org/microplastic_data_portal/)
 
--   The code for the app is in [ui.R](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/ui.R), [server.R](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/server.R), and [global.R](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/global.R)
+-   The code for the app is in [ui.R](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/inst/apps/validator/ui.R), [server.R](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/inst/apps/validator/server.R), and [global.R](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/inst/apps/validator/global.R)
 
 # Additional Information
 
