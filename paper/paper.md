@@ -83,13 +83,13 @@ Consisting of an R package and an R shiny application, this portal was designed 
 
 ![Workflow of the One4All portal. Navigate through the One4All package and the validator app, based on user preference: (https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e).\label{fig:example1}](manuscriptimages/One4AllFlowChart.png)
 
-The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/www/microplastic_images/One4AllValidator_rules.csv), which is a 'CSV' file that contains the following fields: name, description, dataset, valid example, severity, and rule. Users should add the rules as R functions, referring to the columns names in the uploaded data. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 2).
+The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/inst/apps/validator/www/rules_dw_acc.csv), which is a 'CSV' file that contains the following fields: name, description, dataset, valid example, severity, and rule. Users should add the rules as R functions, referring to the columns names in the uploaded data. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 2).
 
-![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 165 rules. The validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example2}](manuscriptimages/One4AllRulesSheet.png)
+![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 81 rules. The validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example2}](manuscriptimages/One4AllRulesSheet.png)
 
 The rules sheet and configuration file (explained below) power the application and package functions to validate, share, and download data. 
 
-Structure a [configuration file](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/code/validator/example_config.yml) using the template from the One4All portal. Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a valid key which will require users to provide an input key when sharing or downloading validated data. Users can request an input key from the maintainer listed in the configuration file under 'contact'.
+Structure a [configuration file](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/inst/apps/validator/example_config.yml) using the template from the One4All portal. Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a valid key which will require users to provide an input key when sharing or downloading validated data. Users can request an input key from the maintainer listed in the configuration file under 'contact'.
 
 ```yaml
 default:
@@ -112,17 +112,18 @@ default:
     # mongo_key: "your_mongo_key"
     # mongo_collection: "your_mongo_collection"
     # apiKey: "your_mongo_apikey"
-    rules_to_use: "www/microplastic_images/One4AllValidator_rules.csv"
-    rules_example: "www/microplastic_images/One4AllValidator_rules.csv"
-    valid_data_example: "www/microplastic_images/valid_example.xlsx"
-    invalid_data_example: "www/microplastic_images/invalid_example.xlsx"
+    rules_to_use: "www/rules_dw_acc.csv"
+    rules_example: "www/rules_dw_acc.csv"
+    valid_data_example: !expr c("www/data.xlsx", "www/extra_files.zip")
+    invalid_data_example: !expr c("www/data_example_errors.xlsx", "www/example_files_errors.zip")
     twitter: "https://twitter.com/Win_OpenData"
     github:  "https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/validator"
-    license: "https://creativecommons.org/licenses/by/4.0/"
+    license: "https://opensource.org/license/mit"
     contact: "win@mooreplasticresearch.org"
     dev: TRUE
     tutorial: "https://www.youtube.com/embed/LMpf5-K_tYQ"
     overview: "https://www.youtube.com/embed/GKsoNega7CY"
+    google_form_link: "https://forms.gle/kMEjpceuSRREJeYR8"
 ```
 
 ## How to use the app:
@@ -217,7 +218,7 @@ The main limitation is finding a balance between expanding the variety of rules 
 
 # Availability and Documentation:
 
-One4All is published on CRAN and was created in R(4.2.1) [@R:2022] using the following libraries: shiny [@Shiny:2023], dplyr [@Dplyr:2023], validate [@Validate:2021], digest [@Digest:2023], data.table [@Datatable:2023], ckanr [@Ckanr:2023], openxlsx [@Openxlsx:2023], lexicon [@Lexicon:2018], readr [@Readr:2023], readxl [@Readxl:2023], tibble [@Tibble:2023], aws.s3 [@Awss3:2020], rlang [@Rlang:2023], jsonlite [@Jsonlite:2014], mongolite [@Jsonlite:2014], and httr [@Httr:2023]. The validator app is hosted on the web at [openanalysis.org/one4all/](https://openanalysis.org/one4all/). The source code is [available on GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) with a [CC-BY-4.0 license](https://creativecommons.org/licenses/by/4.0/legalcode.en). The source code can be run offline on any machine that can install the One4All package. This package is maintained by the Moore Institute for Plastic Pollution Research on GitHub and is updated with each release.
+One4All is published on CRAN and was created in R(4.2.1) [@R:2022] using the following libraries: shiny [@Shiny:2023], dplyr [@Dplyr:2023], validate [@Validate:2021], digest [@Digest:2023], data.table [@Datatable:2023], ckanr [@Ckanr:2023], openxlsx [@Openxlsx:2023], lexicon [@Lexicon:2018], readr [@Readr:2023], readxl [@Readxl:2023], tibble [@Tibble:2023], aws.s3 [@Awss3:2020], rlang [@Rlang:2023], jsonlite [@Jsonlite:2014], mongolite [@Jsonlite:2014], and httr [@Httr:2023]. The validator app is hosted on the web at [openanalysis.org/one4all/](https://openanalysis.org/one4all/). The source code is [available on GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) with an [MIT License](https://opensource.org/license/mit). The source code can be run offline on any machine that can install the One4All package. This package is maintained by the Moore Institute for Plastic Pollution Research on GitHub and is updated with each release.
 
 # Future Goals
 
@@ -225,6 +226,6 @@ The One4All portal is intended to be useful for users to validate and share thei
 
 # Acknowledgments
 
-We acknowledge and greatly appreciate the financial support from the National Renewable Energy Laboratory and the Possibility Lab. The Moore Institute for Plastic Pollution Research led the development of the software tool and drafting of this manuscript. The One4All portal was inspired by the data validator tool created by Appsilon. We acknowledge the work and the input of the San Francisco Estuary Institute and the California State Water Resources Control Board. We would like to thank Scott Coffin, Tony Hale, Diana Lin, Gemma Shusterman, Rebecca Sutton, Adam Wong, Richard Nelson, Leah Thornton Hampton, Libby Heeren, and Gabriel Daiess. We would also like to thank Anja Oca, Haig Minasian, and Holden Ford from California State University, Long Beach, who provided the valid sample data used in the validator application. The views and opinions expressed in this article are those of the authors and do not necessarily reflect the official policy or position of any California State agency.
+We acknowledge and greatly appreciate the financial support from the National Renewable Energy Laboratory and the Possibility Lab. The Moore Institute for Plastic Pollution Research led the development of the software tool and drafting of this manuscript. The One4All portal was inspired by the Data Validator tool created by Appsilon. We acknowledge the work and the input of the San Francisco Estuary Institute and the California State Water Resources Control Board. We would like to thank Scott Coffin, Tony Hale, Diana Lin, Gemma Shusterman, Rebecca Sutton, Adam Wong, Richard Nelson, Leah Thornton Hampton, Libby Heeren, and Gabriel Daiess. We would also like to thank Anja Oca, Haig Minasian, and Holden Ford from California State University, Long Beach, who provided the valid sample data used in the validator application. The views and opinions expressed in this article are those of the authors and do not necessarily reflect the official policy or position of any California State agency.
 
 # References
