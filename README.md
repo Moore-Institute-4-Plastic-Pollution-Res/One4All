@@ -54,12 +54,14 @@ Data validation is essential before sharing data widely. The functionality of th
 ![](man/figures/validatorimage.png)
 
 If using the web app:
+
 - Go to [openanalysis.org/one4all](https://openanalysis.org/microplastic_data_portal/).
 - The code for the app is in [/inst/apps/validator](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/validator).
 
 #### Data Visualization
 The Data Visualization Tool integrates shared data from the Validator Tool to visually represent it, allowing users to analyze data through maps, plots, and tables.
 The code for the app is in [/inst/apps/data_visualization](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/data_visualization).
+
 - To get started with the tool, go to [openanalysis.org/microplastic_analysis](https://openanalysis.org/microplastic_analysis/). 
 
 ![](man/figures/datavisualization.png)
@@ -67,6 +69,7 @@ The code for the app is in [/inst/apps/data_visualization](https://github.com/Mo
 #### Microplastic Image Explorer
 The Microplastic Image Explorer allows users to query microplastic images from our database by applying filters. Users can select more than one filter, ranging from citation, color, morphology, and/or polymer.
 The code for the app is in [/inst/apps/microplastic_image_explorer](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/microplastic_image_explorer).
+
 - To get started with the tool, go to [openanalysis.org/microplastic_image_explorer](https://openanalysis.org/microplastic_image_explorer/). 
 
 ![](man/figures/imageexplorer.png)
