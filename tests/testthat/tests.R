@@ -256,7 +256,7 @@ test_that("validate_data returns a success for rules files that are valid for th
     expect_false(unique(result$issues))
 })
 
-test_that("validate_data returns an correct values with invalid example", {
+test_that("validate_data returns a correct values with invalid example", {
     data("invalid_example")
     data("test_rules")
     result <- validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules) |>
@@ -771,3 +771,24 @@ test_that("run_app() wrapper doesn't produce errors", {
 
 # Tidy up
 unlink(tmp, recursive = T)
+
+# Check for duplicates
+test_that("check_for_duplicates works correctly", {
+    
+    # Load the required configuration
+    config <- config::get(file = "config_pl_for_tests.yml")
+    
+    # Load the necessary datasets
+    data("valid_example")
+    
+    # Pull data from MongoDB
+    mongo_data <- pull_data(config$mongo_collection, config$mongo_key, request = '{"samples.SampleID": 1}')
+    
+    # Get the csv data from the list
+    result <- c(valid_example$samples$SampleID, "test_dfhadjklfhjklahdjkf") %in% mongo_data
+    
+    # Check if any duplicates exist
+    expect_true(any(result))
+    expect_true(length(valid_example$samples$SampleID) + 1 == length(result))
+    expect_true(any(!result))
+})
