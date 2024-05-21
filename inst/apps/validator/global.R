@@ -26,7 +26,7 @@ config <- config::get(file = "config_pl.yml")
 #Data checks ----
 
 if(isTruthy(config$mongo_key)) {
-    database <- mongo(url = config$mongo_key)
+    database <- mongo(url = config$mongo_key, collection = config$mongo_collection)
 } 
 
 if(isTruthy(config$s3_secret_key)){

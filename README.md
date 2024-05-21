@@ -1,4 +1,4 @@
-# **One4All** <a href="https://moore-institute-4-plastic-pollution-res.github.io/One4All/"><img src="man/figures/One4All.png" alt="One4All logo" align="right" style="height: 140px;"/></a>
+# **One4All** <a href="https://moore-institute-4-plastic-pollution-res.github.io/One4All/"><img src="man/figures/One4All.jpg" alt="One4All logo" align="right" style="height: 140px;"/></a>
 
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All)
@@ -53,7 +53,7 @@ run_app(app = "microplastic_image_explorer")
 #### Data Validator
 Data validation is essential before sharing data widely. The functionality of the Validator Tool is based on the One4All package [![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All) [![Website](https://img.shields.io/badge/web-openanalysis.org-white)](https://openanalysis.org/microplastic_data_portal/).
 
-![](man/figures/validatorimage.png)
+![](man/figures/validatorimage.jpg)
 
 If using the web app:
 
@@ -68,7 +68,7 @@ The code for the app is in [/inst/apps/data_visualization](https://github.com/Mo
 
 - To get started with the tool, go to [openanalysis.org/microplastic_analysis](https://openanalysis.org/microplastic_analysis/). 
 
-![](man/figures/datavisualization.png)
+![](man/figures/datavisualization.jpg)
 
 ---
 
@@ -78,7 +78,7 @@ The code for the app is in [/inst/apps/microplastic_image_explorer](https://gith
 
 - To get started with the tool, go to [openanalysis.org/microplastic_image_explorer](https://openanalysis.org/microplastic_image_explorer/). 
 
-![](man/figures/imageexplorer.png)
+![](man/figures/imageexplorer.jpg)
 
 ---
 
