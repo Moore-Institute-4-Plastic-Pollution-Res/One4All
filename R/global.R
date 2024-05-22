@@ -1343,29 +1343,3 @@ run_app <- function(path = "system", log = TRUE, ref = "main", test_mode = FALSE
     if(!test_mode)
         runGitHub("One4All", "Moore-Institute-4-Plastic-Pollution-Res", ref = ref, subdir = app_dir)
 }
-
-#' @title Check for duplicate entries
-#' @description This function checks for duplicate entries when uploading data. Data that has already been uploaded will be prevented if attempted to upload again.
-#' 
-#' @param mongo_key A character string representing the mongo key.
-#' @param mongo_collection A character string representing the mongo collection.
-#' @param request A JSON string specifying the field to be retrieved. Modify to retrieve a different field.
-#' @importFrom mongolite mongo
-#' @return A unique list of the requested data fields.
-#' 
-#' @examples
-#' \dontrun{
-#' mongo_key <- "your_mongo_key"
-#' mongo_collection <- "your_mongo_collection"
-#' data <- pull_data(mongo_collection, mongo_key, request = '{"samples.SampleID": 1}')
-#' print(data)
-#' }
-#' 
-#' @export
-pull_data <- function(mongo_collection, mongo_key, request = '{"samples.SampleID": 1}') {
-    # Connect to MongoDB
-    conn <- mongo(collection = mongo_collection, url = mongo_key)
-    
-    # Find all documents in the collection
-    conn$find('{}', request)[-1] |> unlist() |> unique()
-}
