@@ -42,6 +42,8 @@ authors:
     affiliation: 8
   - name: Hsuan-Cheng Lu
     affiliation: 9
+  - name: Laura Markley
+    affiliation: 10
   - name: Win Cowger
     orcid: 0000-0001-9226-3104
     affiliation: "1, 2"
@@ -64,6 +66,8 @@ affiliations:
    index: 8
  - name: Australian Rivers Institute, School of Environment and Science, Griffith University, AUS
    index: 9
+ - name: Syracuse University, USA
+   index: 10
 date: 20 May 2024
 bibliography: paper.bib
 
