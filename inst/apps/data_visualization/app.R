@@ -360,8 +360,8 @@ ui <- bs4DashPage(
         fluidRow(
           column(
             width = 12,
-            # Add yearSelect input above the first map
-            selectInput("yearSelect", "Select Year", choices = 2024, selected = 2024)
+            # Add yearSelect input above the first map **** Year selector only changes for m_ps_m3, size, width, polymer, and color parameters do not change due to columns not exisitng 
+            selectInput("yearSelect", "Select Year", choices = 2000:2024, selected = 2024)
           ),
           column(
             width = 12,
@@ -967,15 +967,20 @@ server <- function(input, output, session) {
     return(filtered)
   })
 
+  # Before the Location tab code - ONLY CHANGES THE DATA FOR MICROPLASTICS
+  selected_year_column <- reactive({
+      paste0("m_ps_m3_", input$yearSelect
+  })
+  
   # Location tab
   output$plastictableLocation <- DT::renderDataTable({
     data_to_display <- filtered_data2() %>%
-      select(county, city, water_system_name, m_ps_m3,shape,color,width_mm,polymer,latitude,longitude, treatment_level,m_ps_m3_2000, m_ps_m3_2001, m_ps_m3_2002, m_ps_m3_2003, m_ps_m3_2004, m_ps_m3_2005, m_ps_m3_2006, m_ps_m3_2007, m_ps_m3_2008, m_ps_m3_2009, m_ps_m3_2010, m_ps_m3_2011, m_ps_m3_2012, m_ps_m3_2013, m_ps_m3_2014, m_ps_m3_2015, m_ps_m3_2016, m_ps_m3_2017, m_ps_m3_2018, m_ps_m3_2019, m_ps_m3_2020, m_ps_m3_2021, m_ps_m3_2022, m_ps_m3_2023, m_ps_m3_2024 )%>%
+      select(county, city, water_system_name, !!selected_year_column(),shape,color,width_mm,polymer,latitude,longitude, treatment_level,m_ps_m3_2000, m_ps_m3_2001, m_ps_m3_2002, m_ps_m3_2003, m_ps_m3_2004, m_ps_m3_2005, m_ps_m3_2006, m_ps_m3_2007, m_ps_m3_2008, m_ps_m3_2009, m_ps_m3_2010, m_ps_m3_2011, m_ps_m3_2012, m_ps_m3_2013, m_ps_m3_2014, m_ps_m3_2015, m_ps_m3_2016, m_ps_m3_2017, m_ps_m3_2018, m_ps_m3_2019, m_ps_m3_2020, m_ps_m3_2021, m_ps_m3_2022, m_ps_m3_2023, m_ps_m3_2024 )%>%
       rename(
         County = county,
         City = city,
         "Water System Name" = water_system_name,
-        "Concentration (Particles/m^3)" = m_ps_m3,
+        "Concentration (Particles/m^3)" = !!selected_year_column(),
         "Morphology" = shape,
         "Color" = color,
         "Width (mm)" = width_mm,
@@ -1038,26 +1043,43 @@ server <- function(input, output, session) {
   })
 
   output$mapLocation1 <- renderLeaflet({
-    leaflet() %>%
-      setView(lng = -119.4179, lat = 36.7783, zoom = 6) %>%
-      addTiles(urlTemplate = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png") %>%
-      addCircleMarkers(
-        data = filtered_data2(),
-        clusterOptions = markerClusterOptions(),
-        popup = paste0(
-          "<div class='custom-popup'>",
-          "<h4>Water System Details</h4>",
-          "<p><strong>Water System Name:</strong> ", filtered_data2()$water_system_name, "</p>",
-          "<p><strong>Latitude:</strong> ", filtered_data2()$latitude, "</p>",
-          "<p><strong>Longitude:</strong> ", filtered_data2()$longitude, "</p>",
-          "<p><strong>Particles/m^3:</strong> ", filtered_data2()$m_ps_m3, "</p>",
-          "<p><strong>City:</strong> ", filtered_data2()$city, "</p>",
-          "<p><strong>County:</strong> ", filtered_data2()$county, "</p>",
-          "</div>"
-        ),
-        color = ~colorFactor("Set1", unique(filtered_data2()$m_ps_m3))(m_ps_m3),
-        fillOpacity = 0.8
-      )
+      # Create a reactive expression to get the selected year column
+      selected_year_column <- reactive({
+          paste0("m_ps_m3_", input$yearSelect)
+      })
+      
+      # Use observe to dynamically update the map
+      observe({
+          data <- filtered_data2()
+          year_column <- selected_year_column()
+          
+          # Create a leaflet map
+          leafletProxy("mapLocation1", data = data) %>%
+              clearMarkers() %>%
+              addCircleMarkers(
+                  lng = ~longitude,
+                  lat = ~latitude,
+                  clusterOptions = markerClusterOptions(),
+                  popup = ~paste0(
+                      "<div class='custom-popup'>",
+                      "<h4>Water System Details</h4>",
+                      "<p><strong>Water System Name:</strong> ", water_system_name, "</p>",
+                      "<p><strong>Latitude:</strong> ", latitude, "</p>",
+                      "<p><strong>Longitude:</strong> ", longitude, "</p>",
+                      "<p><strong>Particles/m^3:</strong> ", data[[year_column]], "</p>",
+                      "<p><strong>City:</strong> ", city, "</p>",
+                      "<p><strong>County:</strong> ", county, "</p>",
+                      "</div>"
+                  ),
+                  color = ~colorFactor("Set1", unique(data[[year_column]]))(data[[year_column]]),
+                  fillOpacity = 0.8
+              )
+      })
+      
+      # Initial leaflet map setup
+      leaflet() %>%
+          setView(lng = -119.4179, lat = 36.7783, zoom = 6) %>%
+          addTiles(urlTemplate = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
   })
 
   # Filtered data for box plots
