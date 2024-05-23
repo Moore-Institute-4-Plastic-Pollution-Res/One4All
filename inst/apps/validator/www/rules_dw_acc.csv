@@ -80,4 +80,4 @@ Sample_spatial,Spatial file for where the samples were collected should be a geo
 method_file_samples,Methodology file is valid and exists in the zip. ,samples,mcrplsts_plcy_drft.pdf,error,check_exists_in_zip(MethodologyIDFile)
 SampleApparatus,"Sample apparatus must be one of Sieving, Grabbing, or In-Line Filtration",samples,Sieving,error,"SampleApparatus %in% c(""Sieving"", ""Grabbing"", ""In-Line Filtration"")"
 SampleComments,Any comments about the sample analysis,samples,N/A,error,!is.na(SampleComments) | is.na(SampleComments)
-SampleID_Duplicates,Checking for duplicate entries; can modify with other columns,samples,"{""samples.SampleID"": 1}'",error,"!SampleID %in% pull_data(request = '{""samples.SampleID"": 1}')"
+SampleID_Duplicates,Checking for duplicate entries; can modify with other columns,samples,"{""samples.SampleID"": 1}'",warning,"!SampleID %in% pull_data(request = '{""samples.SampleID"": 1}')"
