@@ -25,8 +25,20 @@ config <- config::get(file = "config_pl.yml")
 
 #Data checks ----
 
+mongo_collection = config$mongo_collection
+mongo_key = config$mongo_key 
+
+# Check for duplicates
+pull_data <- function(request = '{"samples.SampleID": 1}') {
+    # Connect to MongoDB
+    conn <- mongo(collection = mongo_collection, url = mongo_key)
+    
+    # Find all documents in the collection
+    conn$find('{}', request)[-1] |> unlist() |> unique()
+}
+
 if(isTruthy(config$mongo_key)) {
-    database <- mongo(url = config$mongo_key)
+    database <- mongo(url = config$mongo_key, collection = config$mongo_collection)
 } 
 
 if(isTruthy(config$s3_secret_key)){

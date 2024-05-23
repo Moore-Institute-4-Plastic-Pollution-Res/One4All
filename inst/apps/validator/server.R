@@ -251,7 +251,7 @@ function(input, output, session) {
                      data_formatted = validation()$data_formatted, 
                      files = gsub("\\\\", "/", input$file$datapath),
                      verified = vals$key, 
-                     valid_key = config$valid_key, 
+                     valid_key_share = config$valid_key_share, 
                      valid_rules = config$valid_rules, 
                      ckan_url = config$ckan_url, 
                      ckan_key = config$ckan_key, 
@@ -337,7 +337,7 @@ function(input, output, session) {
     
     # Download All Data
     observeEvent(input$downloadButton, {
-        if (is.null(config$valid_key)) {
+        if (is.null(config$valid_key_download)) {
             showModal(DownloadNoKeyModal())
         } else {
             showModal(DownloadYesKeyModal())
@@ -384,7 +384,7 @@ function(input, output, session) {
         
         observeEvent(input$ok_yes_keydownload, {
             # Check if the entered key matches the valid key from the configuration file
-            if (!is.null(input$secret) && input$secret == config$valid_key) {
+            if (!is.null(input$secret) && input$secret == config$valid_key_download) {
                 # Display a message indicating that the download process has started
                 showModal(modalDialog(
                     title = "Download Started",
@@ -437,16 +437,42 @@ function(input, output, session) {
     )
     
     output$remote_downloader <- downloadHandler(
-        filename = function() {paste0(input$download_id, ".zip")},
+        filename = function() { paste0("data_", format(Sys.time(), "%Y%m%d"), ".zip") },
         content = function(file) {
-            remote_raw_download(hashed_data = input$download_id,
-                                file_path = file,
-                                s3_key_id = config$s3_key_id, 
-                                s3_secret_key = config$s3_secret_key, 
-                                s3_region = config$s3_region, 
-                                s3_bucket = config$s3_bucket)}
+            dataset_ids <- unlist(strsplit(input$download_id, ","))
+            if (length(dataset_ids) > 0 && nchar(trimws(input$download_id)) > 0) {
+                temp_dir <- tempdir()
+                zip_dir <- file.path(temp_dir, "zip_temp")
+                dir.create(zip_dir)
+                
+                for (id in dataset_ids) {
+                    temp_file <- file.path(zip_dir, paste0(id, ".zip"))
+                    tryCatch({
+                        remote_raw_download(hashed_data = id,
+                                            file_path = temp_file,
+                                            s3_key_id = config$s3_key_id, 
+                                            s3_secret_key = config$s3_secret_key, 
+                                            s3_region = config$s3_region, 
+                                            s3_bucket = config$s3_bucket)
+                    }, error = function(e) {
+                        cat("Error downloading dataset with ID:", id, "\n")
+                        cat("Error message:", e$message, "\n")
+                    })
+                }
+                
+                # Create the zip file without the full paths
+                old_wd <- getwd()
+                setwd(zip_dir)
+                on.exit(setwd(old_wd), add = TRUE)
+                zip(zipfile = file, files = list.files(zip_dir))
+                
+                unlink(zip_dir, recursive = TRUE)
+            } else {
+                cat("No dataset IDs provided.")
+            }
+        }
     )
-    
+
     output$download_rules_excel <- downloadHandler(
         filename = function() {"data_template.xlsx"},
         content = function(file) {saveWorkbook(create_valid_excel(file_rules = rules()), file, TRUE)}
@@ -519,7 +545,7 @@ function(input, output, session) {
         }
     
     observeEvent(req(isTRUE(!any(validation()$issues)), validation()$data_formatted), {
-        if (is.null(config$valid_key)) {
+        if (is.null(config$valid_key_share)) {
             showModal(NoKeyModal())
             } else {
                 showModal(YesKeyModal())
@@ -541,10 +567,10 @@ function(input, output, session) {
     
     observeEvent(input$ok_with_key, {
       # Check that data object exists and is data frame.
-      if (is.null(config$valid_key)) {
+      if (is.null(config$valid_key_share)) {
         vals$key <- NULL
       } else {
-      if (!is.null(input$secret) && input$ok_with_key < 4 && input$secret == config$valid_key){
+      if (!is.null(input$secret) && input$ok_with_key < 4 && input$secret == config$valid_key_share){
         vals$key <- input$secret
         removeModal()
         show_alert(

@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{reformat_rules}
 \alias{reformat_rules}
-\title{Reformats the rules}
+\title{Reformat the rules}
 \usage{
 reformat_rules(rules, data_formatted, zip_data = NULL)
 }

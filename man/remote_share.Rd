@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{remote_share}
 \alias{remote_share}
-\title{Remote Share Function}
+\title{Share your validated data}
 \usage{
 remote_share(
   validation,
@@ -10,7 +10,7 @@ remote_share(
   files,
   verified,
   valid_rules,
-  valid_key,
+  valid_key_share,
   ckan_url,
   ckan_key,
   ckan_package,
@@ -37,7 +37,7 @@ remote_share(
 
 \item{valid_rules}{A list of valid rules for the dataset.}
 
-\item{valid_key}{A list of valid keys.}
+\item{valid_key_share}{A valid key to share data.}
 
 \item{ckan_url}{The URL of the CKAN instance.}
 
@@ -70,7 +70,7 @@ A list containing the status and message of the operation.
 }
 \description{
 This function uploads validated data to specified remote repositories,
-such as CKAN, Amazon S3, and/or MongoDB
+such as CKAN, Amazon S3, and/or MongoDB.
 }
 \examples{
 \dontrun{
@@ -78,7 +78,7 @@ shared_data <- remote_share(validation = result_valid,
                             data_formatted = result_valid$data_formatted,
                             files = test_file,
                             verified = "your_verified_key",
-                            valid_key = "your_valid_key",
+                            valid_key_share = "your_valid_key_share",
                             valid_rules = digest::digest(test_rules),
                             ckan_url = "https://example.com",
                             ckan_key = "your_ckan_key",

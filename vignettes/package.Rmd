@@ -79,7 +79,7 @@ read_data(files_data, data_names = NULL)
 
 ## Where is this data shared?
 
-In the One4All package, the `'remote share'` function shares the validated data to MongoDB, CKAN, and/or AmazonS3. The purpose of having three options is for user preference on where to share their data: 
+In the One4All package, the `'remote share'` function shares the validated data to MongoDB, CKAN, and/or Amazon S3. The purpose of having three options is for user preference on where to share their data: 
 
 
 **MongoDB** is a NoSQL database that stores data in BSON format, allowing for flexible data structures.
@@ -114,7 +114,7 @@ shared_data <- remote_share(validation = result_valid,
 
 ## How is the data downloaded?
 
-The `'remote_download'` function allows users to download data from MongoDB, CKAN, and/or AmazonS3. The data is retrieved based on the `'hashed_data'` identifier (the dataset ID from a downloaded certificate) and assumes the data is stored using the same naming conventions provided in the `'remote_share'` function.
+The `'remote_download'` function allows users to download data from MongoDB, CKAN, and/or Amazon S3. The data is retrieved based on the `'hashed_data'` identifier (the dataset ID from a downloaded certificate) and assumes the data is stored using the same naming conventions provided in the `'remote_share'` function.
 
 The `'remote_download'` function is shown below.
 ```{r, eval=FALSE}

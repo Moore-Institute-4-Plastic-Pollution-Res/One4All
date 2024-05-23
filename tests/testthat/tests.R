@@ -256,7 +256,7 @@ test_that("validate_data returns a success for rules files that are valid for th
     expect_false(unique(result$issues))
 })
 
-test_that("validate_data returns an correct values with invalid example", {
+test_that("validate_data returns a correct values with invalid example", {
     data("invalid_example")
     data("test_rules")
     result <- validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules) |>
@@ -575,8 +575,8 @@ test_that("remote_download retrieves identical data from all sources", {
     test_remote <- remote_share(validation = result_valid, 
                                 data_formatted = result_valid$data_formatted, 
                                 files = test_file,
-                                verified = config$valid_key, 
-                                valid_key = config$valid_key, 
+                                verified = config$valid_key_share, 
+                                valid_key_share = config$valid_key_share, 
                                 valid_rules = digest::digest(test_rules), 
                                 ckan_url = config$ckan_url, 
                                 ckan_key = config$ckan_key, 
@@ -637,8 +637,8 @@ test_that("remote_download retrieves zip data from all ckan and s3", {
     test_remote <- remote_share(validation = result_valid, 
                                 data_formatted = result_valid$data_formatted, 
                                 files = test_file,
-                                verified = config$valid_key, 
-                                valid_key = config$valid_key, 
+                                verified = config$valid_key_share, 
+                                valid_key_share = config$valid_key_share, 
                                 valid_rules = digest::digest(test_rules), 
                                 ckan_url = config$ckan_url, 
                                 ckan_key = config$ckan_key, 

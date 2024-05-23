@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{remote_raw_download}
 \alias{remote_raw_download}
-\title{Download Raw Data from Remote Sources}
+\title{Download raw data from remote sources}
 \usage{
 remote_raw_download(
   hashed_data = NULL,

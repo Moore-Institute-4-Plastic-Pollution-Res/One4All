@@ -1,4 +1,4 @@
-# **One4All** <a href="https://moore-institute-4-plastic-pollution-res.github.io/One4All/"><img src="man/figures/One4All.png" alt="One4All logo" align="right" style="height: 140px;"/></a>
+# **One4All** <a href="https://moore-institute-4-plastic-pollution-res.github.io/One4All/"><img src="man/figures/One4All.jpg" alt="One4All logo" align="right" style="height: 140px;"/></a>
 
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All)
@@ -11,9 +11,9 @@
 ## Overview
 The One4All portal was designed to streamline data validation and formatting tasks. Its primary function is to read a set of rules from a 'CSV' or 'Excel' file to validate a dataset.
 
-The package functions and shiny application also helps in creating valid 'Excel' files with conditional formatting based on specified rules, making it easier to identify and manage inconsistencies in data. Overall, the One4All portal aims to enhance data validation and management processes for a more efficient and accurate workflow.
+The package functions and Validator Tool also aid in creating valid 'Excel' files with conditional formatting based on specified rules, making it easier to identify and manage inconsistencies in data. Overall, the One4All portal aims to enhance data validation and management processes for a more efficient and accurate workflow.
 
-Users have the option to work in the R shiny application or the R package. The functionality in the validator app is based on the One4All package.
+Additionally, the One4All package has a variety of functionality and has been integrated in the Data Visualization Tool and the Microplastic Image Explorer, both available for use in this repository (see below).
 
 ## Installation
 
@@ -30,15 +30,57 @@ install.packages("One4All")
 remotes::install_github("Moore-Institute-4-Plastic-Pollution-Res/One4All")
 ```
 
-### Access the validator tool below:
-- Click here for the web app: [openanalysis.org/microplastic_data_portal/](https://openanalysis.org/microplastic_data_portal/).
-
-- The code for the app is in [code/validator](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/code/validator)
-
-## Getting Started
-``` r
+### Getting Started
+```r
 library(One4All)
 ```
+
+### Tools
+
+Users can run each of the tools using this function and replacing the app name:
+```r
+run_app(app = "validator")
+```
+```r
+run_app(app = "data_visualization")
+```
+```r
+run_app(app = "microplastic_image_explorer")
+```
+
+---
+
+#### Data Validator
+Data validation is essential before sharing data widely. The functionality of the Validator Tool is based on the One4All package [![CRAN version](https://www.r-pkg.org/badges/version/One4All)](https://CRAN.R-project.org/package=One4All) [![Website](https://img.shields.io/badge/web-openanalysis.org-white)](https://openanalysis.org/microplastic_data_portal/).
+
+![](man/figures/validatorimage.jpg)
+
+If using the web app:
+
+- Go to [openanalysis.org/one4all](https://openanalysis.org/microplastic_data_portal/).
+- The code for the app is in [/inst/apps/validator](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/validator).
+
+---
+
+#### Data Visualization
+The Data Visualization Tool integrates shared data from the Validator Tool to visually represent it, allowing users to analyze data through maps, plots, and tables.
+The code for the app is in [/inst/apps/data_visualization](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/data_visualization).
+
+- To get started with the tool, go to [openanalysis.org/microplastic_analysis](https://openanalysis.org/microplastic_analysis/). 
+
+![](man/figures/datavisualization.jpg)
+
+---
+
+#### Microplastic Image Explorer
+The Microplastic Image Explorer allows users to query microplastic images from our database by applying filters. Users can select more than one filter, ranging from citation, color, morphology, and/or polymer.
+The code for the app is in [/inst/apps/microplastic_image_explorer](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/microplastic_image_explorer).
+
+- To get started with the tool, go to [openanalysis.org/microplastic_image_explorer](https://openanalysis.org/microplastic_image_explorer/). 
+
+![](man/figures/imageexplorer.jpg)
+
+---
 
 ## Additional Instructions
 

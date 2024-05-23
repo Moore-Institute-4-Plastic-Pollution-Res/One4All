@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{query_document_by_object_id}
 \alias{query_document_by_object_id}
-\title{Query MongoDB Document by ObjectID}
+\title{Query a MongoDB document by an ObjectID}
 \usage{
 query_document_by_object_id(apiKey, collection, database, dataSource, objectId)
 }

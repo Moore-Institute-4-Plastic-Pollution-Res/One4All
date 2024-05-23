@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{download_all}
 \alias{download_all}
-\title{Download All Data Alternative}
+\title{Download all data alternative}
 \usage{
 download_all(
   file_path = NULL,
@@ -33,6 +33,13 @@ Any return objects from the downloads.
 This function allows users to download all data rather than one data set at a time.
 }
 \examples{
-# example code
+\dontrun{
+    download_all_data <- download_all(file_path = "your/path/file.zip",
+                                      s3_key_id = "your_s3_key_id",
+                                      s3_secret_key = "your_s3_secret_key",
+                                      s3_region = "your_s3_region",
+                                      s3_bucket = "your_s3_bucket",
+                                      callback = NULL)
+}
 
 }

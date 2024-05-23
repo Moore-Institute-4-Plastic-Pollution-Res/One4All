@@ -1,5 +1,6 @@
 default:
-    # valid_key: "your_valid_key"
+    # valid_key_share: "your_valid_key_share"
+    # valid_key_download: "your_valid_key_download"
     # valid_rules: "your_valid_rules"
     # ckan_key: "your_ckan_key"
     # ckan_url: "your_ckan_url"
@@ -17,13 +18,13 @@ default:
     # mongo_key: "your_mongo_key"
     # mongo_collection: "your_mongo_collection"
     # apiKey: "your_mongo_apikey"
-    rules_to_use: "www/microplastic_images/One4AllValidator_rules.csv"
-    rules_example: "www/microplastic_images/One4AllValidator_rules.csv"
-    valid_data_example: "www/microplastic_images/valid_example.xlsx"
-    invalid_data_example: "www/microplastic_images/invalid_example.xlsx"
+    rules_to_use: "www/rules_dw_acc.csv"
+    rules_example: "www/rules_dw_acc.csv"
+    valid_data_example: !expr c("www/data.xlsx", "www/extra_files.zip")
+    invalid_data_example: !expr c("www/data_example_errors.xlsx", "www/example_files_errors.zip")
     twitter: "https://twitter.com/Win_OpenData"
-    github:  "https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal/tree/main/code/validator"
-    license: "https://creativecommons.org/licenses/by/4.0/"
+    github:  "https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/validator"
+    license: "https://opensource.org/license/mit"
     contact: "win@mooreplasticresearch.org"
     dev: TRUE
     tutorial: "https://www.youtube.com/embed/LMpf5-K_tYQ"
