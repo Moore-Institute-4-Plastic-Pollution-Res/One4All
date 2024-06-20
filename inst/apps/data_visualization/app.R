@@ -969,7 +969,7 @@ server <- function(input, output, session) {
 
   # Before the Location tab code - ONLY CHANGES THE DATA FOR MICROPLASTICS
   selected_year_column <- reactive({
-      paste0("m_ps_m3_", input$yearSelect
+      paste0("m_ps_m3_", input$yearSelect)
   })
   
   # Location tab
