@@ -209,34 +209,37 @@ ui <- bs4DashPage(
         tabName = "MapByRawData",
         fluidRow(
           box(
-            title = "About",
+            title = "Welcome to the Data Visualization Tool!",
             h3(
               tags$div(
-                "Welcome to the data visualization portal!",
-                br(),
-                br(),
-                "This app uses microplastics sample data from the California Open Data Portal.",
+                "This app uses microplastics sample data from the California (CA) Open Data Portal.",
                 br(),
                 br(),
                 "Below is a map that allows you to select multiple locations, and the popup markers present overview information about the plastics at those sites.",
                 br(),
                 br(),
-                "The concentration and source of plastics of the selected locations are then displayed in a rain cloud plot below.",
+                "The concentration and source of plastics of the selected locations are displayed in a rain cloud plot below.",
                 br(),
                 br(),
-                "The table directly generates the data from the Open Data Portal, and shows additional information regarding the characteristics of the plastics.",
+                "The table directly generates data from the CA Open Data Portal and shows additional information regarding the characteristics of the plastics.",
                 br(),
                 br(),
-                "Warning: The latitude and longitude data for some locations are inaccurate due to multiple locations being grouped together within a single sample."
+                "Warning: The latitude and longitude data for some locations are inaccurate due to multiple locations being grouped together within a single sample.",
+                style = "font-size: 14px;"
               )
             ),
             class = "about-box-content",
             width = 12
             ),
           column(
-            width = 12,
-            selectInput("Location", "Location", choices = Location_choices, multiple = TRUE)
-          )
+              width = 6,
+              selectInput("Location", "Location", choices = Location_choices, multiple = TRUE)
+              ),
+          column(
+              width = 6,
+              align = "right",
+              actionButton(inputId = "clearAllButtonLocation", "Clear All")
+            )
         ),
         fluidRow(
           column(
@@ -266,16 +269,32 @@ ui <- bs4DashPage(
             DT::dataTableOutput("tableLocation"), 
             width = 12
           )
-        )
-      ),
+          )
+        ),
       tabItem(
         tabName = "MapByCountries",
         fluidRow(
-          column(
-            width = 12,
+            box(
+                title = "Map By Countries",
+                h3(
+                    tags$div(
+                        "Use this tab to filter by country.",
+                        style = "font-size: 14px;"
+                        )
+                    ),
+                class = "about-box-content",
+                width = 12
+                ),
+            column(
+            width = 6,
             selectInput("Country", "Country", choices = Country_choices, multiple = TRUE)
-          )
-        ),
+            ),
+            column(
+                width = 6,
+                align = "right",
+                actionButton(inputId = "clearAllButtonCountry", "Clear All")
+                )
+            ),
         fluidRow(
           column(
             width = 12,
@@ -316,7 +335,8 @@ ui <- bs4DashPage(
                 "Sankey plots are a useful way to visualize the relationship and flow between variables.",
                 br(),
                 br(),
-                "The drop down allows users to look at the relationships of three different microplastic characteristics from the Open Data Portal."
+                "The drop down allows users to look at the relationships of three different microplastic characteristics from the CA Open Data Portal.",
+                style = "font-size: 14px;"
               )
             ),
             class = "sankey-box-content",
@@ -332,10 +352,10 @@ ui <- bs4DashPage(
                                   "Morphology and Material"),
                       selected = "Morphology and Color")
         ),
-        column(
-          width = 12,
-          selectInput("Location", "Location", choices = Location_choices, multiple = TRUE)
-        ),
+        # column(
+        #  width = 12,
+        #  selectInput("Location", "Location", choices = Location_choices, multiple = TRUE)
+        # ),
         box(
           title = "Comparing Characteristics with Sankey Plot",
           sankeyNetworkOutput("SankeyMorphColorMat", height = "700px"),
@@ -444,8 +464,17 @@ ui <- bs4DashPage(
 
 server <- function(input, output, session) {
   filtered_data <- reactive({
-    samples_location <- Samples_Geocoded[Samples_Geocoded$Location %in% input$Location, ]
-    samples_country <- Samples_Geocoded[Samples_Geocoded$Countries %in% input$Country, ]
+      samples_location <- if (is.null(input$Location) || length(input$Location) == 0) {
+          Samples_Geocoded
+      } else {
+          Samples_Geocoded[Samples_Geocoded$Location %in% input$Location, ]
+      }
+      
+      samples_country <- if (is.null(input$Country) || length(input$Country) == 0) {
+          Samples_Geocoded
+      } else {
+          Samples_Geocoded[Samples_Geocoded$Countries %in% input$Country, ]
+      }
     return(list(samples_location = samples_location, samples_country = samples_country))
   })
   
@@ -497,6 +526,16 @@ server <- function(input, output, session) {
         color = "#01579B"
       ) %>%
       addLegend(position = "bottomright", colors = "#01579B", labels = "Location")
+  })
+  
+  # Clear All button action for location
+  observeEvent(input$clearAllButtonLocation, {
+      updateSelectizeInput(session, "Location", selected = "ALL")
+  })
+  
+  # Clear All button action for countries
+  observeEvent(input$clearAllButtonCountry, {
+      updateSelectizeInput(session, "Country", selected = "ALL")
   })
   
   # Location tab
@@ -569,45 +608,67 @@ server <- function(input, output, session) {
   
   # Location tab
   output$plotLocation <- renderPlot({
-    data_location <- filtered_data()$samples_location
-    data_location$Concentration <- as.numeric(as.character(data_location$Concentration))
-    ggplot(data_location, aes(x = Source, y = Concentration, fill = factor(Source))) +
-      geom_flat_violin(
-        position = position_nudge(x = 0.1),
-        alpha = 0.5,
-        scale = "width",
-        trim = FALSE,
-        width = 0.8,
-        lwd = 1,
-      ) +
-      geom_boxplot(
-        width = 0.12,
-        outlier.shape = 8,
-        outlier.color = "navy",
-        alpha = 1
-      ) +
-      stat_dots(
-        position = position_jitterdodge(jitter.width = 1, dodge.width = 0.4, jitter.height = 10),
-        dotsize = 15,
-        side = "left",
-        justification = 1.1,
-        binwidth = 0.08,
-        alpha = 1.0
-      ) +
-      scale_fill_manual(values = c("#87CEEB", "#4C9900")) +
-      labs(
-        title = "Plastics by Source and Concentration",
-        x = "Source",
-        y = "Concentration (particles/L)",
-        fill = "Source"
-      ) +
-      coord_flip() +
-      theme_bw() +
-      theme(
-        axis.text = element_text(size = 15),
-        axis.title = element_text(size = 18),
-        plot.title = element_text(size = 18)
-      )
+      data_location <- filtered_data()$samples_location
+      
+      # Check if data_location is empty
+      if (length(input$Location) == 0) {
+          default_plot <- ggplot() +
+              geom_blank() +
+              labs(
+                  title = "Plastics by Source and Concentration",
+                  x = "Source",
+                  y = "Concentration (particles/L)",
+                  fill = "Source"
+              ) +
+              theme_bw() +
+              theme(
+                  axis.text = element_text(size = 15),
+                  axis.title = element_text(size = 18),
+                  plot.title = element_text(size = 18)
+              )
+          
+          print(default_plot)
+      } else {
+          # Process data_location as usual
+          data_location$Concentration <- as.numeric(as.character(data_location$Concentration))
+          ggplot(data_location, aes(x = Source, y = Concentration, fill = factor(Source))) +
+              geom_flat_violin(
+                  position = position_nudge(x = 0.1),
+                  alpha = 0.5,
+                  scale = "width",
+                  trim = FALSE,
+                  width = 0.8,
+                  lwd = 1,
+              ) +
+              geom_boxplot(
+                  width = 0.12,
+                  outlier.shape = 8,
+                  outlier.color = "navy",
+                  alpha = 1
+              ) +
+              stat_dots(
+                  position = position_jitterdodge(jitter.width = 1, dodge.width = 0.4, jitter.height = 10),
+                  dotsize = 15,
+                  side = "left",
+                  justification = 1.1,
+                  binwidth = 0.08,
+                  alpha = 1.0
+              ) +
+              scale_fill_manual(values = c("#87CEEB", "#4C9900")) +
+              labs(
+                  title = "Plastics by Source and Concentration",
+                  x = "Source",
+                  y = "Concentration (particles/L)",
+                  fill = "Source"
+              ) +
+              coord_flip() +
+              theme_bw() +
+              theme(
+                  axis.text = element_text(size = 15),
+                  axis.title = element_text(size = 18),
+                  plot.title = element_text(size = 18)
+              )
+      }
   })
   
   # Fake Data tab
