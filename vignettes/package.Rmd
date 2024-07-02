@@ -49,7 +49,8 @@ The function below validates data using the One4All package. Replace the paramet
 validate_data(
   files_data,
   data_names = NULL,
-  file_rules = NULL
+  file_rules = NULL,
+  zip_data
 )
 ```
 
@@ -75,6 +76,14 @@ The function reads and formats data from 'CSV' or 'Excel' files. The argument, `
 
 ```{r, eval=FALSE}
 read_data(files_data, data_names = NULL)
+```
+
+#### Broken Rules
+
+If there are any invalid data, users can view the broken rules using the `'rules_broken'` function. Replace the `'results'` and `'show_decision'` parameters with your values. Ensure that the results are in the format of a dataframe by specifying the table (ex. [[1]], [[2]], and [[3]]).
+
+```{r, eval=FALSE}
+broken_rules <- rules_broken(results = result_valid$results[[1]], show_decision = TRUE)
 ```
 
 ## Where is this data shared?
