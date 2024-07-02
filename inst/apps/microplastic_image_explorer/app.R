@@ -91,6 +91,7 @@ ui <- dashboardPage(
                 br(),
                 br(),
                 "Go to the image query tab below to get started querying our database of microplastic images by color, morphology, and polymer types.",
+                style = "font-size: 14px;"
               )
             ),
             class = "overview-box-content",
