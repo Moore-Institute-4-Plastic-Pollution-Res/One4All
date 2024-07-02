@@ -68,7 +68,7 @@ affiliations:
    index: 9
  - name: Syracuse University, USA
    index: 10
-date: 20 May 2024
+date: 2 July 2024
 bibliography: paper.bib
 
 ---
@@ -91,15 +91,13 @@ A full tutorial video is available on [YouTube](https://www.youtube.com/embed/LM
 
 ## Workflow Overview
 
-Consisting of an R package and an R shiny application, this portal was designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a ‘CSV’ or ‘Excel’ file to validate a dataset. Users have the option to work in the validator app or the One4All package. The functionality in the validator app is based on the One4All package (Figure 1). 
+Consisting of an R package and R shiny application, this tool was designed to enhance data validation and management processes by employing a set of functions that read a set of rules from a ‘CSV’ or ‘Excel’ file to validate a dataset. Users have the option to work in the Validator app or the One4All package. The functionality in the application is based on the One4All package (Figure 1). 
 
-![Workflow of the One4All portal. Navigate through the One4All package and the validator app, based on user preference: (https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e).\label{fig:example1}](manuscriptimages/One4AllFlowChart.png)
+![Workflow of the One4All portal. Navigate through the One4All package and the Validator app, based on user preference: (https://lucid.app/documents/view/f33867e8-5822-4cef-b62a-3a6c2e293b4e).\label{fig:example1}](manuscriptimages/One4AllFlowChart.png)
 
-The set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/inst/apps/validator/www/rules_dw_acc.csv), which is a 'CSV' file that contains the following fields: name, description, dataset, valid example, severity, and rule. Users should add the rules as R functions, referring to the column names in the uploaded data. The dataset is an optional field when the file is separated into multiple sheets or files (Figure 2).
+The rules sheet and configuration file power the application and package functions to validate, share, and download data. The implemented set of rules comes from a [rules sheet](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/inst/apps/validator/www/rules_dw_acc.csv), which is a 'CSV' file containing the following fields: name, description, dataset, valid example, severity, and rule. Users can adapt the rules sheet to use the tool for their own purposes. Add the rules as R functions, referring to the column names in the uploaded data. The dataset is an optional field when the file is separated into multiple sheets or files. Specify the rules sheet to use in the 'rules_to_use' configuration field, or hash out the field and upload the rules sheet directly within the app (Figure 2).
 
-![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 82 rules. The validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example2}](manuscriptimages/One4AllRulesSheet.png)
-
-The rules sheet and configuration file (explained below) power the application and package functions to validate, share, and download data. 
+![A screenshot showing a subset of the example rules sheet applied in the One4All portal, which comprises a total of 81 rules. The Validator app provides users with sample rules, a valid data example, and an invalid data example, all of which are available for users to download and adapt to suit their own purposes.\label{fig:example2}](manuscriptimages/One4AllRulesSheet.png)
 
 Structure a [configuration file](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/blob/main/inst/apps/validator/example_config.yml) using the template from the One4All portal. Replace the hashed placeholders with your information to determine fields such as where to share and download the data. An additional layer of security can be implemented by creating a valid key which will require users to provide an input key when sharing or downloading validated data. Users can request an input key from the maintainer listed in the configuration file under 'contact'.
 
@@ -138,7 +136,7 @@ default:
     google_form_link: "https://forms.gle/kMEjpceuSRREJeYR8"
 ```
 
-## How to use the app:
+## How to use the Validator app:
 
 Users will first validate their data by uploading a ‘CSV’ or ‘Excel’ file, and a corresponding zip folder consisting of the unstructured data (Figure 3). 
 
@@ -160,9 +158,25 @@ Users also have the option to download any previously uploaded data from the clo
 
 ![To download a dataset, provide the dataset ID from a downloaded certificate or download all data.\label{fig:example7}](manuscriptimages/One4AllDownload.png)
 
-## How to use the package:
+## Other Tools
 
-The features in the validator app are based on the One4All package functions. The overarching goal of providing the package functions is to allow users the option of working in the application and/or the package and to allow the functions to be reused in contexts beyond the scope of One4All for the user's purposes.
+Additionally, the One4All portal includes two tools, the [Data Visualization Tool](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/data_visualization) and the [Microplastic Image Explorer](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/microplastic_image_explorer), both sourced from the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal) to increase discoverability and adhere to FAIR data principles.
+
+## Data Visualization Tool
+
+The Data Visualization Tool allows users to analyze microplastics data through visual representations. The data presented in the first three tabs are sourced from the [California Open Data Portal](https://data.ca.gov/dataset/microplastics-in-drinking-water), displaying the concentration of microplastics, globally, through maps, plots, and tables. Users can also explore the relationships between various microplastic characteristics, including morphology, color, and polymer type. The fourth tab uses synthetic data to demonstrate the functionality of the tool, display the yearly average microplastic concentrations, treatment levels, polymer and width distributions (Figure 8).
+
+![Analyze microplastics data through various visual representations.\label{fig:example8}](manuscriptimages/DataVisualization.jpg)
+
+## Microplastic Image Explorer
+
+The Microplastic Image Explorer enables users to query microplastic images from our database of approximately 8,000 images. This tool was designed to improve the use of visual microscopy in microplastic identification where users can apply filters including citation, color, morphology, and polymer type to query specific images (Figure 9).
+
+![Query microplastic images from the database by applying filters, including citation, color, morphology, and polymer.\label{fig:example9}](manuscriptimages/MicroplasticImageExplorer.jpg)
+
+## How to use the One4All package:
+
+The features in the Validator app are based on the One4All package functions. The overarching goal of providing the package functions is to allow users the option of working in the application and/or the package and to allow the functions to be reused in contexts beyond the scope of One4All for the user's purposes.
 
 First, load the One4All library, then optionally run the app using the ‘run_app()’ function.
 
@@ -230,14 +244,14 @@ The main limitation is finding a balance between expanding the variety of rules 
 
 # Availability and Documentation:
 
-One4All is published on CRAN and was created in R(4.2.1) [@R:2022] using the following libraries: shiny [@Shiny:2023], dplyr [@Dplyr:2023], validate [@Validate:2021], digest [@Digest:2023], data.table [@Datatable:2023], ckanr [@Ckanr:2023], openxlsx [@Openxlsx:2023], lexicon [@Lexicon:2018], readr [@Readr:2023], readxl [@Readxl:2023], tibble [@Tibble:2023], aws.s3 [@Awss3:2020], rlang [@Rlang:2023], jsonlite [@Jsonlite:2014], mongolite [@Jsonlite:2014], and httr [@Httr:2023]. The validator app is hosted on the web at [openanalysis.org/one4all/](https://openanalysis.org/one4all/). The source code is [available on GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) with an [MIT License](https://opensource.org/license/mit). The source code can be run offline on any machine that can install the One4All package. This package is maintained by the Moore Institute for Plastic Pollution Research on GitHub and is updated with each release.
+One4All is published on CRAN and was created in R(4.2.1) [@R:2022] using the following libraries: shiny [@Shiny:2023], dplyr [@Dplyr:2023], validate [@Validate:2021], digest [@Digest:2023], data.table [@Datatable:2023], ckanr [@Ckanr:2023], openxlsx [@Openxlsx:2023], lexicon [@Lexicon:2018], readr [@Readr:2023], readxl [@Readxl:2023], tibble [@Tibble:2023], aws.s3 [@Awss3:2020], rlang [@Rlang:2023], jsonlite [@Jsonlite:2014], mongolite [@Jsonlite:2014], and httr [@Httr:2023]. The Validator app is hosted on the web at [openanalysis.org/one4all/](https://openanalysis.org/microplastic_data_portal/). The source code is [available on GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) with an [MIT License](https://opensource.org/license/mit). The source code can be run offline on any machine that can install the One4All package. This package is maintained by the Moore Institute for Plastic Pollution Research on GitHub and is updated with each release.
 
 # Future Goals
 
-The One4All portal is intended to be useful for users to validate and share their data. Our goal is to promote open-source resources for the public and update the software with other resources that have yet to be implemented. We plan to integrate Open Specy, developed by @Cowger:2021, for users to validate their spectra submissions before submitting to the Open Specy reference library. Additionally, we plan to incorporate the [Data Visualization Tool](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/data_visualization) and the [Microplastic Image Explorer](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/microplastic_image_explorer), both sourced from the [Microplastics Data Portal](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/Microplastic_Data_Portal), to increase discoverability and adhere to FAIR data principles. For the [Data Visualization Tool](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/data_visualization), we intend to utilize an API key generated from the cloud services within the One4All to integrate shared data, enabling the tool to visually represent the shared data through maps, plots, and tables. Our objective for the [Microplastic Image Explorer](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All/tree/main/inst/apps/microplastic_image_explorer) is to validate datasets containing microplastic images before integrating them into the tool’s database. Similarly, we can collect data for Trash AI, a GUI that identifies individual items of trash within images, by validating datasets containing images of trash before uploading them [@TrashAI:2023]. Furthermore, we aim to expand our current set of rules by incorporating AI strategies such as ChatGPT [@ChatGPT:2024] to generate rule templates for macroplastics or other pollutants. This will provide users the option to create rule templates using AI strategies as well.
+The One4All portal is intended to be useful for users to validate and share their data. Our goal is to promote open-source resources for the public and update the software with other resources that have yet to be implemented. We plan to integrate Open Specy, developed by @Cowger:2021, for users to validate their spectra submissions before submitting to the Open Specy reference library. Additionally, once the Validator tool receives user data, we plan to incorporate this data into the Data Visualization Tool and the Microplastic Image Explorer. For the Data Visualization Tool, we intend to utilize an API key generated from the cloud services within One4All to integrate shared data, enabling the tool to visually represent the shared data through maps, plots, and tables. Our objective for the Microplastic Image Explorer is to validate datasets containing microplastic images before integrating them into the tool’s database. Similarly, we can collect data for Trash AI, a GUI that identifies individual items of trash within images, by validating datasets containing images of trash before uploading them [@TrashAI:2023]. Furthermore, we aim to expand our current set of rules by incorporating AI strategies such as ChatGPT [@ChatGPT:2024] to generate rule templates for macroplastics or other pollutants. This will provide users the option to create rule templates using AI strategies as well.
 
 # Acknowledgments
 
-We acknowledge and greatly appreciate the financial support from the National Renewable Energy Laboratory and the Possibility Lab. The Moore Institute for Plastic Pollution Research led the development of the software tool and drafting of this manuscript. The One4All portal was inspired by the Data Validator tool created by Appsilon. We acknowledge the work and the input of the San Francisco Estuary Institute and the California State Water Resources Control Board. We would like to thank Scott Coffin, Tony Hale, Diana Lin, Gemma Shusterman, Rebecca Sutton, Adam Wong, Richard Nelson, Leah Thornton Hampton, Libby Heeren, and Gabriel Daiess. We would also like to thank Anja Oca, Haig Minasian, and Holden Ford from California State University, Long Beach, who provided the valid sample data used in the validator application. The views and opinions expressed in this article are those of the authors and do not necessarily reflect the official policy or position of any California State agency.
+We acknowledge and greatly appreciate the financial support from the National Renewable Energy Laboratory and the Possibility Lab. The Moore Institute for Plastic Pollution Research led the development of the software tool and drafting of this manuscript. The One4All portal was inspired by the Data Validator tool created by Appsilon. We acknowledge the work and the input of the San Francisco Estuary Institute and the California State Water Resources Control Board. We would like to thank Scott Coffin, Tony Hale, Diana Lin, Gemma Shusterman, Rebecca Sutton, Adam Wong, Richard Nelson, Leah Thornton Hampton, Libby Heeren, and Gabriel Daiess. The views and opinions expressed in this article are those of the authors and do not necessarily reflect the official policy or position of any California State agency.
 
 # References
