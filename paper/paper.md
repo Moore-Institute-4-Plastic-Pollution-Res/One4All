@@ -164,7 +164,7 @@ Additionally, the One4All portal includes two tools, the [Data Visualization Too
 
 ## Data Visualization Tool
 
-The Data Visualization Tool allows users to analyze microplastics data through visual representations. The data presented in the first three tabs are sourced from the [California Open Data Portal](https://data.ca.gov/dataset/microplastics-in-drinking-water), displaying the concentration of microplastics, globally, through maps, plots, and tables. Users can also explore the relationships between various microplastic characteristics, including morphology, color, and polymer type. The fourth tab uses synthetic data to demonstrate the functionality of the tool, display the yearly average microplastic concentrations, treatment levels, polymer and width distributions (Figure 8).
+The Data Visualization Tool allows users to analyze microplastics data through visual representations. The data presented in the first three tabs are sourced from the [California Open Data Portal](https://data.ca.gov/dataset/microplastics-in-drinking-water), displaying the concentration of microplastics, globally, through maps, plots, and tables. Users can also explore the relationships between various microplastic characteristics, including morphology, color, and polymer type. The fourth tab uses synthetic data to demonstrate the functionality of the tool, displaying the yearly average microplastic concentrations, treatment levels, polymer and width distributions (Figure 8).
 
 ![Analyze microplastics data through various visual representations.\label{fig:example8}](manuscriptimages/DataVisualization.jpg)
 
