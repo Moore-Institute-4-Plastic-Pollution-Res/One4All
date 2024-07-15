@@ -1322,9 +1322,15 @@ run_app <- function(path = "system", log = TRUE, ref = "main", test_mode = FALSE
     
     miss <- pkg[!(pkg %in% installed.packages()[ , "Package"])]
     
-    if(length(miss)) stop("run_app() requires the following packages: ",
-                          paste(paste0("'", miss, "'"), collapse = ", "),
-                          call. = FALSE)
+    if(length(miss)) {
+        missing_pkg_str <- paste(sprintf("'%s'", miss), collapse = ", ")
+        install_command <- sprintf("install.packages(c(%s))", missing_pkg_str)
+        stop("run_app() requires the following packages to be installed:\n",
+             missing_pkg_str, 
+             "\n\nTo install these packages, you can copy and run the following command in your console:\n",
+             install_command,
+             call. = FALSE)
+    }
     
     app_dirs <- c("validator" = "inst/apps/validator",
                   "data_visualization" = "inst/apps/data_visualization",
