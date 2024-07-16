@@ -136,7 +136,7 @@ default:
     google_form_link: "https://forms.gle/kMEjpceuSRREJeYR8"
 ```
 
-## How to use the Validator app:
+## How to use the Validator app
 
 Users will first validate their data by uploading a ‘CSV’ or ‘Excel’ file, and a corresponding zip folder consisting of the unstructured data (Figure 3). 
 
@@ -174,7 +174,7 @@ The Microplastic Image Explorer enables users to query microplastic images from 
 
 ![Query microplastic images from the database by applying filters, including citation, color, morphology, and polymer.\label{fig:example9}](manuscriptimages/MicroplasticImageExplorer.jpg)
 
-## How to use the One4All package:
+## How to use the One4All package
 
 The features in the applications are driven using the One4All package functions. The overarching goal of the R package is to allow functions to be reused in contexts beyond the imagined scope of One4All. In most cases, the applications will be more user-friendly than the code. 
 
@@ -238,11 +238,11 @@ downloaded_data <- remote_download(hashed_data = "example_hash",
                     mongo_collection = "mongo_collection")
 ```
 
-## Limitations:
+## Limitations
 
 The main limitation is finding a balance between expanding the variety of rules to broaden the tool's usability and maintaining efficient collaboration among researchers. The current rules implemented in the One4All portal encompass a wide variety of microplastics data, but those rules are limited to microplastics. To accept a wider variety of data, or to use the tool for an entirely different purpose, additional rules sheets will need to be created with variables about the other fields. However, the more variables added to a rules sheet, the more complex the overall QA/QC compliance pathway, increasing the chances of data entry errors. 
 
-# Availability and Documentation:
+# Availability and Documentation
 
 One4All is published on CRAN and was created in R(4.2.1) [@R:2022] using the following libraries: shiny [@Shiny:2023], dplyr [@Dplyr:2023], validate [@Validate:2021], digest [@Digest:2023], data.table [@Datatable:2023], ckanr [@Ckanr:2023], openxlsx [@Openxlsx:2023], lexicon [@Lexicon:2018], readr [@Readr:2023], readxl [@Readxl:2023], tibble [@Tibble:2023], aws.s3 [@Awss3:2020], rlang [@Rlang:2023], jsonlite [@Jsonlite:2014], mongolite [@Jsonlite:2014], and httr [@Httr:2023]. The microplastic version of the Validator app is hosted on the web at [openanalysis.org/one4all/](https://openanalysis.org/microplastic_data_portal/). The source code is [available on GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) with an [MIT License](https://opensource.org/license/mit). The Moore Institute for Plastic Pollution Research maintains the package. The source code can be run offline on any machine that can install the One4All package. 
 
